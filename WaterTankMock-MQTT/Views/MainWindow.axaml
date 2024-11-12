@@ -1,0 +1,596 @@
+<Window
+    x:Class="WaterTankMock_MQTT.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:material="using:Material.Icons.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+    xmlns:vm="using:WaterTankMock_MQTT.ViewModels"
+    Title="Water_TankMock:tool MQTT by SognoLucido"
+    Width="600"
+    Height="400"
+    x:DataType="vm:MainWindowViewModel"
+    CanResize="False"
+    Icon="/Assets/avalonia-logo.ico">
+
+
+
+
+
+
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+
+
+    <Grid
+        Background="White"
+        ColumnDefinitions="1*,2.5*"
+        RowDefinitions="0.7*,3*"
+        ShowGridLines="False">
+
+
+
+        <Border
+            Grid.ColumnSpan="2"
+            Background="#f9fbfa"
+            BorderBrush="#e8edeb"
+            BorderThickness="0,0,0,1" />
+        <Border
+            Grid.Row="1"
+            Background="#f9fbfa"
+            BorderBrush="#e8edeb"
+            BorderThickness="0,0,1,0" />
+
+
+        <Rectangle
+            Grid.Column="1"
+            Width="5"
+            Margin="10,10,0,10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Stretch"
+            Fill="#646464"
+            RadiusX="3"
+            RadiusY="3" />
+
+
+        <TextBlock
+            Margin="10"
+            HorizontalAlignment="Center"
+            Text="{Binding Statustext}" />
+
+        <TextBox
+            Height="30"
+            Margin="8"
+            VerticalAlignment="Bottom"
+            BorderBrush="{Binding $self.Foreground}"
+            BorderThickness="1"
+            Classes="solo"
+            CornerRadius="32"
+            Text="{Binding Search, Mode=OneWayToSource}"
+            Theme="{StaticResource SoloTextBox}"
+            Watermark="Search item">
+            <TextBox.InnerLeftContent>
+                <Border Width="{Binding $self.Bounds.Height}" Height="{Binding $parent[TextBox].Height}">
+                    <avalonia:MaterialIcon
+                        Width="20"
+                        Height="20"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Kind="Magnify" />
+                </Border>
+            </TextBox.InnerLeftContent>
+        </TextBox>
+
+
+        <StackPanel
+            Grid.Column="1"
+            Margin="30,0,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Orientation="Horizontal"
+            Spacing="5">
+            <TextBox
+                Width="200"
+                p1:TextFieldAssist.Label="MQTT Broker IP"
+                Classes="outline dense clearButton"
+                Text="{Binding ConnectionIP}"
+                Theme="{StaticResource OutlineTextBox}"
+                UseFloatingWatermark="True" />
+
+            <TextBox
+                Width="70"
+                HorizontalContentAlignment="Center"
+                Classes="outline dense"
+                Text="{Binding ConnectionPort}"
+                Watermark="1883" />
+        </StackPanel>
+
+
+        <StackPanel Grid.Row="1" VerticalAlignment="Top">
+
+            <ListBox
+                Height="290"
+                Margin="5"
+                Background="Transparent"
+                ItemsSource="{Binding Items}"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                SelectedItem="{Binding SelectedTankItem, Mode=OneWayToSource}">
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+
+                        <Grid ColumnDefinitions="1*,0.2*">
+                            <TextBlock Text="{Binding Name, Mode=OneWay}" />
+
+                            <avalonia:MaterialIcon
+                                Grid.Column="1"
+                                IsVisible="{Binding Starring}"
+                                Kind="Star" />
+                        </Grid>
+
+
+
+
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+
+            </ListBox>
+        </StackPanel>
+
+
+        <!--  IsVisible="{Binding ItemSelected}"  -->
+        <TabControl
+            Grid.Row="1"
+            Grid.Column="1"
+            TabStripPlacement="Top">
+
+
+            <TabControl.Styles>
+                <Style Selector="TabItem">
+                    <Setter Property="MinHeight" Value="35" />
+                </Style>
+            </TabControl.Styles>
+            <TabItem Header="Tank-Info">
+
+
+                <Grid ColumnDefinitions="1*,0.2*" ShowGridLines="False">
+
+                    <StackPanel
+                        Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+
+                        <TextBox
+                            p1:TextFieldAssist.Label="Name"
+                            Classes="outline"
+                            Text="{Binding SelectedTankItem.Name, Mode=TwoWay}"
+                            TextAlignment="Center"
+                            Theme="{StaticResource OutlineTextBox}"
+                            UseFloatingWatermark="True" />
+                        <TextBox
+                            p1:TextFieldAssist.Label="Capacity"
+                            Classes="outline"
+                            IsReadOnly="True"
+                            Text="{Binding SelectedTankItem.Capacity, Mode=TwoWay}"
+                            TextAlignment="Center"
+                            Theme="{StaticResource OutlineTextBox}"
+                            UseFloatingWatermark="True" />
+                        <TextBox
+                            p1:TextFieldAssist.Label="CurrentLv"
+                            Classes="outline"
+                            IsReadOnly="True"
+                            Text="{Binding SelectedTankItem.CurrentLevel, Mode=TwoWay}"
+                            TextAlignment="Center"
+                            Theme="{StaticResource OutlineTextBox}"
+                            UseFloatingWatermark="True" />
+                        <TextBox
+                            Width="325"
+                            HorizontalAlignment="Right"
+                            p1:TextFieldAssist.Label="Id"
+                            Classes="outline"
+                            IsReadOnly="True"
+                            Text="{Binding SelectedTankItem.Id}"
+                            Theme="{StaticResource OutlineTextBox}"
+                            UseFloatingWatermark="True" />
+
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="10,20,10,10"
+                        Spacing="10">
+
+
+                        <!--
+						<controls:FloatingButton Background="#bdbdbd" Classes="Light Mini">
+							<avalonia:MaterialIcon Kind="PencilOutline" Width="27" Height="27" />
+						</controls:FloatingButton>
+						
+						-->
+                        <controls:FloatingButton
+                            Background="#bdbdbd"
+                            Classes="Light Mini accent"
+                            Command="{Binding StarCommand}">
+                            <avalonia:MaterialIcon
+                                Width="30"
+                                Height="30"
+                                Foreground="{Binding SelectedTankItem.Stariconcolor}"
+                                Kind="{Binding SelectedTankItem.Stariconname}" />
+                        </controls:FloatingButton>
+                    </StackPanel>
+
+                    <!-- <avalonia:MaterialIcon  Width="30" Height="30" Foreground="Yellow" Kind="Star" /> -->
+
+
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Tank-Simulation-Settings">
+
+
+
+
+                <Grid
+                    ColumnDefinitions="1*,1*"
+                    RowDefinitions="0.2*,1*"
+                    ShowGridLines="False">
+
+
+                    <Border
+                        Grid.ColumnSpan="2"
+                        BorderBrush="Black"
+                        BorderThickness="0,0,0,1" />
+
+                    <StackPanel
+                        Grid.ColumnSpan="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="17"
+                            FontWeight="Black" />
+                        <TextBox VerticalAlignment="Center">Daily routine</TextBox>
+
+
+                        <Border
+                            Width="20"
+                            Height="20"
+                            VerticalAlignment="Center"
+                            BorderBrush="Black"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            ToolTip.Placement="Bottom">
+
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                ToolTip.Placement="Bottom">
+
+                                <avalonia:MaterialIcon Kind="Square" />
+                                <ToolTip.Tip>
+                                    <StackPanel
+                                        Width="300"
+                                        Height="200"
+                                        HorizontalAlignment="Center">
+                                        <TextBlock FontSize="16">HowtoUse</TextBlock>
+                                        <TextBlock TextWrapping="Wrap">
+                                            The simulation runs for X days, with 10 ticks per day—1 tick every 3 seconds.
+                                            To enable a trigger, toggle the buttons below. When a trigger is enabled,
+                                            the MQTT tank client will send an MQTT message to the broker and scale resources
+                                            (water, configurable per trigger in settings).
+                                            The simulation will progress through each trigger, sending a message for each active one.
+                                            This process will repeat each day (days are configurable after connection)
+                                        </TextBlock>
+                                    </StackPanel>
+                                </ToolTip.Tip>
+                            </StackPanel>
+
+                        </Border>
+
+
+                    </StackPanel>
+
+
+                    <ToggleButton
+                        Grid.ColumnSpan="2"
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Content="{Binding Togglesettingbuttonname}"
+                        FontSize="12"
+                        IsChecked="{Binding Settings}" />
+
+                    <!--
+                    -->
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Width="170"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        IsVisible="{Binding !Settings}"
+                        Spacing="10">
+
+                        <StackPanel.Styles>
+
+                            <Style Selector="ToggleButton:checked">
+                                <Setter Property="Background" Value="#abd7fb" />
+
+                            </Style>
+
+                        </StackPanel.Styles>
+
+                        <ToggleButton IsChecked="{Binding SelectedTankItem.Triggers[0].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 1°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding SelectedTankItem.Triggers[1].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 2°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding SelectedTankItem.Triggers[2].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 3°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding SelectedTankItem.Triggers[3].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 4°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding SelectedTankItem.Triggers[4].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 5°</ToggleButton>
+                    </StackPanel>
+
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Width="170"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        IsVisible="{Binding !Settings}"
+                        Spacing="10">
+
+                        <StackPanel.Styles>
+
+                            <Style Selector="ToggleButton:checked">
+                                <Setter Property="Background" Value="#abd7fb" />
+                                <!--  Change to your desired pressed color  -->
+
+                            </Style>
+
+                        </StackPanel.Styles>
+
+                        <ToggleButton IsChecked="{Binding SelectedTankItem.Triggers[5].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 6°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding SelectedTankItem.Triggers[6].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 7°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding SelectedTankItem.Triggers[7].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 8°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding SelectedTankItem.Triggers[8].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 9°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding SelectedTankItem.Triggers[9].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 10°</ToggleButton>
+                    </StackPanel>
+
+
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Background="Azure"
+                        IsVisible="{Binding Settings}">
+
+                        <Border
+                            Height="80"
+                            Margin="10"
+                            BorderBrush="Black"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <StackPanel
+                                Margin="10"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Orientation="Horizontal"
+                                Spacing="5">
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="17"
+                                    FontWeight="Black"
+                                    Text="{Binding SelectedTankItem.Activetriggers}" />
+                                <TextBlock
+                                    Margin="0,0,40,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="17"
+                                    FontWeight="Black"
+                                    Text="Active Trigger/s" />
+
+                                <ComboBox
+                                    Width="150"
+                                    Margin="0,0,0,0"
+                                    VerticalAlignment="Top"
+                                    p1:ComboBoxAssist.Label="TriggerItem"
+                                    ItemsSource="{Binding SelectedTankItem.Triggerfiltered}"
+                                    SelectedItem="{Binding Triggeritemselect, Mode=TwoWay}"
+                                    Theme="{StaticResource MaterialOutlineComboBox}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                            </StackPanel>
+
+                        </Border>
+
+                        <TextBlock
+                            Width="350"
+                            Text="The range below represents the resource (water) amount to be scaled each day at the selected trigger. The system will randomly select a value within this range "
+                            TextWrapping="Wrap" />
+
+
+                        <StackPanel
+                            Margin="20,15,0,0"
+                            HorizontalAlignment="Center"
+                            IsEnabled="{Binding Rangevisible}"
+                            Orientation="Horizontal"
+                            Spacing="5">
+
+                            <!--
+							<StackPanel.Styles>
+								<Style Selector="TextBlock#PART_PlaceholderText">
+									<Setter Property="Opacity" Value="1"></Setter>
+								</Style>
+							</StackPanel.Styles>
+							-->
+
+                            <TextBox
+                                Width="120"
+                                VerticalAlignment="Center"
+                                p1:TextFieldAssist.Label="{Binding Triggeritemselect.Rangemin}"
+                                Classes="outline dense clearButton"
+                                Text="{Binding Number1, Mode=TwoWay}"
+                                Theme="{StaticResource OutlineTextBox}"
+                                UseFloatingWatermark="True" />
+                            <TextBlock
+                                Margin="0,5,0,0"
+                                VerticalAlignment="Center"
+                                FontWeight="ExtraBold"
+                                Text="-" />
+                            <TextBox
+                                Width="120"
+                                VerticalAlignment="Center"
+                                p1:TextFieldAssist.Label="{Binding Triggeritemselect.Rangemax}"
+                                Classes="outline dense clearButton"
+                                Text="{Binding Number2, Mode=TwoWay}"
+                                Theme="{StaticResource OutlineTextBox}"
+                                UseFloatingWatermark="True" />
+                            <Button
+                                Width="60"
+                                Height="40"
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Classes="accent"
+                                Command="{Binding SaverangeCommand}">
+                                <avalonia:MaterialIcon Kind="ContentSave" />
+                            </Button>
+                        </StackPanel>
+                        <TextBlock
+                            Margin="30,2,0,0"
+                            HorizontalAlignment="Left"
+                            FontSize="10"
+                            Foreground="red"
+                            Text="{Binding Settingerror}" />
+
+                    </StackPanel>
+
+
+
+
+
+                </Grid>
+
+
+
+
+
+
+                <!--
+			<StackPanel Margin="10" HorizontalAlignment="Center" Spacing="10" VerticalAlignment="Top">
+				<TextBlock  HorizontalAlignment="Center" Background="Red"   FontWeight="Bold" Text="Daily routine" FontSize="20"  > </TextBlock>
+				<CheckBox HorizontalAlignment="Center"></CheckBox>
+				
+			</StackPanel>
+			-->
+
+
+
+            </TabItem>
+
+
+
+
+        </TabControl>
+
+
+
+
+        <StackPanel
+            Grid.Row="1"
+            Height="30"
+            Margin="2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Orientation="Horizontal">
+            <Button
+                Width="100"
+                Classes="accent"
+                Command="{Binding AddItemCommand}"
+                CornerRadius="5,0,0,5"
+                IsEnabled="{Binding Addandclearvisib}">
+                Add
+            </Button>
+            <Button
+                Background="#7c1e8f"
+                Command="{Binding ClearAllCommand}"
+                CornerRadius="0,4,4,0"
+                IsEnabled="{Binding Addandclearvisib}">
+                Clear
+            </Button>
+        </StackPanel>
+
+
+        <Button
+            Grid.Column="1"
+            Width="90"
+            Height="50"
+            Margin="0,0,10,0"
+            HorizontalAlignment="Right"
+            Classes="accent"
+            Command="{Binding TestconnectionCommand}"
+            IsEnabled="{Binding !Connected}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold">
+                Connect
+            </TextBlock>
+        </Button>
+
+        <Button
+            Grid.Column="1"
+            Width="100"
+            Height="50"
+            Margin="0,0,10,0"
+            HorizontalAlignment="Right"
+            Background="Green"
+            Classes="accent"
+            Command="{Binding TestconnectionCommand}"
+            IsVisible="{Binding Connected}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold">
+                Start TEST
+            </TextBlock>
+        </Button>
+
+
+
+        <!--	<ProgressBar  Grid.Column="1" VerticalAlignment="Bottom" > </ProgressBar> -->
+
+
+
+        <!--
+		<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+			<Button Height="30" Width="60" Command="{Binding SendhttpCommand}" >
+
+			</Button>
+		</StackPanel>
+
+		<Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" HorizontalAlignment="Center" VerticalAlignment="Center"  Padding="5" Grid.Column="1">
+		<TextBlock  Text="{Binding Textboxuser}" ></TextBlock>
+		</Border>
+		-->
+
+        <!--	<Button HorizontalAlignment="Center" Command="{Binding TestsCommand}" Margin="10"  VerticalAlignment="Top">OK</Button>-->
+
+    </Grid>
+
+
+</Window>
