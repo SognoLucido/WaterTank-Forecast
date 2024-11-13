@@ -12,6 +12,9 @@ namespace WaterTankMock_MQTT.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
+
+        public Sharedata Sharedata { get; }
+
         public MainWindowViewModel() { }
 
 
@@ -19,8 +22,9 @@ namespace WaterTankMock_MQTT.ViewModels
         const int Mqttdefport = 1883;
 
 
-        public MainWindowViewModel(MqttInit _mqtt)
+        public MainWindowViewModel(MqttInit _mqtt, Sharedata sharedata)
         {
+            Sharedata = sharedata;
             Mqtt = _mqtt;
             Items = [];
             ItemSelected = false;
@@ -60,7 +64,7 @@ namespace WaterTankMock_MQTT.ViewModels
         [ObservableProperty] private int _keytotriggers;
         [ObservableProperty]private bool _connected;
         [ObservableProperty]private string _statustext;
-        [ObservableProperty]private bool _itemSelected ;
+        [ObservableProperty] private bool _itemSelected ;
         [ObservableProperty] private string _togglesettingbuttonname;
         [ObservableProperty] private string? _settingerror ;
         [ObservableProperty] private bool _rangevisible ;
@@ -131,8 +135,6 @@ namespace WaterTankMock_MQTT.ViewModels
             set
             {
 
-
-               
 
                 if(string.IsNullOrEmpty(_search) && !string.IsNullOrEmpty(value))
                 {
@@ -240,6 +242,8 @@ namespace WaterTankMock_MQTT.ViewModels
                     
 
                 }
+
+                //page appear if the value is selected else blank
 
                 if(value is null) ItemSelected = false;
 

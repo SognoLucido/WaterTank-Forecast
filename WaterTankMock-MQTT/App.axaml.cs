@@ -4,6 +4,7 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
+using WaterTankMock_MQTT.Models;
 using WaterTankMock_MQTT.Services;
 using WaterTankMock_MQTT.ViewModels;
 using WaterTankMock_MQTT.Views;
@@ -47,13 +48,15 @@ namespace WaterTankMock_MQTT
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<MqttInit>();
+            services.AddSingleton<SettingsTankViewModel>();
             services.AddSingleton<MainWindowViewModel>();
+
             services.AddTransient<MainWindow>();
-            
-           
+            services.AddTransient<SettingsTankView>();
 
 
+            services.AddSingleton<Sharedata>();
+            services.AddSingleton<MqttInit>();
 
         }
     }
