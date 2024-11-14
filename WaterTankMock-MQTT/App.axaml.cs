@@ -57,6 +57,7 @@ namespace WaterTankMock_MQTT
 
             services.AddSingleton<Sharedata>();
             services.AddSingleton<MqttInit>();
+            services.AddSingleton<PagesController>();
 
         }
     }
