@@ -45,12 +45,15 @@ namespace WaterTankMock_MQTT.ViewModels
             {
                 Statustext = "Connected";
                 Connected = true;
+                Pages.Changepage(Page.Recap);
             }
             else
             {
                 Statustext = "Disconnected";
                 Connected = false;
+                Loadingbar = false;
             }
+           
         }
 
         private void Sharedata_PageItemselected(object? sender, Page e)
@@ -69,7 +72,8 @@ namespace WaterTankMock_MQTT.ViewModels
         [ObservableProperty] private int _keytotriggers;
         [ObservableProperty]private bool _connected;
         [ObservableProperty]private string _statustext;
-        [ObservableProperty] private bool _itemSelected ;
+        [ObservableProperty] private bool _loadingbar = false;
+       
         [ObservableProperty] private bool _addandclearvisib = true;
 
      
@@ -179,8 +183,8 @@ namespace WaterTankMock_MQTT.ViewModels
         [RelayCommand]
         private async Task Testconnection()
         {
-
-
+            Loadingbar = true;
+           
             if (!int.TryParse(ConnectionPort, out int port))
             {
                 port = Mqttdefport;

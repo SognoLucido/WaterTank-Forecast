@@ -10,20 +10,18 @@ namespace WaterTankMock_MQTT.Services
     {
         Null = -1,
         TankSettings = 0,
-        StartTest
+        Recap
     }
-
-
 
     public partial class PagesController : ViewModelBase 
     {
 
  
         private ViewModelBase[] PageCollection { get; set; } = new ViewModelBase[2];
-        public PagesController(SettingsTankViewModel Tankset) 
+        public PagesController(SettingsTankViewModel Tankset,RecapViewModel recap) 
         {
             PageCollection[0] = Tankset;
-
+            PageCollection[1] = recap;
         }
 
         [ObservableProperty]

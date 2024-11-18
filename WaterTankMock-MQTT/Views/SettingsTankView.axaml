@@ -5,8 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:WaterTankMock_MQTT.ViewModels"
-    d:DesignHeight="350"
-    d:DesignWidth="450"
+    d:DesignHeight="324" 
+    d:DesignWidth="600"
     x:DataType="vm:SettingsTankViewModel"
 	xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
 	xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
@@ -22,8 +22,12 @@
         <vm:SettingsTankViewModel />
     </Design.DataContext>
 
-	<TabControl TabStripPlacement="Top">
 
+	<Grid  ColumnDefinitions="1*,2.5*" >
+		
+	
+	<TabControl Grid.Column="1" Background="White" TabStripPlacement="Top">
+     
 
 		<TabControl.Styles>
 			<Style Selector="TabItem">
@@ -33,11 +37,12 @@
 		<TabItem Header="Tank-Info">
 
 
-			<Grid ColumnDefinitions="1*,0.2*" ShowGridLines="false">
+			<Grid ColumnDefinitions="1*,0.2*" ShowGridLines="False">
 
 				<StackPanel
+					
 					Grid.Row="1"
-					HorizontalAlignment="Center"
+					HorizontalAlignment="Right"
 					VerticalAlignment="Center">
 
 					<TextBox
@@ -374,5 +379,5 @@
 
 
 	</TabControl>
-
+	</Grid>
 </UserControl>

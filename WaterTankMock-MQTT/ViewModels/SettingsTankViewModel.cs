@@ -24,7 +24,7 @@ namespace WaterTankMock_MQTT.ViewModels
         [ObservableProperty] private string? _settingerror;
         [ObservableProperty] private string _togglesettingbuttonname ;
         [ObservableProperty] private bool _rangevisible;
-
+        [ObservableProperty] private string? _test = "ACTIVE";
         //[ObservableProperty]
         private TriggerItem? _triggeritemselect;
 

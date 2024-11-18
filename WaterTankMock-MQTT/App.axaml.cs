@@ -50,7 +50,9 @@ namespace WaterTankMock_MQTT
         {
             services.AddSingleton<SettingsTankViewModel>();
             services.AddSingleton<MainWindowViewModel>();
+            services.AddScoped<RecapViewModel>();
 
+            services.AddTransient<RecapView>();
             services.AddTransient<MainWindow>();
             services.AddTransient<SettingsTankView>();
 

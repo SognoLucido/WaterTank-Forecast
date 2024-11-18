@@ -1,0 +1,111 @@
+<UserControl
+    x:Class="WaterTankMock_MQTT.Views.RecapView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:WaterTankMock_MQTT.ViewModels"
+    d:DesignHeight="324"
+    d:DesignWidth="600"
+    x:DataType="vm:RecapViewModel"
+    mc:Ignorable="d">
+
+
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:RecapViewModel />
+    </Design.DataContext>
+
+
+
+
+    <Grid
+        Background="White"
+        RowDefinitions="6*,*"
+        ShowGridLines="True">
+
+
+
+        <Border
+            Margin="10"
+            Background="LightBlue"
+            BorderBrush="Black"
+            BorderThickness="1"
+            ClipToBounds="False"
+            CornerRadius="10" />
+
+        <ListBox Margin="15" ItemsSource="{Binding Sharedata.Items}" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Black" BorderThickness="1">
+                        <Grid RowDefinitions="*,*" ShowGridLines="False">
+                            <Grid
+                                Margin="0,5,0,0"
+                                ColumnDefinitions="*,1.2*"
+                                ShowGridLines="False">
+
+                                <TextBlock
+                                    Margin="10,0,10,0"
+                                    Text="{Binding Name, StringFormat='Name: {0}'}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="NoWrap" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding Id, StringFormat='ID: {0}'}" />
+								
+                            </Grid>
+
+                           
+					
+                            <StackPanel
+                                Grid.Row="1"
+                               
+                                Orientation="Vertical">
+
+								<StackPanel Orientation="Horizontal">
+									<TextBlock  Margin="10,0,0,0" Text="{Binding Capacity, StringFormat='Cap: {0}'}}" />
+									<TextBlock  Margin="10,0,0,0" Text="{Binding CurrentLevel, StringFormat='CurrentLvl: {0}'}}" />
+								</StackPanel>
+
+
+								<TextBlock  Margin="10,0,0,0" Text="{Binding Recap}" FontSize="12" />
+							</StackPanel>
+							
+							
+                        </Grid>
+                    </Border>
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Orientation="Horizontal"
+            Spacing="50">
+
+            <Button
+                Width="100"
+                Background="#7c1e8f"
+                Content="Back"
+                Foreground="White" />
+			<TextBlock VerticalAlignment="Center" FontSize="20" FontWeight="Black" Text="Recap" > </TextBlock>
+            <Button
+                Width="100"
+                Classes="accent"
+                Content="Continue" />
+
+
+
+
+        </StackPanel>
+    </Grid>
+
+</UserControl>

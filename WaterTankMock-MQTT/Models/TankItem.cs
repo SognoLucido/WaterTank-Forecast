@@ -37,9 +37,9 @@ public partial class TankItem : ObservableObject
 
 
 
-    private string _name;
+    private string? _name;
 
-    public string Name
+    public string? Name
     {
         get => _name;
         set
@@ -53,8 +53,8 @@ public partial class TankItem : ObservableObject
     //[ObservableProperty]
     //private bool _starred;
 
-    [ObservableProperty] private string _stariconcolor;
-    [ObservableProperty] private string _stariconname;
+    [ObservableProperty] private string? _stariconcolor;
+    [ObservableProperty] private string? _stariconname;
 
 
     private bool _starring;
@@ -159,7 +159,17 @@ public partial class TankItem : ObservableObject
     public ObservableCollection<TriggerItem> _triggerfiltered;
 
 
-    
+    public string Recap => $"" +
+        $"{{Tr.1{Triggers[0].Active}" +
+        $"-Tr.2{Triggers[1].Active}" +
+        $"-Tr.3{Triggers[2].Active}" +
+        $"-Tr.4{Triggers[3].Active}" +
+        $"-Tr.5{Triggers[4].Active}" +
+        $"-Tr.6{Triggers[5].Active}" +
+        $"-Tr.7{Triggers[6].Active}" +
+        $"-Tr.8{Triggers[7].Active}" +
+        $"-Tr.9{Triggers[8].Active}" +
+        $"-Tr.10{Triggers[9].Active}}}";
 
 
     //[ObservableProperty]

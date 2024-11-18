@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
+using WaterTankMock_MQTT.Models;
 
 namespace WaterTankMock_MQTT.Services;
 
@@ -15,6 +16,14 @@ public class MqttInit
     private readonly List<IMqttClient> clients = [];
     private readonly MqttFactory factory = new();
     public event EventHandler<bool>? ConnectionStatus;
+
+    readonly Sharedata Sharedata;
+  
+
+    public MqttInit(Sharedata sharedata)
+    {
+        Sharedata = sharedata;
+    }
 
     public async Task Checkconnection(string ip,int port)
     {
@@ -38,11 +47,10 @@ public class MqttInit
 
             var test = await mqttClient.PublishAsync(applicationMessage, CancellationToken.None);
 
-
-            while(true)
+             if (mqttClient.IsConnected) ConnectionStatus?.Invoke(this, true);
+            while (true)
             {
-                if(mqttClient.IsConnected) ConnectionStatus?.Invoke(this, true);
-                else break;
+                if (!mqttClient.IsConnected)break;
 
                 await Task.Delay(5000);
             }

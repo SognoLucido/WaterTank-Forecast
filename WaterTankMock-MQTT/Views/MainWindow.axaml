@@ -44,6 +44,7 @@
             Background="#f9fbfa"
             BorderBrush="#e8edeb"
             BorderThickness="0,0,0,1" />
+
         <Border
             Grid.Row="1"
             Background="#f9fbfa"
@@ -114,13 +115,17 @@
                 Watermark="1883" />
         </StackPanel>
 
+        <ProgressBar
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Bottom"
+            IsIndeterminate="True"
+            IsVisible="{Binding Loadingbar}" />
 
-        <StackPanel Grid.Row="1" VerticalAlignment="Top">
+        <StackPanel Grid.Row="1" >
 
             <ListBox
-                Height="290"
+                Height="280"
                 Margin="5"
-                Background="Transparent"
                 ItemsSource="{Binding Sharedata.Items}"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                 SelectedItem="{Binding Sharedata.SelectedTankItem, Mode=OneWayToSource}">
@@ -145,37 +150,43 @@
 
 
             </ListBox>
+
+            
+			<StackPanel
+		   Grid.Row="1"
+		   Height="30"
+		   Margin="2"
+		   HorizontalAlignment="Stretch"
+		   VerticalAlignment="Bottom"
+		   Orientation="Horizontal">
+				<Button
+					Width="100"
+					Classes="accent"
+					Command="{Binding AddItemCommand}"
+					CornerRadius="5,0,0,5"
+					IsEnabled="{Binding Addandclearvisib}">
+					Add
+				</Button>
+				<Button
+					Background="#7c1e8f"
+					Command="{Binding ClearAllCommand}"
+					CornerRadius="0,4,4,0"
+					IsEnabled="{Binding Addandclearvisib}">
+					Clear
+				</Button>
+			</StackPanel>
         </StackPanel>
 
-
-        <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding Pages.Pagez}" />
-
-
-
-
-        <StackPanel
+        <!--PAGEEE-->
+        <ContentControl
             Grid.Row="1"
-            Height="30"
-            Margin="2"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Bottom"
-            Orientation="Horizontal">
-            <Button
-                Width="100"
-                Classes="accent"
-                Command="{Binding AddItemCommand}"
-                CornerRadius="5,0,0,5"
-                IsEnabled="{Binding Addandclearvisib}">
-                Add
-            </Button>
-            <Button
-                Background="#7c1e8f"
-                Command="{Binding ClearAllCommand}"
-                CornerRadius="0,4,4,0"
-                IsEnabled="{Binding Addandclearvisib}">
-                Clear
-            </Button>
-        </StackPanel>
+            Grid.ColumnSpan="2"
+            Content="{Binding Pages.Pagez}" />
+
+
+
+
+       
 
 
         <Button
@@ -186,7 +197,7 @@
             HorizontalAlignment="Right"
             Classes="accent"
             Command="{Binding TestconnectionCommand}"
-            IsEnabled="{Binding !Connected}">
+            IsEnabled="{Binding !Loadingbar}">
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
@@ -194,7 +205,7 @@
                 Connect
             </TextBlock>
         </Button>
-
+		<!--
         <Button
             Grid.Column="1"
             Width="100"
@@ -213,7 +224,7 @@
             </TextBlock>
         </Button>
 
-
+ -->
 
         <!--	<ProgressBar  Grid.Column="1" VerticalAlignment="Bottom" > </ProgressBar> -->
 
