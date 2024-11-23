@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using WaterTankMock_MQTT.Services;
 using WaterTankMock_MQTT.ViewModels;
 
@@ -13,12 +14,13 @@ namespace WaterTankMock_MQTT.Models
 
         //public Sharedata(Pages pages) => pep = pages;
 
-        public event EventHandler<Page>? DataChanged;
+        public event EventHandler<Page>? DataChanged ;
 
 
         [ObservableProperty]
         private ObservableCollection<TankItem>? _items;
 
+        [ObservableProperty] private bool _gotorecap = false;
 
 
         private TankItem? _selectedTankItem;
@@ -56,9 +58,15 @@ namespace WaterTankMock_MQTT.Models
 
                 //if (value is null) ItemSelected = false;
 
-
-
             }
+
         }
+
+
+        public async Task Changepage(Page p)
+        {
+            DataChanged?.Invoke(this, p);
+        }
+
     }
 }

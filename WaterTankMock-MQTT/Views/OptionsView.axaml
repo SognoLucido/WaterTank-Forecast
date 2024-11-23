@@ -1,14 +1,13 @@
 <UserControl
-    
+    x:Class="WaterTankMock_MQTT.Views.OptionsView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	x:Class="WaterTankMock_MQTT.Views.RecapView"
     xmlns:vm="using:WaterTankMock_MQTT.ViewModels"
     d:DesignHeight="324"
     d:DesignWidth="600"
-    x:DataType="vm:RecapViewModel"
+    x:DataType="vm:OptionsViewModel"
     mc:Ignorable="d">
 
 
@@ -17,7 +16,7 @@
             This only sets the DataContext for the previewer in an IDE,
             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
         -->
-        <vm:RecapViewModel />
+        <vm:OptionsViewModel />
     </Design.DataContext>
 
 
@@ -28,17 +27,48 @@
         RowDefinitions="6*,*"
         ShowGridLines="False">
 
-
-
         <Border
             Margin="10"
-            Background="LightBlue"
+            Background="#f9fbfa"
             BorderBrush="Black"
             BorderThickness="1"
             ClipToBounds="False"
             CornerRadius="10" />
 
-        <ListBox Margin="15" ItemsSource="{Binding Sharedata.Items}" >
+        <Grid
+            Margin="20"
+            ColumnDefinitions="*,0.2*"
+            RowDefinitions="*,*,*"
+            ShowGridLines="False">
+
+            <Grid.Styles>
+                <Style Selector="Border">
+                    
+                    <Setter Property="BorderBrush" Value="#e8edeb" />
+                </Style>
+            </Grid.Styles>
+
+            <Border BorderThickness="1,1,0,1" CornerRadius="10,0,0,10">
+                <TextBlock
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    TextWrapping="Wrap">
+                    Seed the data(send to the broker the initial default data : capacity ,currentlvl ecc.. ) before the simulation
+                </TextBlock>
+
+            </Border>
+            <Border
+                Grid.Column="1"
+                BorderThickness="1"
+                CornerRadius="0,10,10,0" >
+				<ToggleSwitch HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Black" IsChecked="True" />
+			</Border>
+
+        </Grid>
+		
+        <!--
+        <ListBox Margin="15" ItemsSource="{Binding Sharedata.Items}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border BorderBrush="Black" BorderThickness="1">
@@ -57,33 +87,33 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Center"
                                     Text="{Binding Id, StringFormat='ID: {0}'}" />
-								
+
                             </Grid>
 
-                           
-					
-                            <StackPanel
-                                Grid.Row="1"
-                               
-                                Orientation="Vertical">
-
-								<StackPanel Orientation="Horizontal">
-									<TextBlock  Margin="10,0,0,0" Text="{Binding Capacity, StringFormat='Cap: {0}'}}" />
-									<TextBlock  Margin="10,0,0,0" Text="{Binding CurrentLevel, StringFormat='CurrentLvl: {0}'}}" />
-								</StackPanel>
 
 
-								<TextBlock  Margin="10,0,0,0" Text="{Binding Recap}" FontSize="12" />
-							</StackPanel>
-							
-							
+                            <StackPanel Grid.Row="1" Orientation="Vertical">
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="10,0,0,0" Text="{Binding Capacity, StringFormat='Cap: {0}'}}" />
+                                    <TextBlock Margin="10,0,0,0" Text="{Binding CurrentLevel, StringFormat='CurrentLvl: {0}'}}" />
+                                </StackPanel>
+
+
+                                <TextBlock
+                                    Margin="10,0,0,0"
+                                    FontSize="12"
+                                    Text="{Binding Recap}" />
+                            </StackPanel>
+
+
                         </Grid>
                     </Border>
 
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
+        -->
 
         <StackPanel
             Grid.Row="1"
@@ -96,14 +126,18 @@
                 Width="100"
                 Background="#7c1e8f"
                 Content="Back"
-                Foreground="White" 
-				Command="{Binding GobackCommand}"/>
-			
-			<TextBlock VerticalAlignment="Center" FontSize="20" FontWeight="Black" Text="Recap" > </TextBlock>
+				Command="{Binding GobackCommand}"
+                Foreground="White" />
+
+            <TextBlock
+                VerticalAlignment="Center"
+                FontSize="20"
+                FontWeight="Black"
+                Text="Options" />
             <Button
                 Width="100"
                 Classes="accent"
-				Command="{Binding ContinueCommand}"
+				Command=""
                 Content="Continue" />
 
 
@@ -111,5 +145,4 @@
 
         </StackPanel>
     </Grid>
-
 </UserControl>

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 using WaterTankMock_MQTT.Models;
+using System.Linq;
 
 namespace WaterTankMock_MQTT.Services;
 
@@ -25,7 +26,7 @@ public class MqttInit
         Sharedata = sharedata;
     }
 
-    public async Task Checkconnection(string ip,int port)
+    public async Task Checkconnection(string ip,int port,CancellationToken ctoken)
     {
         using var mqttClient = factory.CreateMqttClient();
         var mqttClientOptions = new MqttClientOptionsBuilder()
@@ -37,6 +38,7 @@ public class MqttInit
         try
         {
             
+           
 
             await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
 
@@ -48,15 +50,12 @@ public class MqttInit
             var test = await mqttClient.PublishAsync(applicationMessage, CancellationToken.None);
 
              if (mqttClient.IsConnected) ConnectionStatus?.Invoke(this, true);
-            while (true)
+
+            while (!mqttClient.IsConnected || !ctoken.IsCancellationRequested)
             {
-                if (!mqttClient.IsConnected)break;
 
-                await Task.Delay(5000);
+                await Task.Delay(5000,ctoken);
             }
-
-
-
 
 
         }

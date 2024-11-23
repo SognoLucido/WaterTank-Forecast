@@ -63,14 +63,48 @@
             RadiusY="3" />
 
 
+
+
         <TextBlock
             Margin="10"
             HorizontalAlignment="Center"
             Text="{Binding Statustext}" />
 
+        <Button
+            Grid.Column="1"
+            Width="90"
+            Height="50"
+            Margin="0,0,10,0"
+            HorizontalAlignment="Right"
+            Background="#7c1e8f"
+            Classes="accent"
+            Command="{Binding DisconnectCommand}"
+            IsVisible="{Binding Connected}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold">
+				Disconn.
+			</TextBlock>
+        </Button>
+
+        <Button
+            Margin="6,2,6,0"
+            VerticalAlignment="Top"
+			IsVisible="{Binding Sharedata.Gotorecap}"
+			Command="{Binding GotorecapButtonCommand}"
+            Classes="accent"
+            ZIndex="1">
+            GO to RECAP --->
+        </Button>
+        <!--
+		<Button HorizontalAlignment="Left" VerticalAlignment="Top" Background="Red" Margin="2"  >DIsc</Button>
+		-->
+
         <TextBox
             Height="30"
             Margin="8"
+			IsEnabled="{Binding !Connected}"
             VerticalAlignment="Bottom"
             BorderBrush="{Binding $self.Foreground}"
             BorderThickness="1"
@@ -79,8 +113,8 @@
             Text="{Binding Search, Mode=OneWayToSource}"
             Theme="{StaticResource SoloTextBox}"
             Watermark="Search item">
-            <TextBox.InnerLeftContent>
-                <Border Width="{Binding $self.Bounds.Height}" Height="{Binding $parent[TextBox].Height}">
+            <TextBox.InnerLeftContent >
+                <Border Width="{Binding $self.Bounds.Height}" IsEnabled="{Binding !Connected}" Height="{Binding $parent[TextBox].Height}">
                     <avalonia:MaterialIcon
                         Width="20"
                         Height="20"
@@ -121,7 +155,7 @@
             IsIndeterminate="True"
             IsVisible="{Binding Loadingbar}" />
 
-        <StackPanel Grid.Row="1" >
+        <StackPanel Grid.Row="1">
 
             <ListBox
                 Height="280"
@@ -151,33 +185,33 @@
 
             </ListBox>
 
-            
-			<StackPanel
-		   Grid.Row="1"
-		   Height="30"
-		   Margin="2"
-		   HorizontalAlignment="Stretch"
-		   VerticalAlignment="Bottom"
-		   Orientation="Horizontal">
-				<Button
-					Width="100"
-					Classes="accent"
-					Command="{Binding AddItemCommand}"
-					CornerRadius="5,0,0,5"
-					IsEnabled="{Binding Addandclearvisib}">
-					Add
-				</Button>
-				<Button
-					Background="#7c1e8f"
-					Command="{Binding ClearAllCommand}"
-					CornerRadius="0,4,4,0"
-					IsEnabled="{Binding Addandclearvisib}">
-					Clear
-				</Button>
-			</StackPanel>
+
+            <StackPanel
+                Grid.Row="1"
+                Height="30"
+                Margin="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <Button
+                    Width="100"
+                    Classes="accent"
+                    Command="{Binding AddItemCommand}"
+                    CornerRadius="5,0,0,5"
+                    IsEnabled="{Binding Addandclearvisib}">
+                    Add
+                </Button>
+                <Button
+                    Background="#7c1e8f"
+                    Command="{Binding ClearAllCommand}"
+                    CornerRadius="0,4,4,0"
+                    IsEnabled="{Binding Addandclearvisib}">
+                    Clear
+                </Button>
+            </StackPanel>
         </StackPanel>
 
-        <!--PAGEEE-->
+        <!--  PAGEEE  -->
         <ContentControl
             Grid.Row="1"
             Grid.ColumnSpan="2"
@@ -186,7 +220,7 @@
 
 
 
-       
+
 
 
         <Button
@@ -197,7 +231,7 @@
             HorizontalAlignment="Right"
             Classes="accent"
             Command="{Binding TestconnectionCommand}"
-            IsEnabled="{Binding !Loadingbar}">
+            IsVisible="{Binding !Connected}">
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
@@ -205,7 +239,7 @@
                 Connect
             </TextBlock>
         </Button>
-		<!--
+        <!--
         <Button
             Grid.Column="1"
             Width="100"
@@ -224,7 +258,7 @@
             </TextBlock>
         </Button>
 
- -->
+        -->
 
         <!--	<ProgressBar  Grid.Column="1" VerticalAlignment="Bottom" > </ProgressBar> -->
 
