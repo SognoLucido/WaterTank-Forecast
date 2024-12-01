@@ -19,9 +19,6 @@
         <vm:OptionsViewModel />
     </Design.DataContext>
 
-
-
-
     <Grid
         Background="White"
         RowDefinitions="6*,*"
@@ -35,114 +32,128 @@
             ClipToBounds="False"
             CornerRadius="10" />
 
-        <Grid
-            Margin="20"
-            ColumnDefinitions="*,0.2*"
-            RowDefinitions="*,*,*"
-            ShowGridLines="False">
 
-            <Grid.Styles>
-                <Style Selector="Border">
-                    
-                    <Setter Property="BorderBrush" Value="#e8edeb" />
-                </Style>
-            </Grid.Styles>
+        <ScrollViewer>
+            <StackPanel Margin="20" Spacing="10">
 
-            <Border BorderThickness="1,1,0,1" CornerRadius="10,0,0,10">
-                <TextBlock
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    TextWrapping="Wrap">
-                    Seed the data(send to the broker the initial default data : capacity ,currentlvl ecc.. ) before the simulation
-                </TextBlock>
+                <StackPanel.Styles>
+                    <Style Selector="Border">
 
-            </Border>
-            <Border
-                Grid.Column="1"
-                BorderThickness="1"
-                CornerRadius="0,10,10,0" >
-				<ToggleSwitch HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Black" IsChecked="True" />
-			</Border>
-
-        </Grid>
-		
-        <!--
-        <ListBox Margin="15" ItemsSource="{Binding Sharedata.Items}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderBrush="Black" BorderThickness="1">
-                        <Grid RowDefinitions="*,*" ShowGridLines="False">
-                            <Grid
-                                Margin="0,5,0,0"
-                                ColumnDefinitions="*,1.2*"
-                                ShowGridLines="False">
-
-                                <TextBlock
-                                    Margin="10,0,10,0"
-                                    Text="{Binding Name, StringFormat='Name: {0}'}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="NoWrap" />
-                                <TextBlock
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Center"
-                                    Text="{Binding Id, StringFormat='ID: {0}'}" />
-
-                            </Grid>
+                        <Setter Property="BorderBrush" Value="#e8edeb" />
+                    </Style>
+                </StackPanel.Styles>
 
 
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
 
-                            <StackPanel Grid.Row="1" Orientation="Vertical">
+                    <Border
+                        Width="440"
+                        Height="80"
+                        BorderThickness="1,1,0,1"
+                        CornerRadius="10,0,0,10">
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            TextWrapping="Wrap">
+                            Seed the data (send the initial default data, such as capacity, current level, etc.., to the broker) at the start of the simulation
+                        </TextBlock>
 
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="10,0,0,0" Text="{Binding Capacity, StringFormat='Cap: {0}'}}" />
-                                    <TextBlock Margin="10,0,0,0" Text="{Binding CurrentLevel, StringFormat='CurrentLvl: {0}'}}" />
-                                </StackPanel>
-
-
-                                <TextBlock
-                                    Margin="10,0,0,0"
-                                    FontSize="12"
-                                    Text="{Binding Recap}" />
-                            </StackPanel>
-
-
-                        </Grid>
+                    </Border>
+                    <Border
+                        Width="100"
+                        BorderThickness="1"
+                        CornerRadius="0,10,10,0">
+                        <ToggleSwitch
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            BorderBrush="Black"
+                            IsChecked="{Binding Sharedata.Seeddata}" />
                     </Border>
 
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        -->
+                </StackPanel>
 
-        <StackPanel
+
+
+
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+
+                    <Border
+                        Width="270"
+                        Height="80"
+                        BorderThickness="1,1,0,1"
+                        CornerRadius="10,0,0,10">
+                        <TextBlock
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="25">
+                            MQTT Topic
+                        </TextBlock>
+
+                    </Border>
+                    <Border
+                        Width="270"
+                        BorderThickness="1"
+                        CornerRadius="0,10,10,0">
+                        <TextBox
+							Width="150"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+							TextAlignment="Center"
+                            Classes="outline"
+                            Theme="{StaticResource OutlineTextBox}"
+                            UseFloatingWatermark="False"
+							Text="{Binding Topicname, Mode=TwoWay}"
+                            Watermark="watertank" />
+                    </Border>
+
+                </StackPanel>
+
+
+            </StackPanel>
+
+        </ScrollViewer>
+
+
+
+
+
+
+
+        <Grid
             Grid.Row="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Orientation="Horizontal"
-            Spacing="50">
+            ColumnDefinitions="*,*,*"
+            ShowGridLines="False">
 
             <Button
                 Width="100"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
                 Background="#7c1e8f"
+                Command="{Binding GobackCommand}"
                 Content="Back"
-				Command="{Binding GobackCommand}"
                 Foreground="White" />
 
             <TextBlock
+                Grid.Column="1"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="20"
                 FontWeight="Black"
                 Text="Options" />
+
             <Button
+                Grid.Column="2"
                 Width="100"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
                 Classes="accent"
-				Command=""
+                Command="{Binding ContinueCommand}"
                 Content="Continue" />
 
+        </Grid>
 
 
-
-        </StackPanel>
     </Grid>
 </UserControl>

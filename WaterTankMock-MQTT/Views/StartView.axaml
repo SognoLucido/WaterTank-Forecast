@@ -1,0 +1,160 @@
+<UserControl
+    x:Class="WaterTankMock_MQTT.Views.StartView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+    xmlns:vm="using:WaterTankMock_MQTT.ViewModels"
+    d:DesignHeight="324"
+    d:DesignWidth="600"
+    x:DataType="vm:StartViewModel">
+
+
+    <Design.DataContext>
+        <vm:StartViewModel />
+    </Design.DataContext>
+
+    <Grid
+        Background="White"
+        ColumnDefinitions="*,0.5*,0.5*"
+        RowDefinitions="*,0.4*"
+        ShowGridLines="False">
+
+
+        <Border
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Background="#f9fbfa"
+            BorderBrush="LightGray"
+            BorderThickness="1,0,0,0" />
+
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock
+                HorizontalAlignment="Center"
+                FontSize="15"
+                FontWeight="Black">
+                Day
+            </TextBlock>
+            <Border
+                Width="100"
+                Height="80"
+                Margin="20"
+                HorizontalAlignment="Center"
+                BorderBrush="Black"
+                BorderThickness="1"
+                CornerRadius="5">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+					Text="{Binding Sharedata.Daycount}"
+                    FontSize="60">
+                   
+                </TextBlock>
+            </Border>
+
+            <TextBox
+                Width="180"
+                HorizontalAlignment="Center"
+                p1:TextFieldAssist.Label="DateTime"
+                IsHitTestVisible="False"
+                Text="{Binding Sharedata.DatatostringliveUpdate}"
+                TextAlignment="Center"
+                UseFloatingWatermark="True" />
+        </StackPanel>
+
+
+
+
+        <StackPanel
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="10">
+
+            <StackPanel.Styles>
+
+                <Style Selector="ToggleButton:checked">
+                    <Setter Property="Background" Value="#abd7fb" />
+                    <!--  Change to your desired pressed color  -->
+
+                </Style>
+                <Style Selector="ToggleButton">
+                    <Setter Property="IsHitTestVisible" Value="False" />
+                </Style>
+
+            </StackPanel.Styles>
+
+            <ToggleButton IsChecked="{Binding Sharedata.Simtriggers[0]}">Trigger 1°</ToggleButton>
+            <ToggleButton IsChecked="{Binding Sharedata.Simtriggers[1]}">Trigger 2°</ToggleButton>
+            <ToggleButton IsChecked="{Binding Sharedata.Simtriggers[2]}">Trigger 3°</ToggleButton>
+            <ToggleButton IsChecked="{Binding Sharedata.Simtriggers[3]}">Trigger 4°</ToggleButton>
+            <ToggleButton IsChecked="{Binding Sharedata.Simtriggers[4]}">Trigger 5°</ToggleButton>
+        </StackPanel>
+
+
+        <StackPanel
+            Grid.Column="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="10">
+
+            <StackPanel.Styles>
+
+                <Style Selector="ToggleButton:checked">
+                    <Setter Property="Background" Value="#abd7fb" />
+                    <!--  Change to your desired pressed color  -->
+
+                </Style>
+
+            </StackPanel.Styles>
+
+            <ToggleButton IsChecked="{Binding Sharedata.Simtriggers[5]}">Trigger 6°</ToggleButton>
+            <ToggleButton IsChecked="{Binding Sharedata.Simtriggers[6]}">Trigger 7°</ToggleButton>
+            <ToggleButton IsChecked="{Binding Sharedata.Simtriggers[7]}">Trigger 8°</ToggleButton>
+            <ToggleButton IsChecked="{Binding Sharedata.Simtriggers[8]}">Trigger 9°</ToggleButton>
+            <ToggleButton IsChecked="{Binding Sharedata.Simtriggers[9]}">Trigger 10°</ToggleButton>
+        </StackPanel>
+
+
+
+
+
+
+
+        <Border
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            BorderBrush="Gray"
+            BorderThickness="1">
+
+            <StackPanel VerticalAlignment="Center" Spacing="3">
+                <TextBlock
+                    Margin="40,0"
+                    FontSize="18"
+					Text="{Binding Sharedata.ProgressMessage}"
+                    FontStyle="Italic"
+                    FontWeight="Heavy">
+                    
+                </TextBlock>
+                <ProgressBar
+                    Height="20"
+                    Margin="20,0"
+                    Background="LightGray"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    CornerRadius="2"
+                    Foreground="LightBlue"
+                    Maximum="100"
+                    Minimum="0"
+                    ShowProgressText="True"
+                    Value="{Binding Sharedata.ProgressBar}" />
+            </StackPanel>
+
+        </Border>
+
+
+    </Grid>
+
+
+</UserControl>

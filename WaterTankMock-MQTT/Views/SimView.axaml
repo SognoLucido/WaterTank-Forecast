@@ -1,0 +1,131 @@
+<UserControl
+    x:Class="WaterTankMock_MQTT.Views.SimView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+    xmlns:vm="using:WaterTankMock_MQTT.ViewModels"
+    d:DesignHeight="324"
+    d:DesignWidth="600"
+    x:DataType="vm:SimViewModel">
+
+    <Design.DataContext>
+        <vm:SimViewModel />
+    </Design.DataContext>
+
+    <Grid
+        Background="White"
+        RowDefinitions="6*,*"
+        ShowGridLines="False">
+
+        <Border
+            Margin="10,10,10,0"
+            Background="#f9fbfa"
+            BorderBrush="Black"
+            BorderThickness="1"
+            ClipToBounds="False"
+            CornerRadius="10">
+
+            <Grid
+                ColumnDefinitions="*,*"
+                RowDefinitions="0.2*,0.6*,*"
+                ShowGridLines="True">
+
+              
+
+                    <!--	<TextBlock Text="{Binding Sharedata.Starttest}" ></TextBlock>-->
+
+					<DatePicker
+						Grid.Row="1"
+						HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                        Name="DatePicker1"
+                        p1:TextFieldAssist.Label="Start date (00:00)"
+                        SelectedDate="{Binding Date, Mode=TwoWay}" />
+
+                    <TextBox
+						HorizontalAlignment="Center"
+                         VerticalAlignment="Top"
+						Grid.Row="2"
+                        Classes="outline"
+						Width="150"
+                        Text="{Binding Days, Mode=TwoWay }"
+                        TextAlignment="Center"
+                        Theme="{StaticResource OutlineTextBox}"
+                        UseFloatingWatermark="False"
+                        Watermark="to x Days" />
+
+              
+
+
+                <TextBlock
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontWeight="Bold">
+                    Example mqtt body message
+                </TextBlock>
+
+                <TextBox
+					Grid.Row="1"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+					
+                    Margin="15"
+                    Background="#cfcfcf"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    CornerRadius="3"
+                    Text="{Binding BdMessg}" />
+
+
+            </Grid>
+
+
+        </Border>
+
+
+
+
+        <Border
+            Grid.Row="1"
+            Width="315"
+            Margin="3"
+            Background="#f9fbfa"
+            BorderBrush="Black"
+            BorderThickness="2"
+            CornerRadius="5">
+
+            <StackPanel
+                HorizontalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="5">
+
+
+
+                <Button
+                    Width="150"
+                    VerticalAlignment="Center"
+                    Background="#7c1e8f"
+                    Command="{Binding GobackCommand}"
+                    Content="Back"
+                    Foreground="White" />
+
+                <Button
+                    Width="150"
+                    VerticalAlignment="Center"
+                    Background="Green"
+                    Classes="accent"
+                    Command="{Binding ContinueCommand}"
+                    Content="Start " />
+
+            </StackPanel>
+        </Border>
+
+    </Grid>
+
+
+
+
+</UserControl>

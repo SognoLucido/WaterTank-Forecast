@@ -63,48 +63,50 @@
             RadiusY="3" />
 
 
-
-
-        <TextBlock
-            Margin="10"
-            HorizontalAlignment="Center"
-            Text="{Binding Statustext}" />
-
-        <Button
-            Grid.Column="1"
-            Width="90"
-            Height="50"
-            Margin="0,0,10,0"
-            HorizontalAlignment="Right"
-            Background="#7c1e8f"
-            Classes="accent"
-            Command="{Binding DisconnectCommand}"
-            IsVisible="{Binding Connected}">
-            <TextBlock
+		<Button
+				  Grid.Column="1"
+				  Width="90"
+				  Height="50"
+				  Margin="0,0,10,0"
+				  HorizontalAlignment="Right"
+				  Background="#7c1e8f"
+				  Classes="accent"
+				  Command="{Binding DisconnectCommand}"
+				  IsVisible="{Binding Connected}">
+			<TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontWeight="Bold">
 				Disconn.
 			</TextBlock>
-        </Button>
+		</Button>
 
-        <Button
+		<StackPanel>
+			
+			
+		
+		<!--  {Binding Sharedata.Gotorecap}  -->
+		<Button
             Margin="6,2,6,0"
             VerticalAlignment="Top"
 			IsVisible="{Binding Sharedata.Gotorecap}"
 			Command="{Binding GotorecapButtonCommand}"
             Classes="accent"
             ZIndex="1">
-            GO to RECAP --->
-        </Button>
-        <!--
-		<Button HorizontalAlignment="Left" VerticalAlignment="Top" Background="Red" Margin="2"  >DIsc</Button>
-		-->
+			GO to RECAP --->
+		</Button>
+		
+		<TextBlock
+            Margin="10"
+            HorizontalAlignment="Center"
+            Text="{Binding Statustext}" />
 
-        <TextBox
+
+
+		<TextBox
             Height="30"
-            Margin="8"
-			IsEnabled="{Binding !Connected}"
+            Margin="10,0,10,0"
+			IsVisible="{Binding !Connected}"
             VerticalAlignment="Bottom"
             BorderBrush="{Binding $self.Foreground}"
             BorderThickness="1"
@@ -124,7 +126,8 @@
                 </Border>
             </TextBox.InnerLeftContent>
         </TextBox>
-
+			
+		</StackPanel>
 
         <StackPanel
             Grid.Column="1"

@@ -1,8 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using WaterTankMock_MQTT.Models;
 using WaterTankMock_MQTT.Services;
@@ -16,14 +13,27 @@ namespace WaterTankMock_MQTT.ViewModels
 
         public OptionsViewModel() { }
 
-        public OptionsViewModel(Sharedata sharedata) 
+        public OptionsViewModel(Sharedata sharedata)
         {
             Sharedata = sharedata;
         }
 
 
 
+        
+        private string? _topicname ;
 
+        public string? Topicname
+        {
+
+        get => _topicname; 
+            set 
+            {
+                SetProperty(ref _topicname, value);
+
+                Sharedata.MqttTopic = value ?? "watertank";
+            }
+       }
 
 
 
@@ -31,9 +41,8 @@ namespace WaterTankMock_MQTT.ViewModels
         private async Task Goback()
         {
 
-   
-                await Sharedata.Changepage(Page.Recap);
-          
+            await Sharedata.Changepage(Page.Recap);
+
         }
 
 
@@ -41,7 +50,7 @@ namespace WaterTankMock_MQTT.ViewModels
         [RelayCommand]
         private async Task Continue()
         {
-            await Sharedata.Changepage(Page.Options);
+            await Sharedata.Changepage(Page.Sim);
         }
 
 

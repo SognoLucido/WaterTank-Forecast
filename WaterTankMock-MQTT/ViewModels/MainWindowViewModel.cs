@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WaterTankMock_MQTT.Models;
 using WaterTankMock_MQTT.Services;
+using WaterTankMock_MQTT.Services.Mqtt;
 
 namespace WaterTankMock_MQTT.ViewModels
 {

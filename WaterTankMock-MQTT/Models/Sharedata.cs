@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using WaterTankMock_MQTT.Services;
@@ -21,6 +22,8 @@ namespace WaterTankMock_MQTT.Models
         private ObservableCollection<TankItem>? _items;
 
         [ObservableProperty] private bool _gotorecap = false;
+
+        public string MqttTopic { get; set; } = "watertank";
 
 
         private TankItem? _selectedTankItem;
@@ -67,6 +70,45 @@ namespace WaterTankMock_MQTT.Models
         {
             DataChanged?.Invoke(this, p);
         }
+
+
+        /////sim settings 
+      
+        [ObservableProperty]
+        private bool _seeddata = true;
+
+
+        [ObservableProperty]
+        private string? _datatostringliveUpdate;
+
+
+
+        private DateTime? _startdate;
+        public DateTime? StartTestDate 
+        { 
+            get => _startdate;
+            set 
+            {
+                SetProperty(ref _startdate, value);
+                DatatostringliveUpdate = value.ToString();
+
+            }
+        }
+
+        [ObservableProperty]
+        private string _progressMessage = string.Empty;
+
+        [ObservableProperty]
+        private int _progressBar = 0;
+
+        [ObservableProperty]
+        private ObservableCollection<bool> _simtriggers = [false, false, false,false,false,false,false,false,false,false];
+
+        [ObservableProperty]
+        private int _daycount = 0;
+
+        [ObservableProperty]
+        private int _toxdays = 0;
 
     }
 }
