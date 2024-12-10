@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterTankMock_MQTT", "WaterTankMock-MQTT\WaterTankMock_MQTT.csproj", "{0C23341A-2C3E-4F45-8C86-BA3F22A7F884}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterTankMockTool_MQTT", "WaterTankMockTool-MQTT\WaterTankMockTool_MQTT.csproj", "{0C23341A-2C3E-4F45-8C86-BA3F22A7F884}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MockTool-Avalonia", "MockTool-Avalonia", "{003FA254-ADCF-4909-8324-BF697C92F14E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,6 +20,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0C23341A-2C3E-4F45-8C86-BA3F22A7F884} = {003FA254-ADCF-4909-8324-BF697C92F14E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BEDF588-5462-44B7-86C9-6359BE6F9A97}

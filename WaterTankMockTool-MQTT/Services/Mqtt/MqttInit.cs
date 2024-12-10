@@ -1,0 +1,335 @@
+﻿
+
+using MQTTnet;
+using MQTTnet.Client;
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using WaterTankMock_MQTT.Models;
+using WaterTankMock_MQTT.Services.Mqtt.Models;
+
+
+namespace WaterTankMock_MQTT.Services.Mqtt;
+
+public class MqttInit
+{
+    private readonly List<IMqttClient> clients = [];
+    private  MqttFactory factory = new();
+    public event EventHandler<bool>? ConnectionStatus;
+    private MqttClientOptions? options;
+    private string? ip;
+    private int? port;
+    private List<MqttBodyJsonModel>? rawdataclients ;
+    private CancellationToken Onlinetoken;
+    //int[] Htriggers = [3,5,7,9,11,13,15,17,19,21];
+
+
+    readonly Sharedata Sharedata;
+
+    public MqttInit(Sharedata sharedata)
+    {
+        Sharedata = sharedata;
+    }
+
+    public async Task Checkconnection(string ip, int port, CancellationToken ctoken)
+    {
+        Onlinetoken = ctoken;
+
+        using var mqttClient = factory.CreateMqttClient();
+        var mqttClientOptions = new MqttClientOptionsBuilder()
+            .WithTcpServer(ip, port)
+            .WithCleanSession(true)
+            .WithClientId("ConnectionCheck")
+            .WithKeepAlivePeriod(TimeSpan.FromSeconds(60))
+            .Build();
+        try
+        {
+
+
+
+            await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+
+            this.ip = ip;
+            this.port = port;
+
+
+            var applicationMessage = new MqttApplicationMessageBuilder()
+              .WithTopic("test")
+              .WithPayload("testconnection")
+              .Build();
+
+            var test = await mqttClient.PublishAsync(applicationMessage, CancellationToken.None);
+
+            if (mqttClient.IsConnected) ConnectionStatus?.Invoke(this, true);
+
+            while (mqttClient.IsConnected && !ctoken.IsCancellationRequested)
+            {
+
+                await Task.Delay(5000, ctoken);
+            }
+
+
+        }
+        catch (Exception)
+        {
+            ConnectionStatus?.Invoke(this, false);
+
+        }
+
+        ConnectionStatus?.Invoke(this, false);
+        await Cleanup();
+
+    }
+
+    private async Task Cleanup()
+    {
+
+        foreach (var mqttClient in clients)
+        {
+            mqttClient.Dispose();
+        }
+
+        clients.Clear();
+        factory = new();
+        ip = null;
+        port = null;
+        rawdataclients = null;
+    }
+
+
+
+    public async Task Startsim()
+    {
+
+        Sharedata.Daycount = 0;
+        Sharedata.ProgressBar = 0;
+        var DateBackup = Sharedata.StartTestDate;
+
+        await ClientConnector();
+
+
+        if (Sharedata.Seeddata)
+            await Seeddata();
+
+
+        await Start();
+
+
+    }
+
+
+
+    private async Task Start()
+    {
+
+        Random rng = new();
+
+        Sharedata.ProgressBar = 0;
+
+        Sharedata.ProgressMessage = "Sending...";
+
+        var applicationMessage = new MqttApplicationMessageBuilder()
+        .WithTopic(Sharedata.MqttTopic)
+        .Build();
+
+
+
+        var newstartdate = new DateTime(
+            Sharedata.StartTestDate.Year,
+            Sharedata.StartTestDate.Month,
+            Sharedata.StartTestDate.Day,
+            3,
+            Sharedata.StartTestDate.Minute,
+            Sharedata.StartTestDate.Second,kind:DateTimeKind.Utc
+            );
+
+
+        int triggerStateProgressbar = 0;
+
+        for (; Sharedata.Daycount < Sharedata.Toxdays; Sharedata.Daycount++)
+        {
+
+            //await Task.Delay(2000);
+
+           
+
+            Sharedata.StartTestDate = newstartdate;
+
+            Sharedata.Simtriggers[0] = true;
+
+            await Task.Delay(1000);
+
+            for (int i = 0  , t = 0; ; i++ )  // clients i  ; triggers t
+            {
+                if(i >= Sharedata.Items.Count)
+                {
+                    triggerStateProgressbar++;
+                    t++;
+                    i = 0;
+                    if (t >= Sharedata.Simtriggers.Count) 
+                    {
+                        
+                        break;
+                    } 
+                    else
+                    {
+                        Sharedata.Simtriggers[t] = true;
+                        Sharedata.StartTestDate = Sharedata.StartTestDate.AddHours(2);
+                    }
+
+                    
+                    await Task.Delay(1000);
+                }
+
+
+                if (Sharedata.Items[i].Triggers[t].Active)
+                {
+
+                    var resourcescale = rng.Next(Sharedata.Items[i].Triggers[t].Rangemin, Sharedata.Items[i].Triggers[t].Rangemax);
+                    Sharedata.Items[i].CurrentLevel = (Sharedata.Items[i].CurrentLevel - resourcescale) < 0 ? 0 : Sharedata.Items[i].CurrentLevel - resourcescale;
+
+
+                    //Console.WriteLine(Sharedata.StartTestDate);
+
+                    applicationMessage.PayloadSegment = JsonSerializer.SerializeToUtf8Bytes(
+                         new MqttBodyJsonModel
+                         {
+                             tank_id = Sharedata.Items[i].Id,
+                             timestamp = Sharedata.StartTestDate, // trigger 3:am
+                             capacity = new()
+                             {
+                                 current_volume = Sharedata.Items[i].CurrentLevel,
+                                 total_capacity = Sharedata.Items[i].Capacity
+                             }
+                         }
+                        );
+
+
+                    await clients[i].PublishAsync(applicationMessage, Onlinetoken);
+
+
+                }
+
+
+
+
+              //  Sharedata.ProgressBar = (int)(((t+1)*(Sharedata.Daycount +1)) * (100.0 / Sharedata.Simtriggers.Count  * Sharedata.Toxdays));
+
+                Sharedata.ProgressBar = (int)(100 * (triggerStateProgressbar+1) / ((10 * Sharedata.Toxdays)-1));
+
+            }
+
+
+
+
+            for (int z = 0; z < Sharedata.Simtriggers.Count; z++)
+            {
+                Sharedata.Simtriggers[z] = false;
+            }
+
+
+
+
+        }
+
+        Sharedata.ProgressMessage = "Done";
+
+    }
+
+
+
+
+    private async Task ClientConnector()
+    {
+
+        options = new MqttClientOptionsBuilder()
+            .WithTcpServer(ip, port)
+            .WithCleanSession(true)
+            .WithClientId("")
+            .WithKeepAlivePeriod(TimeSpan.FromMinutes(5))
+            .Build();
+
+
+        Sharedata.ProgressMessage = "Clients connecting...";
+
+        for (int i = 0; i < Sharedata.Items.Count; i++)
+        {
+
+
+
+            clients.Add(factory.CreateMqttClient());
+
+            options.ClientId = Sharedata.Items[i].Id.ToString();
+
+            await clients[i].ConnectAsync(options, Onlinetoken);
+
+            Sharedata.ProgressBar = (int)((i + 1) * (100.0 / Sharedata.Items.Count));
+            await Task.Delay(500);
+        }
+
+
+        Sharedata.ProgressMessage = "All clients connected";
+
+        await Task.Delay(1000);
+
+
+
+        //options.ClientId = "hewae";
+
+    }
+
+
+    private async Task Seeddata()
+    {
+
+        Sharedata.ProgressMessage = "Seeding...";
+
+        Sharedata.ProgressBar = 0;
+
+
+        await Task.Delay(1000);
+        var applicationMessage = new MqttApplicationMessageBuilder()
+          .WithTopic(Sharedata.MqttTopic)
+          .Build();
+
+
+        rawdataclients = [];
+
+
+
+        foreach (var item in Sharedata.Items)
+        {
+            rawdataclients.Add
+                (
+                    new MqttBodyJsonModel
+                    {
+                        tank_id = item.Id,
+                        timestamp = Sharedata.StartTestDate,
+                        capacity = new()
+                        {
+                            current_volume = item.CurrentLevel,
+                            total_capacity = item.Capacity
+                        }
+                    }
+                );
+        }
+
+
+        for (int i = 0; i < clients.Count; i++)
+        {
+
+            applicationMessage.PayloadSegment = JsonSerializer.SerializeToUtf8Bytes(rawdataclients[i]);
+            await clients[i].PublishAsync(applicationMessage, Onlinetoken);
+            Sharedata.ProgressBar = (int)((i + 1) * (100.0 / Sharedata.Items.Count));
+        }
+
+
+    }
+
+
+
+
+
+}

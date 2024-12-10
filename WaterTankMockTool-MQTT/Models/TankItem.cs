@@ -219,7 +219,7 @@ public class TriggerItem(string name ,bool active)
     public bool Active { get; set; } = active;
 
     
-    public int Rangemin { get; set; } = 0;
+    public int Rangemin { get; set; } = 1;
 
    
     public int Rangemax { get; set; } = 10;

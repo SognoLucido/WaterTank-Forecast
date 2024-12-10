@@ -165,7 +165,7 @@
                 Margin="5"
                 ItemsSource="{Binding Sharedata.Items}"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                SelectedItem="{Binding Sharedata.SelectedTankItem, Mode=OneWayToSource}">
+                SelectedItem="{Binding Sharedata.SelectedTankItem, Mode=TwoWay}">
 
                 <ListBox.ItemTemplate>
                     <DataTemplate>

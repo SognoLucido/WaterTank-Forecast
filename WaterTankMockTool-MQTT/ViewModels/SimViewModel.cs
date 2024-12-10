@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,14 +36,28 @@ namespace WaterTankMock_MQTT.ViewModels
             get => _datepicker;
             set
             {
+
+               if(value is not null)
+                    if (value.Contains('+') || value.Contains('-') && value.Length > 5) value = value.Substring(0, value.Length - 7);
+
                 SetProperty(ref _datepicker, value);
 
 
-                if (value == null) Sharedata.StartTestDate = null;
-                else Sharedata.StartTestDate = DateTime.Parse(value);
+                //if (value == null) Sharedata.StartTestDate = null;
+                //else Sharedata.StartTestDate = DateTime.Parse(value);
 
+                if (value != null) 
+                {
 
-                //Test = value;
+                    var test = DateTime.UtcNow;
+
+                    
+
+                    Sharedata.StartTestDate  = DateTime.SpecifyKind(DateTime.Parse(value), DateTimeKind.Utc);
+                                 
+                }
+               
+
             }
         }
 

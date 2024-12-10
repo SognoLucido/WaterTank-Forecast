@@ -83,14 +83,20 @@ namespace WaterTankMock_MQTT.Models
 
 
 
-        private DateTime? _startdate;
-        public DateTime? StartTestDate 
+        private DateTime _startdate;
+        public DateTime StartTestDate 
         { 
             get => _startdate;
             set 
             {
+                
+                
                 SetProperty(ref _startdate, value);
+
+
+
                 DatatostringliveUpdate = value.ToString();
+
 
             }
         }
@@ -108,7 +114,7 @@ namespace WaterTankMock_MQTT.Models
         private int _daycount = 0;
 
         [ObservableProperty]
-        private int _toxdays = 0;
+        private int _toxdays = 1;
 
     }
 }

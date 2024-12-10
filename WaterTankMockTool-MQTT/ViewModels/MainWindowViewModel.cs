@@ -56,7 +56,9 @@ namespace WaterTankMock_MQTT.ViewModels
                 Statustext = "Disconnected";
                 Connected = false;
                 Loadingbar = false;
-              await  Pages.Changepage(Page.Null);
+                Sharedata.SelectedTankItem = null;
+                await Pages.Changepage(Page.Null);
+               
             }
            
         }
