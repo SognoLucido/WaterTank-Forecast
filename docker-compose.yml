@@ -1,0 +1,29 @@
+services:
+  dataflow-readapi:
+    image: ${DOCKER_REGISTRY-}dataflowreadapi
+    build:
+      context: .
+      dockerfile: DataFlow-ReadAPI/Dockerfile
+
+  dataingestapi:
+    image: ${DOCKER_REGISTRY-}dataingestapi
+    container_name: MqttToDBServiceAPP - A
+    build:
+      context: .
+      dockerfile: DataIngestAPI/Dockerfile
+
+  mosquitto:
+    build:
+      context: .
+      dockerfile: Mosquitto-MQTT-Broker/Dockerfile
+    image: mosquitto  
+    container_name: mosquitto_broker - A
+    ports:
+      - "1883:1883"
+    volumes:
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-log:/mosquitto/log
+
+volumes:
+  mosquitto-data:
+  mosquitto-log:

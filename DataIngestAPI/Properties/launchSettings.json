@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DataIngestAPI": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

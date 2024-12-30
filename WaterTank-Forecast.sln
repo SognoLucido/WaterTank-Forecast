@@ -7,6 +7,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterTankMockTool_MQTT", "W
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MockTool-Avalonia", "MockTool-Avalonia", "{003FA254-ADCF-4909-8324-BF697C92F14E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MQTT to DB Write consoleAPP", "MQTT to DB Write consoleAPP", "{5FB6BDF4-7625-496B-8D11-7C67201CCAED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Read DB API - Main", "Read DB API - Main", "{CB58C5DB-0A84-4E4A-A76B-C2751BD7DA1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataIngestAPI", "DataIngestAPI\DataIngestAPI.csproj", "{86E557F1-CBC7-493D-96C0-2702A2FF5143}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFlow-ReadAPI", "DataFlow-ReadAPI\DataFlow-ReadAPI.csproj", "{AFF8E898-D6C7-4C1A-B9DA-9D0C375492A0}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2616C6EB-5E4F-4956-AA2A-06F3261B4EDD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mosquitto-MQTT-Broker", "Mosquitto-MQTT-Broker", "{36F958BE-F2B6-4C0F-9F73-610C8485FE37}"
+	ProjectSection(SolutionItems) = preProject
+		Mosquitto-MQTT-Broker\Dockerfile = Mosquitto-MQTT-Broker\Dockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +32,26 @@ Global
 		{0C23341A-2C3E-4F45-8C86-BA3F22A7F884}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C23341A-2C3E-4F45-8C86-BA3F22A7F884}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C23341A-2C3E-4F45-8C86-BA3F22A7F884}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86E557F1-CBC7-493D-96C0-2702A2FF5143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86E557F1-CBC7-493D-96C0-2702A2FF5143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86E557F1-CBC7-493D-96C0-2702A2FF5143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86E557F1-CBC7-493D-96C0-2702A2FF5143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFF8E898-D6C7-4C1A-B9DA-9D0C375492A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFF8E898-D6C7-4C1A-B9DA-9D0C375492A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFF8E898-D6C7-4C1A-B9DA-9D0C375492A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFF8E898-D6C7-4C1A-B9DA-9D0C375492A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2616C6EB-5E4F-4956-AA2A-06F3261B4EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2616C6EB-5E4F-4956-AA2A-06F3261B4EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2616C6EB-5E4F-4956-AA2A-06F3261B4EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2616C6EB-5E4F-4956-AA2A-06F3261B4EDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0C23341A-2C3E-4F45-8C86-BA3F22A7F884} = {003FA254-ADCF-4909-8324-BF697C92F14E}
+		{86E557F1-CBC7-493D-96C0-2702A2FF5143} = {5FB6BDF4-7625-496B-8D11-7C67201CCAED}
+		{AFF8E898-D6C7-4C1A-B9DA-9D0C375492A0} = {CB58C5DB-0A84-4E4A-A76B-C2751BD7DA1D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BEDF588-5462-44B7-86C9-6359BE6F9A97}
