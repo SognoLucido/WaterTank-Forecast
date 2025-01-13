@@ -5,12 +5,12 @@ services:
       context: .
       dockerfile: DataFlow-ReadAPI/Dockerfile
 
-  dataingestapi:
-    image: ${DOCKER_REGISTRY-}dataingestapi
-    container_name: MqttToDBServiceAPP - A
-    build:
-      context: .
-      dockerfile: DataIngestAPI/Dockerfile
+  # dataingestapi:
+  #   image: ${DOCKER_REGISTRY-}dataingestapi
+  #   container_name: MqttToDBServiceAPP - A
+  #   build:
+  #     context: .
+  #     dockerfile: DataIngestAPI/Dockerfile
 
   mosquitto:
     build:

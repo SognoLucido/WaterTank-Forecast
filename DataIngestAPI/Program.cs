@@ -1,10 +1,20 @@
-﻿namespace DataIngestAPI
+﻿using DataIngestAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+namespace DataIngestAPI
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Console.WriteLine("Hello, World!");
+            HostApplicationBuilder builder = Host.CreateApplicationBuilder();
+            builder.Services.AddHostedService<MqttReaderBG>();
+
+            builder.Services.AddSingleton<DbService>();
+
+            IHost host = builder.Build();
+            host.Run();
         }
     }
 }
