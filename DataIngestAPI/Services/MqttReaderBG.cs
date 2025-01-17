@@ -19,13 +19,15 @@ namespace DataIngestAPI.Services
         {
             //while (!stoppingToken.IsCancellationRequested)
             //{
-                var mqttFactory = new MqttClientFactory();
+            await dbcall.InitCreation();
+            var mqttFactory = new MqttClientFactory();
 
                 using var mqttClient = mqttFactory.CreateMqttClient();
 
                 var mqttClientOptions = new MqttClientOptionsBuilder()
                 .WithTcpServer(MqttServerIP)
                 .WithProtocolVersion(MqttProtocolVersion.V500)
+                .WithKeepAlivePeriod(TimeSpan.FromMinutes(5))
                 .Build();
 
             var response = await mqttClient.ConnectAsync(mqttClientOptions, ctoken);
@@ -33,9 +35,11 @@ namespace DataIngestAPI.Services
             mqttClient.ApplicationMessageReceivedAsync += e =>
             {
 
-                Console.WriteLine($"Topic : {e.ApplicationMessage.Topic} and Message : {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}"); 
 
 
+                //Console.WriteLine($"Topic : {e.ApplicationMessage.Topic} and Message : {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}"); 
+
+                dbcall.Insertdata(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
 
                 return Task.CompletedTask;
             };
