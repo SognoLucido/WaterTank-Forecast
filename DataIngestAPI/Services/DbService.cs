@@ -45,18 +45,20 @@ namespace DataIngestAPI.Services
         {
 
 
-            try
-            {
+            //try
+            //{
 
                 var TankItemclass = JsonSerializer.Deserialize<WaterTankItem>(data, WaterTankItemSGjsonConverter.Default.WaterTankItem);
 
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            //}
+            //catch(Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
 
             using var conn = new NpgsqlConnection(Connstring);
+
+
             //Random rnd = new Random();
 
             //for (var i = 0; i < 10; i++)
@@ -71,14 +73,14 @@ namespace DataIngestAPI.Services
             //    };
 
 
-            //    const string insertQuery = @"
-            //INSERT INTO WaterTank (time, tank_id, current_volume, total_capacity)
-            //VALUES (@Time, @TankId, @CurrentVolume, @TotalCapacity)";
+            const string insertQuery = @"
+            INSERT INTO WaterTank (time, tank_id, current_volume, total_capacity)
+            VALUES (@timestamp, @tank_id, @current_volume, @total_capacity)";
 
 
 
-            //    var result = await conn.ExecuteAsync(insertQuery, TankItemclass);
-            //}
+            var result = await conn.ExecuteAsync(insertQuery, TankItemclass);
+        
         }
 
 

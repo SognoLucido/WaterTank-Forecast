@@ -198,11 +198,13 @@ public class MqttInit
                          {
                              tank_id = Sharedata.Items[i].Id,
                              timestamp = Sharedata.StartTestDate, // trigger 3:am
-                             capacity = new()
-                             {
-                                 current_volume = Sharedata.Items[i].CurrentLevel,
-                                 total_capacity = Sharedata.Items[i].Capacity
-                             }
+                             current_volume = Sharedata.Items[i].CurrentLevel,
+                              total_capacity = Sharedata.Items[i].Capacity
+                             //capacity = new()
+                             //{
+                             //    current_volume = Sharedata.Items[i].CurrentLevel,
+                             //    total_capacity = Sharedata.Items[i].Capacity
+                             //}
                          }
                         );
 
@@ -307,11 +309,14 @@ public class MqttInit
                     {
                         tank_id = item.Id,
                         timestamp = Sharedata.StartTestDate,
-                        capacity = new()
-                        {
-                            current_volume = item.CurrentLevel,
-                            total_capacity = item.Capacity
-                        }
+                        current_volume = item.CurrentLevel,
+                        total_capacity = item.Capacity
+                        //capacity = new()
+                        //{
+                        //    current_volume = item.CurrentLevel,
+                        //    total_capacity = item.Capacity
+                        //}
+
                     }
                 );
         }

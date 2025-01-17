@@ -10,13 +10,14 @@ namespace WaterTankMock_MQTT.Services.Mqtt.Models
     {
          public Guid tank_id { get; set; }
         public DateTime timestamp { get; set; }
-        public Capacity capacity { get; set; }
-    }
-
-    public class Capacity
-    {
         public int current_volume { get; set; }
         public int total_capacity { get; set; }
         public string unit { get; set; } = "liters";
     }
+
+    //public class Capacity
+    //{
+      
+    //    public string unit { get; set; } = "liters";
+    //}
 }

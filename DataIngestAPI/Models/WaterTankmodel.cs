@@ -11,7 +11,7 @@ namespace DataIngestAPI.Models
         DateTime timestamp , 
         Guid tank_id , 
         Double current_volume,
-        Double capacity
+        Double total_capacity
         );
 
     [JsonSerializable(typeof(WaterTankItem))]
