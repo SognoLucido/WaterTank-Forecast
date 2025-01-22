@@ -121,7 +121,7 @@ public class MqttInit
 
 
 
-    private async Task Start()
+    private async Task Start() //buggy to fix
     {
 
         Random rng = new();
@@ -148,16 +148,14 @@ public class MqttInit
 
         int triggerStateProgressbar = 0;
 
+        Sharedata.StartTestDate = newstartdate;
+
         for (; Sharedata.Daycount < Sharedata.Toxdays; Sharedata.Daycount++)
         {
 
             //await Task.Delay(2000);
 
-           
-
-            Sharedata.StartTestDate = newstartdate;
-
-            Sharedata.Simtriggers[0] = true;
+            //   Sharedata.Simtriggers[0] = true;
 
             await Task.Delay(1000);
 
@@ -166,16 +164,18 @@ public class MqttInit
                 if(i >= Sharedata.Items.Count)
                 {
                     triggerStateProgressbar++;
+                    Sharedata.Simtriggers[t] = true;
                     t++;
                     i = 0;
                     if (t >= Sharedata.Simtriggers.Count) 
                     {
-                        
+                       // Sharedata.Simtriggers[t - 1] = true;
+                        Sharedata.StartTestDate = Sharedata.StartTestDate.AddHours(6);
                         break;
                     } 
                     else
                     {
-                        Sharedata.Simtriggers[t] = true;
+                        //Sharedata.Simtriggers[t-1] = true;
                         Sharedata.StartTestDate = Sharedata.StartTestDate.AddHours(2);
                     }
 
@@ -192,6 +192,9 @@ public class MqttInit
 
 
                     //Console.WriteLine(Sharedata.StartTestDate);
+
+                    var start = Sharedata.Items[i].Triggers[t].Active;
+                    var test = Sharedata.StartTestDate;
 
                     applicationMessage.PayloadSegment = JsonSerializer.SerializeToUtf8Bytes(
                          new MqttBodyJsonModel
@@ -212,6 +215,8 @@ public class MqttInit
                     await clients[i].PublishAsync(applicationMessage, Onlinetoken);
 
 
+
+
                 }
 
 
@@ -219,15 +224,16 @@ public class MqttInit
 
               //  Sharedata.ProgressBar = (int)(((t+1)*(Sharedata.Daycount +1)) * (100.0 / Sharedata.Simtriggers.Count  * Sharedata.Toxdays));
 
-                Sharedata.ProgressBar = (int)(100 * (triggerStateProgressbar+1) / ((10 * Sharedata.Toxdays)-1));
+                Sharedata.ProgressBar = (int)(100 * (triggerStateProgressbar) / ((10 * Sharedata.Toxdays)-1));
 
             }
 
-
+            await Task.Delay(1000);
 
 
             for (int z = 0; z < Sharedata.Simtriggers.Count; z++)
             {
+
                 Sharedata.Simtriggers[z] = false;
             }
 

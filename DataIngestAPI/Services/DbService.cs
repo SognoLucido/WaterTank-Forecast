@@ -81,6 +81,9 @@ namespace DataIngestAPI.Services
 
             var result = await conn.ExecuteAsync(insertQuery, TankItemclass);
         
+
+            Console.WriteLine($"ID: {TankItemclass.tank_id} , CurrentCap: {TankItemclass.current_volume} ->parsed & successful inserted in db" );
+
         }
 
 
