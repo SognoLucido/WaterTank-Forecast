@@ -132,6 +132,7 @@ public class MqttInit
 
         var applicationMessage = new MqttApplicationMessageBuilder()
         .WithTopic(Sharedata.MqttTopic)
+        //.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce)
         .Build();
 
 
@@ -262,6 +263,8 @@ public class MqttInit
 
         Sharedata.ProgressMessage = "Clients connecting...";
 
+        
+
         for (int i = 0; i < Sharedata.Items.Count; i++)
         {
 
@@ -271,16 +274,17 @@ public class MqttInit
 
             options.ClientId = Sharedata.Items[i].Id.ToString();
 
-            await clients[i].ConnectAsync(options, Onlinetoken);
+           await clients[i].ConnectAsync(options, Onlinetoken);
 
+           
             Sharedata.ProgressBar = (int)((i + 1) * (100.0 / Sharedata.Items.Count));
             await Task.Delay(500);
         }
 
 
-        Sharedata.ProgressMessage = "All clients connected";
+        Sharedata.ProgressMessage = $"All {Sharedata.Items.Count} clients connected";
 
-        await Task.Delay(1000);
+        await Task.Delay(2000);
 
 
 

@@ -32,16 +32,16 @@ namespace DataIngestAPI.Services
 
             var response = await mqttClient.ConnectAsync(mqttClientOptions, ctoken);
 
-            mqttClient.ApplicationMessageReceivedAsync += e =>
+            mqttClient.ApplicationMessageReceivedAsync += async e =>
             {
 
 
 
                 //Console.WriteLine($"Topic : {e.ApplicationMessage.Topic} and Message : {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}"); 
 
-                dbcall.Insertdata(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
+              await dbcall.Insertdata(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
 
-                return Task.CompletedTask;
+              //return Task.CompletedTask;
             };
 
 

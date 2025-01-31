@@ -1,12 +1,14 @@
 {
   "profiles": {
     "http": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5051"
+        "commandName": "Project",
+        "launchBrowser": true,
+        "launchUrl": "scalar/v1",
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+        "dotnetRunMessages": true,
+        "applicationUrl": "http://localhost:5051"
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",

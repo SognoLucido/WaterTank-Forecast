@@ -178,25 +178,27 @@ namespace WaterTankMock_MQTT.ViewModels
         [RelayCommand]
         private async Task AddItem()
         {
-            Random rnd = new Random();
-
-            var newGuid = Guid.NewGuid();
-
-            var Newitem = new TankItem
-            {
-                Name =  newGuid.ToString()[..5] + "-TankItem",
-                Id = newGuid,
-                Capacity = rnd.Next(500,1001) ,
-               
-            };
-
-            Newitem.CurrentLevel =  rnd.Next(Newitem.Capacity / 2 , Newitem.Capacity);
+            Random rnd = new();
 
 
-            Newitem.Starring = false;
+            //for (int i = 0; i < 150; i++)
+            //{
 
-            Sharedata.Items.Add(Newitem);
+                var newGuid = Guid.NewGuid();
+                var Newitem = new TankItem
+                {
+                    Name = newGuid.ToString()[..5] + "-TankItem",
+                    Id = newGuid,
+                    Capacity = rnd.Next(500, 1001),
 
+                };
+
+                Newitem.CurrentLevel = rnd.Next(Newitem.Capacity / 2, Newitem.Capacity);
+
+                Newitem.Starring = false;
+
+                Sharedata.Items.Add(Newitem);
+            //}
             //Backuplist = Items;
 
 

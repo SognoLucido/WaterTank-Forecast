@@ -63,7 +63,7 @@
 					<TextBox
 						p1:TextFieldAssist.Label="CurrentLv"
 						Classes="outline"
-						IsReadOnly="True"
+						IsReadOnly="False"
 						Text="{Binding Sharedata.SelectedTankItem.CurrentLevel, Mode=TwoWay}"
 						TextAlignment="Center"
 						Theme="{StaticResource OutlineTextBox}"
