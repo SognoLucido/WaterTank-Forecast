@@ -22,6 +22,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mosquitto-MQTT-Broker", "Mo
 		Mosquitto-MQTT-Broker\Dockerfile = Mosquitto-MQTT-Broker\Dockerfile
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FillDBTESTtool", "FillDBTESTtool", "{6FA9C750-4E48-43BA-90A8-6140A34A4199}"
+	ProjectSection(SolutionItems) = preProject
+		README.txt = README.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectInserttoDB", "DirectInserttoDB\DirectInserttoDB.csproj", "{5F3D6972-41A1-46B8-BB98-41AC79D449A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +51,10 @@ Global
 		{2616C6EB-5E4F-4956-AA2A-06F3261B4EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2616C6EB-5E4F-4956-AA2A-06F3261B4EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2616C6EB-5E4F-4956-AA2A-06F3261B4EDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F3D6972-41A1-46B8-BB98-41AC79D449A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F3D6972-41A1-46B8-BB98-41AC79D449A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F3D6972-41A1-46B8-BB98-41AC79D449A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F3D6972-41A1-46B8-BB98-41AC79D449A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +63,7 @@ Global
 		{0C23341A-2C3E-4F45-8C86-BA3F22A7F884} = {003FA254-ADCF-4909-8324-BF697C92F14E}
 		{86E557F1-CBC7-493D-96C0-2702A2FF5143} = {5FB6BDF4-7625-496B-8D11-7C67201CCAED}
 		{AFF8E898-D6C7-4C1A-B9DA-9D0C375492A0} = {CB58C5DB-0A84-4E4A-A76B-C2751BD7DA1D}
+		{5F3D6972-41A1-46B8-BB98-41AC79D449A1} = {6FA9C750-4E48-43BA-90A8-6140A34A4199}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BEDF588-5462-44B7-86C9-6359BE6F9A97}

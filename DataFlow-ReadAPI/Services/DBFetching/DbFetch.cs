@@ -15,76 +15,95 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
         public async Task Fetchdata()
         {
-          
+
             const string sqlfetch = @"
-                WITH tank_last_time AS (
-	                SELECT DISTINCT ON (tank_id)
-                    tank_id,
-	                time AS last_time ,
-                    current_volume
-	                FROM watertank
-	                ORDER BY tank_id, time DESC
-                ),
+                                 WITH tank_last_time AS (
+                       SELECT DISTINCT ON (tank_id)
+                       tank_id,
+                       time AS last_time ,
+                       current_volume
+                       FROM watertank
+                       ORDER BY tank_id, time DESC
+                   ),
                 date_ranges AS (
                     SELECT 
                         tank_id,
-                        last_time,
-		                tl.current_volume AS lastvol,
+                        last_time::date AS last_date,
+		                tl.current_volume AS last_volume,
                         COALESCE(
-                            (SELECT MIN(time) 
+                            (SELECT MIN(time)::date 
                              FROM public.watertank wt 
-                             WHERE wt.tank_id = tl.tank_id AND wt.time >= tl.last_time - INTERVAL '7 days'),
-                            last_time - INTERVAL '7 days'
-                        ) AS start_time
+                             WHERE wt.tank_id = tl.tank_id AND wt.time >= tl.last_time - INTERVAL '7days'), 
+                            (last_time - INTERVAL '7days')::date
+                        ) AS start_date
                     FROM tank_last_time tl
                 ),
+                all_dates AS (
+                    SELECT 
+                        dr.tank_id, 
+                        generate_series(dr.start_date, dr.last_date, '1 day'::interval)::date AS consumption_day
+                    FROM date_ranges dr
+                ),
                 consumption_data AS (
-                  SELECT 
-                        wt.tank_id,
-                        wt.time::date AS consumption_day,
-                        wt.current_volume,
-                        LAG(wt.current_volume) OVER (PARTITION BY wt.tank_id ORDER BY wt.time) AS previous_volume,
+                    SELECT 
+                        ad.tank_id,
+                        ad.consumption_day,
+                        wt.current_volume
+                    FROM all_dates ad
+                    LEFT JOIN public.watertank wt 
+                        ON ad.tank_id = wt.tank_id AND ad.consumption_day = wt.time::date
+                ),
+                filled_data AS (
+                    SELECT 
+                        tank_id,
+                        consumption_day,
+                        COALESCE(
+                            current_volume, 
+                            LAG(current_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day) 
+                        ) AS filled_volume
+                    FROM consumption_data
+                ),
+                final_consumption AS (
+                    SELECT 
+                        tank_id,
+                        consumption_day,
+                        filled_volume AS current_volume,
+                        LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day) AS previous_volume,
                         CASE 
-                            WHEN wt.current_volume < LAG(wt.current_volume) OVER (PARTITION BY wt.tank_id ORDER BY wt.time)
-                                 THEN LAG(wt.current_volume) OVER (PARTITION BY wt.tank_id ORDER BY wt.time) - wt.current_volume
+                            WHEN filled_volume < LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day)
+                            THEN LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day) - filled_volume
                             ELSE 0
                         END AS daily_consumption,
                         CASE 
-                            WHEN wt.current_volume > LAG(wt.current_volume) OVER (PARTITION BY wt.tank_id ORDER BY wt.time)
-                                 THEN 1
+                            WHEN filled_volume > LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day)
+                            THEN 1
                             ELSE 0
                         END AS is_refill
-                    FROM public.watertank wt
-                    JOIN date_ranges dr
-                    ON wt.tank_id = dr.tank_id
-                    WHERE wt.time BETWEEN dr.start_time AND dr.last_time
+                    FROM filled_data
                 ),
-                summary_data AS (
+                summary_data AS(
                     SELECT 
                         tank_id,
                         SUM(daily_consumption) AS total_consumption,
-                        COUNT(DISTINCT consumption_day) FILTER (WHERE is_refill = 0) AS non_refill_days
-                    FROM consumption_data
+                        (COUNT(DISTINCT consumption_day) FILTER (WHERE is_refill = 0) -1) AS non_refill_days
+                    FROM final_consumption
                     GROUP BY tank_id
                 ),
-                consumption_calc as(
-                SELECT 	
+                recap_data AS(
+                SELECT 
                     dr.tank_id,
-	                dr.lastvol ,
-                    dr.start_time AS range_start,
-                    dr.last_time AS range_end,
-                    sd.total_consumption,
-                    sd.non_refill_days,
+                    dr.last_date AS range_end,
+	                dr.last_volume,
                     CASE 
-                        WHEN sd.non_refill_days > 1 THEN (sd.total_consumption )  / (sd.non_refill_days - 1)
+                        WHEN sd.non_refill_days > 1 
+                        THEN sd.total_consumption / sd.non_refill_days 
                         ELSE NULL
                     END AS average_daily_consumption
-	
                 FROM summary_data sd
-                JOIN date_ranges dr
-                ON sd.tank_id = dr.tank_id
+                JOIN date_ranges dr ON sd.tank_id = dr.tank_id
                 )
-                SELECT tank_id , range_end ,  (g.lastvol / g.average_daily_consumption) as days_remaining   FROM consumption_calc as g";
+                SELECT g.tank_id, g.range_end ,  (g.last_volume / g.average_daily_consumption) as days_remaining   FROM recap_data as g";
+
 
             using (var Dbconn = new NpgsqlConnection(Connstring))
             {

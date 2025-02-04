@@ -2,3 +2,4 @@
 - better input validation in TextBoxs
 - StartView , incorrect datetime progress during sim 
 - Simview ,incorrect mqtt body message example
+-option to disable Totalcapacity . add zone/client id ?
