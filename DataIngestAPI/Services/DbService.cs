@@ -20,7 +20,9 @@ namespace DataIngestAPI.Services
             CREATE TABLE IF NOT EXISTS WaterTank (
             time TIMESTAMPTZ NOT NULL,
             tank_id UUID NOT NULL,
-            current_volume DOUBLE PRECISION,
+            current_volume DOUBLE PRECISION NOT NULL,
+            client_id UUID,
+            zone_code VARCHAR(10),
             total_capacity DOUBLE PRECISION
                 );";
 
@@ -87,7 +89,7 @@ namespace DataIngestAPI.Services
            
         }
 
-
+        //optional
         public async Task Cleantable()
         {
             const string sqldel = @"DROP TABLE IF EXISTS WaterTank";

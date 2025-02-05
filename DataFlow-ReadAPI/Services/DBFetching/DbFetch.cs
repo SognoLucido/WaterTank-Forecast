@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using DataFlow_ReadAPI.Models;
 using Npgsql;
 using Npgsql.Internal;
 
@@ -13,7 +14,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
         public DbFetch(IConfiguration _conf) { Connstring = _conf.GetConnectionString("postgresread")!; }
 
 
-        public async Task Fetchdata()
+        public async Task<IEnumerable<DBreturnData>> Fetchdata(Guid[]? tank_ids ,  int Rangedays )
         {
 
             const string sqlfetch = @"
@@ -102,20 +103,29 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                 FROM summary_data sd
                 JOIN date_ranges dr ON sd.tank_id = dr.tank_id
                 )
-                SELECT g.tank_id, g.range_end ,  (g.last_volume / g.average_daily_consumption) as days_remaining   FROM recap_data as g";
+                SELECT g.tank_id, g.range_end + INTERVAL '1 day' * (g.last_volume/ g.average_daily_consumption )::INTEGER as empty_at_day 
+                FROM recap_data as g";
 
+            // OLD SELECT g.tank_id, g.range_end ,  (g.last_volume / g.average_daily_consumption) as days_remaining   FROM recap_data as g"
 
             using (var Dbconn = new NpgsqlConnection(Connstring))
             {
 
-                var data = Dbconn.Query(
-                  sqlfetch)
-                  .Select(x => new {
-                      x.tank_id,
-                      x.range_end,
-                      x.days_remaining
-                  })
-                  .ToList();
+
+               var x = await Dbconn.QueryAsync<DBreturnData>(sqlfetch);
+
+
+
+                return x;
+
+                //var data = Dbconn.Query(
+                //  sqlfetch)
+                //  .Select(x => new {
+                //      x.tank_id,
+                //      x.range_end,
+                //      x.days_remaining
+                //  })
+                //  .ToList();
 
 
 

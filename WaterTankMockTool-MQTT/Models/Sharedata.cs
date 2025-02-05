@@ -75,8 +75,16 @@ namespace WaterTankMock_MQTT.Models
         /////sim settings 
       
         [ObservableProperty]
-        private bool _seeddata = true;
+        private bool _seeddata = false;
 
+        [ObservableProperty]
+        private bool _capacity = false;
+
+        [ObservableProperty]
+        private bool _clientid = false;
+
+        [ObservableProperty]
+        private bool _zonecode = false;
 
         [ObservableProperty]
         private string? _datatostringliveUpdate;

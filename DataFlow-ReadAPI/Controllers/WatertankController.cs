@@ -22,9 +22,9 @@ namespace DataFlow_ReadAPI.Controllers
         public async Task<IActionResult> Get()
         {
 
-            await dbcall.Fetchdata();
+           // await dbcall.Fetchdata(null,0);
 
-            return Ok();
+            return Ok(await dbcall.Fetchdata(null, 0));
         }
 
         //// GET api/<WatertankController>/5

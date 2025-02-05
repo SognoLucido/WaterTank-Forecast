@@ -15,21 +15,18 @@ internal class DBBulkinsert
 
     public async Task Start()
     {
+        const int days = 31;
+        const int TOTAL_ITEMS = 10000;
+        const string sqlinsert = @"INSERT INTO watertank (time ,tank_id, current_volume )VALUES (@Time , @Id , @Lvl )";
 
         using var Dbconn = new NpgsqlConnection(Connstring);
-        BodyData[] Items = new BodyData[10000];
+        BodyData[] Items = new BodyData[TOTAL_ITEMS];
 
 
         for (int i = 0; i < Items.Length; i++)
         {
             Items[i] = new();
         }
-
-
-
-        const string sqlinsert = @"INSERT INTO watertank (time ,tank_id, current_volume )VALUES (@Time , @Id , @Lvl )";
-
-        const int days = 31;
 
 
         var Stime = Stopwatch.GetTimestamp();
@@ -49,8 +46,6 @@ internal class DBBulkinsert
 
             }
 
-
-            //calcul(Items);
 
           await Dbconn.ExecuteAsync(sqlinsert, Items);
 

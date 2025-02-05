@@ -13,6 +13,10 @@ namespace DirectInserttoDB.Models
        public DateTime Time { get; set; }
         public Double Lvl { get; private set; } = rng.Next(600, 800);
 
+        Guid? client_id { get; set; }   
+        string? zone_code { get; set; }
+        Double? total_capacity { get; set; }
+
         public BodyData(/*DateTime _time*/) 
         {
 

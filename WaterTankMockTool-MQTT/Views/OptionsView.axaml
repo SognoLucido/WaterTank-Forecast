@@ -22,101 +22,224 @@
     <Grid
         Background="White"
         RowDefinitions="6*,*"
-        ShowGridLines="False">
+        ShowGridLines="True">
 
         <Border
             Margin="10"
             Background="#f9fbfa"
             BorderBrush="Black"
             BorderThickness="1"
-            ClipToBounds="False"
-            CornerRadius="10" />
+            ClipToBounds="True"
+            CornerRadius="10">
 
 
-        <ScrollViewer>
-            <StackPanel Margin="20" Spacing="10">
+            <ScrollViewer
+                ClipToBounds="True"
+                HorizontalScrollBarVisibility="Hidden"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="20" Spacing="10">
 
-                <StackPanel.Styles>
-                    <Style Selector="Border">
+                    <StackPanel.Styles>
+                        <Style Selector="Border">
 
-                        <Setter Property="BorderBrush" Value="#e8edeb" />
-                    </Style>
-                </StackPanel.Styles>
+                            <Setter Property="BorderBrush" Value="#e8edeb" />
+                        </Style>
+                    </StackPanel.Styles>
+
+                    <!--  Seed  -->
+
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+
+                        <Border
+                            Width="440"
+                            Height="80"
+                            BorderThickness="1,1,0,1"
+                            CornerRadius="10,0,0,10">
+                            <TextBlock
+                                Margin="10"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                TextWrapping="Wrap">
+                                Seed the data (send the initial default data, such as capacity, current level, etc.., to the broker) at the start of the simulation
+                            </TextBlock>
+
+                        </Border>
+                        <Border
+                            Width="100"
+                            BorderThickness="1"
+                            CornerRadius="0,10,10,0">
+                            <ToggleSwitch
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                BorderBrush="Black"
+                                IsChecked="{Binding Sharedata.Seeddata}" />
+                        </Border>
 
 
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    </StackPanel>
 
-                    <Border
-                        Width="440"
-                        Height="80"
-                        BorderThickness="1,1,0,1"
-                        CornerRadius="10,0,0,10">
-                        <TextBlock
-                            Margin="10"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            TextWrapping="Wrap">
-                            Seed the data (send the initial default data, such as capacity, current level, etc.., to the broker) at the start of the simulation
-                        </TextBlock>
+                    <!--  Capacity  -->
 
-                    </Border>
-                    <Border
-                        Width="100"
-                        BorderThickness="1"
-                        CornerRadius="0,10,10,0">
-                        <ToggleSwitch
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            BorderBrush="Black"
-                            IsChecked="{Binding Sharedata.Seeddata}" />
-                    </Border>
+
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+
+                        <Border
+                            Width="440"
+                            Height="55"
+                            BorderThickness="1,1,0,1"
+                            CornerRadius="10,0,0,10">
+                            <TextBlock
+                                Margin="10"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="20">
+                                Enable "Capacity"
+                            </TextBlock>
+
+                        </Border>
+                        <Border
+                            Width="100"
+                            BorderThickness="1"
+                            CornerRadius="0,10,10,0">
+                            <ToggleSwitch
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                BorderBrush="Black"
+                                IsChecked="{Binding Sharedata.Capacity}" />
+                        </Border>
+
+
+                    </StackPanel>
+
+
+                    <!--  Client Id  -->
+
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+
+                        <Border
+                            Width="440"
+                            Height="80"
+                            BorderThickness="1,1,0,1"
+                            CornerRadius="10,0,0,10">
+
+							
+							<StackPanel Spacing="2"  Orientation="Horizontal" HorizontalAlignment="Center">
+								<TextBlock
+							   Margin="10"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center"
+							   FontSize="17">
+									Enable "Client id"
+								</TextBlock>
+								
+							<TextBox
+			                   Width="260"
+			                   VerticalAlignment="Center"
+							   VerticalContentAlignment="Center"
+			                   Classes="outline dense "
+							   FontSize="12"
+			                   Text="4D47E866-8065-485C-BAD1-825E7C4172E0"
+							   IsVisible="{Binding Sharedata.Clientid}"
+			                   Watermark="GUID" />
+								
+							</StackPanel>
+
+
+
+						</Border>
+                        <Border
+                            Width="100"
+                            BorderThickness="1"
+                            CornerRadius="0,10,10,0">
+                            <ToggleSwitch
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                BorderBrush="Black"
+                                IsChecked="{Binding Sharedata.Clientid}" />
+                        </Border>
+
+
+                    </StackPanel>
+
+                    <!--  Zone code  -->
+
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+
+                        <Border
+                            Width="440"
+                            Height="80"
+                            BorderThickness="1,1,0,1"
+                            CornerRadius="10,0,0,10">
+                            <TextBlock
+                                Margin="10"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="20">
+                                Enable "Zone Code"
+                            </TextBlock>
+
+                        </Border>
+                        <Border
+                            Width="100"
+                            BorderThickness="1"
+                            CornerRadius="0,10,10,0">
+                            <ToggleSwitch
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                BorderBrush="Black"
+                                IsChecked="{Binding Sharedata.Zonecode}" />
+                        </Border>
+
+
+                    </StackPanel>
+
+                    <!--  Mqtt TOPIC  -->
+
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+
+                        <Border
+                            Width="270"
+                            Height="80"
+                            BorderThickness="1,1,0,1"
+                            CornerRadius="10,0,0,10">
+                            <TextBlock
+                                Margin="10"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="25">
+                                MQTT Topic
+                            </TextBlock>
+
+                        </Border>
+                        <Border
+                            Width="270"
+                            BorderThickness="1"
+                            CornerRadius="0,10,10,0">
+                            <TextBox
+                                Width="150"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Classes="outline"
+                                Text="{Binding Topicname, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                Theme="{StaticResource OutlineTextBox}"
+                                UseFloatingWatermark="False"
+                                Watermark="watertank" />
+                        </Border>
+
+
+                    </StackPanel>
+
+
+
+
 
                 </StackPanel>
 
+            </ScrollViewer>
 
 
-
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-
-                    <Border
-                        Width="270"
-                        Height="80"
-                        BorderThickness="1,1,0,1"
-                        CornerRadius="10,0,0,10">
-                        <TextBlock
-                            Margin="10"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="25">
-                            MQTT Topic
-                        </TextBlock>
-
-                    </Border>
-                    <Border
-                        Width="270"
-                        BorderThickness="1"
-                        CornerRadius="0,10,10,0">
-                        <TextBox
-							Width="150"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-							TextAlignment="Center"
-                            Classes="outline"
-                            Theme="{StaticResource OutlineTextBox}"
-                            UseFloatingWatermark="False"
-							Text="{Binding Topicname, Mode=TwoWay}"
-                            Watermark="watertank" />
-                    </Border>
-
-                </StackPanel>
-
-
-            </StackPanel>
-
-        </ScrollViewer>
-
-
-
+        </Border>
 
 
 
