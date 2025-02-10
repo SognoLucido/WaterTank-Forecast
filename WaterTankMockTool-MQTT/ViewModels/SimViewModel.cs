@@ -98,14 +98,13 @@ namespace WaterTankMock_MQTT.ViewModels
 
 
         public string BdMessg { get; } =
-            @"{
-  ""tank_id"": ""guid"",
-  ""timestamp"": ""2024-11-27 14:30:00"",
-  ""capacity"": {
-    ""current_volume"": 500,
-    ""total_capacity"": 1000,
-    ""unit"": ""liters"",
-  }
+        @"{
+""tank_id"": ""guid"",
+""timestamp"": ""2024-11-27 14:30:00"",
+""current_volume"": 500,
+""total_capacity"": 1000,
+""client_id"": ""guid"",
+""zone_code"": ""VARCHAR(10)""
 }";
 
 

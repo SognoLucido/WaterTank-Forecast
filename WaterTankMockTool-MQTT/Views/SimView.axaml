@@ -77,6 +77,8 @@
                     BorderBrush="Black"
                     BorderThickness="1"
                     CornerRadius="3"
+					IsReadOnly="False"
+					IsHitTestVisible="False"
                     Text="{Binding BdMessg}" />
 
 

@@ -93,7 +93,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontSize="20">
-                                Enable "Capacity"
+                                Enable Total "Capacity"
                             </TextBlock>
 
                         </Border>
@@ -123,24 +123,33 @@
                             CornerRadius="10,0,0,10">
 
 							
-							<StackPanel Spacing="2"  Orientation="Horizontal" HorizontalAlignment="Center">
-								<TextBlock
-							   Margin="10"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center"
-							   FontSize="17">
-									Enable "Client id"
-								</TextBlock>
+							<StackPanel Spacing="15"  Orientation="Horizontal" HorizontalAlignment="Center">
+
+								<StackPanel  VerticalAlignment="Center">
+									<TextBlock
+							           Margin="10"
+							           HorizontalAlignment="Center"
+							           VerticalAlignment="Center"
+							           FontSize="{Binding Sharedata.Clientfont}" Text="{Binding Sharedata.Clienttext}">
 								
-							<TextBox
-			                   Width="260"
-			                   VerticalAlignment="Center"
-							   VerticalContentAlignment="Center"
-			                   Classes="outline dense "
-							   FontSize="12"
-			                   Text="4D47E866-8065-485C-BAD1-825E7C4172E0"
-							   IsVisible="{Binding Sharedata.Clientid}"
-			                   Watermark="GUID" />
+									</TextBlock>
+									<Button IsVisible="{Binding Sharedata.Clientid}" Command="{Binding Sharedata.GenerateNewGuidCommand}" Classes="accent" FontSize="13" Margin="0,-4,0,0" Height="30" Width="90">
+										new GUID
+									</Button>
+								</StackPanel>
+
+
+								
+								<TextBox
+								   Width="260"
+								   VerticalAlignment="Center"
+								   HorizontalContentAlignment="Center"
+								   Classes="outline dense "
+								   FontSize="12"
+								   Text="{Binding Sharedata.Clientguid}"
+								   IsVisible="{Binding Sharedata.Clientid}"
+								   Watermark="GUID" 
+								  />
 								
 							</StackPanel>
 
@@ -163,35 +172,60 @@
 
                     <!--  Zone code  -->
 
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+					<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
 
-                        <Border
+						<Border
                             Width="440"
                             Height="80"
                             BorderThickness="1,1,0,1"
                             CornerRadius="10,0,0,10">
-                            <TextBlock
-                                Margin="10"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="20">
-                                Enable "Zone Code"
-                            </TextBlock>
 
-                        </Border>
-                        <Border
+
+							<StackPanel Spacing="15"  Orientation="Horizontal" HorizontalAlignment="Center">
+
+								
+									<TextBlock
+							           Margin="10"
+							           HorizontalAlignment="Center"
+							           VerticalAlignment="Center"
+							           FontSize="20" Text="{Binding Sharedata.Zonetext}"
+									   IsVisible="{Binding !Sharedata.Zonecode}">
+									  
+
+									</TextBlock>
+							
+
+
+
+								<TextBox
+								   Width="260"
+								   VerticalAlignment="Center"
+								   HorizontalContentAlignment="Center"
+								   Classes="outline dense "
+								   FontSize="12"
+								   Text="{Binding Sharedata.ZonecodeID}"
+								   IsVisible="{Binding Sharedata.Zonecode}"
+								   Watermark="VARCHAR(10)"
+								  />
+
+							</StackPanel>
+
+
+
+						</Border>
+						<Border
                             Width="100"
                             BorderThickness="1"
                             CornerRadius="0,10,10,0">
-                            <ToggleSwitch
+							<ToggleSwitch
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 BorderBrush="Black"
                                 IsChecked="{Binding Sharedata.Zonecode}" />
-                        </Border>
+						</Border>
 
 
-                    </StackPanel>
+					</StackPanel>
 
                     <!--  Mqtt TOPIC  -->
 

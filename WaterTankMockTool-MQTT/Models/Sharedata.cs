@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -74,21 +75,81 @@ namespace WaterTankMock_MQTT.Models
 
         /////sim settings 
       
-        [ObservableProperty]
-        private bool _seeddata = false;
+        [ObservableProperty]private bool _seeddata = false;
+        [ObservableProperty] private bool _capacity = false;
 
-        [ObservableProperty]
-        private bool _capacity = false;
 
-        [ObservableProperty]
+        //START client OPTIONs
+        //[ObservableProperty]
         private bool _clientid = false;
+        public bool Clientid
+        {
+            get => _clientid;
+            set
+            {
+                SetProperty(ref _clientid, value);
 
-        [ObservableProperty]
-        private bool _zonecode = false;
+                if (value)
+                {
+                    Clientfont = 17;
+                    Clienttext = "Client ID";
+                }
+                else
+                {
+                    Clientfont = 20;
+                    Clienttext = "Enable \"Client ID\"";
+                }
+
+            }
+        }
+
+        [ObservableProperty] private string _clienttext = "Enable \"Client ID\"";
+        [ObservableProperty] private int _clientfont = 20;
+        [ObservableProperty] private Guid _clientguid = new();
+
+        [RelayCommand] 
+        private async Task GenerateNewGuid() => Clientguid = Guid.NewGuid();
+
+
+        //END client OPTIONs
+
+
+
+        //START ZONECODE OPTIONs
+
+        //[ObservableProperty]
+        private bool _zonecode ;
+        
+        public bool Zonecode
+        {
+            get => _zonecode;
+            set
+            {
+                SetProperty(ref _zonecode, value);
+
+                if (value)
+                {
+
+                    Zonetext = "Zone Code";
+                }
+                else
+                {
+
+                    Zonetext = "Enable \"Zone Code\"";
+                }
+
+            }
+        }
+
+
+
+        [ObservableProperty] private string? _zonetext = "Enable \"Zone Code\"";
+        [ObservableProperty] private string? _zonecodeID ;
+
+        //END ZONECODE OPTIONs
 
         [ObservableProperty]
         private string? _datatostringliveUpdate;
-
 
 
         private DateTime _startdate;
