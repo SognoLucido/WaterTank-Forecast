@@ -81,13 +81,13 @@ namespace WaterTankMock_MQTT.Models
 
         //START client OPTIONs
         //[ObservableProperty]
-        private bool _clientid = false;
-        public bool Clientid
+        private bool _clientidenable = false;
+        public bool ClientidEnable
         {
-            get => _clientid;
+            get => _clientidenable;
             set
             {
-                SetProperty(ref _clientid, value);
+                SetProperty(ref _clientidenable, value);
 
                 if (value)
                 {
@@ -118,14 +118,14 @@ namespace WaterTankMock_MQTT.Models
         //START ZONECODE OPTIONs
 
         //[ObservableProperty]
-        private bool _zonecode ;
+        private bool _zonecodeenable ;
         
-        public bool Zonecode
+        public bool ZonecodeEnable
         {
-            get => _zonecode;
+            get => _zonecodeenable;
             set
             {
-                SetProperty(ref _zonecode, value);
+                SetProperty(ref _zonecodeenable, value);
 
                 if (value)
                 {

@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Metadata;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,10 @@ namespace WaterTankMock_MQTT.ViewModels
         {
             Sharedata = _sharedata;
             mqttInit = _mqtt;
+
+
+           
+            //BdMessg = build;
         }
 
 
@@ -97,18 +102,53 @@ namespace WaterTankMock_MQTT.ViewModels
 
 
 
-        public string BdMessg { get; } =
-        @"{
-""tank_id"": ""guid"",
-""timestamp"": ""2024-11-27 14:30:00"",
-""current_volume"": 500,
-""total_capacity"": 1000,
-""client_id"": ""guid"",
-""zone_code"": ""VARCHAR(10)""
-}";
+        //        public string BdMessg { get; } =
+        //        @"{
+        //""tank_id"": ""guid"",
+        //""timestamp"": ""2024-11-27 14:30:00"",
+        //""current_volume"": 500,
+        //""total_capacity"": 1000,
+        //""client_id"": ""guid"",
+        //""zone_code"": ""VARCHAR(10)""
+        //}";
+
+        public string BdMessg { get => Pepz(); } 
 
 
+         private string Pepz()
+        {
+            StringBuilder sb = new("{\n\"tank_id\": \"GUID\",\n\"timestamp\": \"2024-11-27 14:30:00\",\n\"current_volume\": \"500\"");
 
+            bool end = false;
+
+            if (Sharedata.Capacity)
+            {
+                end = true;
+                sb.AppendLine(",");
+                sb.Append("\"total_capacity\": \"1000\"");
+            }
+            if (Sharedata.ClientidEnable)
+            {
+                end = true;
+                sb.AppendLine(",");
+                sb.Append("\"client_id\": \"GUID\"");
+            }
+            if (Sharedata.ZonecodeEnable)
+            {
+                end = true;
+                sb.AppendLine(",");
+                sb.Append("\"zone_code\": \"VARCHAR(10)\"");
+
+            }
+
+            if (!end) 
+            {
+                sb.Append(',');
+            }
+            sb.Append("\n}");
+
+            return sb.ToString();
+        }
 
         [RelayCommand]
         private async Task Continue()

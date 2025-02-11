@@ -133,7 +133,7 @@
 							           FontSize="{Binding Sharedata.Clientfont}" Text="{Binding Sharedata.Clienttext}">
 								
 									</TextBlock>
-									<Button IsVisible="{Binding Sharedata.Clientid}" Command="{Binding Sharedata.GenerateNewGuidCommand}" Classes="accent" FontSize="13" Margin="0,-4,0,0" Height="30" Width="90">
+									<Button IsVisible="{Binding Sharedata.ClientidEnable}" Command="{Binding Sharedata.GenerateNewGuidCommand}" Classes="accent" FontSize="13" Margin="0,-4,0,0" Height="30" Width="90">
 										new GUID
 									</Button>
 								</StackPanel>
@@ -147,7 +147,7 @@
 								   Classes="outline dense "
 								   FontSize="12"
 								   Text="{Binding Sharedata.Clientguid}"
-								   IsVisible="{Binding Sharedata.Clientid}"
+								   IsVisible="{Binding Sharedata.ClientidEnable}"
 								   Watermark="GUID" 
 								  />
 								
@@ -164,7 +164,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 BorderBrush="Black"
-                                IsChecked="{Binding Sharedata.Clientid}" />
+                                IsChecked="{Binding Sharedata.ClientidEnable}" />
                         </Border>
 
 
@@ -189,7 +189,7 @@
 							           HorizontalAlignment="Center"
 							           VerticalAlignment="Center"
 							           FontSize="20" Text="{Binding Sharedata.Zonetext}"
-									   IsVisible="{Binding !Sharedata.Zonecode}">
+									   IsVisible="{Binding !Sharedata.ZonecodeEnable}">
 									  
 
 									</TextBlock>
@@ -204,7 +204,7 @@
 								   Classes="outline dense "
 								   FontSize="12"
 								   Text="{Binding Sharedata.ZonecodeID}"
-								   IsVisible="{Binding Sharedata.Zonecode}"
+								   IsVisible="{Binding Sharedata.ZonecodeEnable}"
 								   Watermark="VARCHAR(10)"
 								  />
 
@@ -221,7 +221,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 BorderBrush="Black"
-                                IsChecked="{Binding Sharedata.Zonecode}" />
+                                IsChecked="{Binding Sharedata.ZonecodeEnable}" />
 						</Border>
 
 

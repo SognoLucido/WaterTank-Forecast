@@ -5,6 +5,7 @@ using MQTTnet.Client;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using WaterTankMock_MQTT.Models;
@@ -125,9 +126,8 @@ public class MqttInit
     {
 
         Random rng = new();
-
+        var options = new JsonSerializerOptions {DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull};
         Sharedata.ProgressBar = 0;
-
         Sharedata.ProgressMessage = "Sending...";
 
         var applicationMessage = new MqttApplicationMessageBuilder()
@@ -160,7 +160,7 @@ public class MqttInit
 
             await Task.Delay(1000);
 
-            for (int i = 0  , t = 0; ; i++ )  // clients i  ; triggers t
+            for (int i = 0 , t = 0; ; i++ )  // clients i  ; triggers t
             {
                 if(i >= Sharedata.Items.Count)
                 {
@@ -203,14 +203,13 @@ public class MqttInit
                              tank_id = Sharedata.Items[i].Id,
                              timestamp = Sharedata.StartTestDate, // trigger 3:am
                              current_volume = Sharedata.Items[i].CurrentLevel,
-                              total_capacity = Sharedata.Items[i].Capacity
-                             //capacity = new()
-                             //{
-                             //    current_volume = Sharedata.Items[i].CurrentLevel,
-                             //    total_capacity = Sharedata.Items[i].Capacity
-                             //}
-                         }
-                        );
+                              total_capacity = Sharedata.Capacity ? Sharedata.Items[i].Capacity : null,
+                              client_id = Sharedata.ClientidEnable ? Sharedata.Clientguid : null ,
+                              zone_code = Sharedata.ZonecodeEnable ? Sharedata.ZonecodeID : null ,
+
+
+                         },options
+                   );
 
 
                     await clients[i].PublishAsync(applicationMessage, Onlinetoken);
