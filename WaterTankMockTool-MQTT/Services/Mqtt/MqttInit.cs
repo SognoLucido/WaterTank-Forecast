@@ -2,13 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet;
-using MQTTnet.Client;
 using WaterTankMock_MQTT.Models;
 using WaterTankMock_MQTT.Services.Mqtt.Models;
 
@@ -18,7 +16,8 @@ namespace WaterTankMock_MQTT.Services.Mqtt;
 public class MqttInit
 {
     private readonly List<IMqttClient> clients = [];
-    private MqttFactory factory = new();
+    private MqttClientFactory? factory = new(); // to fix this create new one on connection not on class init
+  
     public event EventHandler<bool>? ConnectionStatus;
     private MqttClientOptions? options;
     private string? ip;

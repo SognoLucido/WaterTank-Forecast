@@ -23,9 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mosquitto-MQTT-Broker", "Mo
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FillDBTESTtool", "FillDBTESTtool", "{6FA9C750-4E48-43BA-90A8-6140A34A4199}"
-	ProjectSection(SolutionItems) = preProject
-		README.txt = README.txt
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectInserttoDB", "DirectInserttoDB\DirectInserttoDB.csproj", "{5F3D6972-41A1-46B8-BB98-41AC79D449A1}"
 EndProject
