@@ -49,7 +49,7 @@ namespace WaterTankMock_MQTT
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<SimViewModel>();
+            services.AddTransient<SimViewModel>();
             services.AddSingleton<SettingsTankViewModel>();
             services.AddSingleton<MainWindowViewModel>();
             services.AddTransient<RecapViewModel>();

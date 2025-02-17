@@ -1,13 +1,14 @@
 ﻿
 
-using MQTTnet;
-using MQTTnet.Client;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using MQTTnet;
+using MQTTnet.Client;
 using WaterTankMock_MQTT.Models;
 using WaterTankMock_MQTT.Services.Mqtt.Models;
 
@@ -17,12 +18,12 @@ namespace WaterTankMock_MQTT.Services.Mqtt;
 public class MqttInit
 {
     private readonly List<IMqttClient> clients = [];
-    private  MqttFactory factory = new();
+    private MqttFactory factory = new();
     public event EventHandler<bool>? ConnectionStatus;
     private MqttClientOptions? options;
     private string? ip;
     private int? port;
-    private List<MqttBodyJsonModel>? rawdataclients ;
+    private List<MqttBodyJsonModel>? rawdataclients;
     private CancellationToken Onlinetoken;
     //int[] Htriggers = [3,5,7,9,11,13,15,17,19,21];
 
@@ -94,6 +95,8 @@ public class MqttInit
 
         clients.Clear();
         factory = new();
+        ResetTriggers();
+
         ip = null;
         port = null;
         rawdataclients = null;
@@ -126,7 +129,7 @@ public class MqttInit
     {
 
         Random rng = new();
-        var options = new JsonSerializerOptions {DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull};
+        var options = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
         Sharedata.ProgressBar = 0;
         Sharedata.ProgressMessage = "Sending...";
 
@@ -136,57 +139,76 @@ public class MqttInit
         .Build();
 
 
-
-        var newstartdate = new DateTime(
+        //this datetime used to the logic in the loop (mqqt timestamp body ) 
+        var Logicdate = new DateTime(
             Sharedata.StartTestDate.Year,
             Sharedata.StartTestDate.Month,
             Sharedata.StartTestDate.Day,
             3,
             Sharedata.StartTestDate.Minute,
-            Sharedata.StartTestDate.Second,kind:DateTimeKind.Utc
+            Sharedata.StartTestDate.Second, kind: DateTimeKind.Utc
             );
 
 
         int triggerStateProgressbar = 0;
 
-        Sharedata.StartTestDate = newstartdate;
+       // Sharedata.StartTestDate  // Display DateTime; this shows the progress 
+          
+
+
 
         for (; Sharedata.Daycount < Sharedata.Toxdays; Sharedata.Daycount++)
         {
 
+
+           //  var testdatepint = Sharedata.StartTestDate;
             //await Task.Delay(2000);
 
             //   Sharedata.Simtriggers[0] = true;
 
             await Task.Delay(1000);
 
-            for (int i = 0 , t = 0; ; i++ )  // clients i  ; triggers t
+            for (int i = 0, t = 0; ;++i)  // clients i  ; triggers t
             {
-                if(i >= Sharedata.Items.Count)
+
+                if (i >= Sharedata.Items.Count)
                 {
                     triggerStateProgressbar++;
                     Sharedata.Simtriggers[t] = true;
                     t++;
                     i = 0;
-                    if (t >= Sharedata.Simtriggers.Count) 
+                    Sharedata.StartTestDate = Logicdate;
+                    if (t >= Sharedata.Simtriggers.Count)
                     {
-                       // Sharedata.Simtriggers[t - 1] = true;
-                        Sharedata.StartTestDate = Sharedata.StartTestDate.AddHours(6);
+
+                        Logicdate = Logicdate.AddHours(6);
                         break;
-                    } 
+                    }
                     else
                     {
-                        //Sharedata.Simtriggers[t-1] = true;
-                        Sharedata.StartTestDate = Sharedata.StartTestDate.AddHours(2);
-                    }
 
-                    
+                        Logicdate = Logicdate.AddHours(2);
+                    }
+                    //if (t >= Sharedata.Simtriggers.Count)
+                    //{
+                    //    // Sharedata.Simtriggers[t - 1] = true;
+                    //    Sharedata.StartTestDate = Sharedata.StartTestDate.AddHours(6);
+                    //    break;
+                    //}
+                    //else
+                    //{
+
+                    //    //Sharedata.Simtriggers[t-1] = true;
+                    //    /* if (t > 1)*/
+                    //    Sharedata.StartTestDate = Sharedata.StartTestDate.AddHours(2);
+                    //}
+
                     await Task.Delay(1000);
                 }
 
-
                 if (Sharedata.Items[i].Triggers[t].Active)
                 {
+                    if (Onlinetoken.IsCancellationRequested) return; 
 
                     var resourcescale = rng.Next(Sharedata.Items[i].Triggers[t].Rangemin, Sharedata.Items[i].Triggers[t].Rangemax);
                     Sharedata.Items[i].CurrentLevel = (Sharedata.Items[i].CurrentLevel - resourcescale) < 0 ? 0 : Sharedata.Items[i].CurrentLevel - resourcescale;
@@ -201,44 +223,36 @@ public class MqttInit
                          new MqttBodyJsonModel
                          {
                              tank_id = Sharedata.Items[i].Id,
-                             timestamp = Sharedata.StartTestDate, // trigger 3:am
+                             timestamp = Logicdate, // OLDSharedata.StartTestDate, // trigger 3:am
                              current_volume = Sharedata.Items[i].CurrentLevel,
-                              total_capacity = Sharedata.Capacity ? Sharedata.Items[i].Capacity : null,
-                              client_id = Sharedata.ClientidEnable ? Sharedata.Clientguid : null ,
-                              zone_code = Sharedata.ZonecodeEnable ? Sharedata.ZonecodeID : null ,
+                             total_capacity = Sharedata.Capacity ? Sharedata.Items[i].Capacity : null,
+                             client_id = Sharedata.ClientidEnable ? Sharedata.Clientguid : null,
+                             zone_code = Sharedata.ZonecodeEnable ? Sharedata.ZonecodeID : null,
 
 
-                         },options
+                         }, options
                    );
 
-
-                    await clients[i].PublishAsync(applicationMessage, Onlinetoken);
-
-
-
+                    if (!Onlinetoken.IsCancellationRequested)
+                        await clients[i].PublishAsync(applicationMessage, Onlinetoken);
+                    else return;
 
                 }
 
 
+                //  Sharedata.ProgressBar = (int)(((t+1)*(Sharedata.Daycount +1)) * (100.0 / Sharedata.Simtriggers.Count  * Sharedata.Toxdays));
 
+                Sharedata.ProgressBar = (int)(100 * (triggerStateProgressbar) / ((10 * Sharedata.Toxdays) - 1));
 
-              //  Sharedata.ProgressBar = (int)(((t+1)*(Sharedata.Daycount +1)) * (100.0 / Sharedata.Simtriggers.Count  * Sharedata.Toxdays));
-
-                Sharedata.ProgressBar = (int)(100 * (triggerStateProgressbar) / ((10 * Sharedata.Toxdays)-1));
+             
 
             }
 
             await Task.Delay(1000);
 
+            ResetTriggers();
 
-            for (int z = 0; z < Sharedata.Simtriggers.Count; z++)
-            {
-
-                Sharedata.Simtriggers[z] = false;
-            }
-
-
-
+            Sharedata.StartTestDate = Sharedata.StartTestDate.AddHours(3);
 
         }
 
@@ -248,6 +262,15 @@ public class MqttInit
 
 
 
+    private void ResetTriggers()
+    {
+
+        for (int z = 0; z < Sharedata.Simtriggers.Count; z++)
+        {
+
+            Sharedata.Simtriggers[z] = false;
+        }
+    }
 
     private async Task ClientConnector()
     {
@@ -262,7 +285,7 @@ public class MqttInit
 
         Sharedata.ProgressMessage = "Clients connecting...";
 
-        
+
 
         for (int i = 0; i < Sharedata.Items.Count; i++)
         {
@@ -273,9 +296,9 @@ public class MqttInit
 
             options.ClientId = Sharedata.Items[i].Id.ToString();
 
-           await clients[i].ConnectAsync(options, Onlinetoken);
+            await clients[i].ConnectAsync(options, Onlinetoken);
 
-           
+
             Sharedata.ProgressBar = (int)((i + 1) * (100.0 / Sharedata.Items.Count));
             await Task.Delay(500);
         }

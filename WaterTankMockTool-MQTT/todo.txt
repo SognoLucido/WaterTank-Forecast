@@ -1,5 +1,4 @@
 - MainWindow , add x <-- User select (x1 everyclick or x150 )tank items
 - better input validation in TextBoxs
-- StartView , incorrect datetime progress during sim 
-- Simview ,incorrect mqtt body message example
--option to disable Totalcapacity . add zone/client id ?
+- better switchPageController
+

@@ -47,10 +47,8 @@
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-					Text="{Binding Sharedata.Daycount}"
-                    FontSize="60">
-                   
-                </TextBlock>
+                    FontSize="60"
+                    Text="{Binding Sharedata.Daycount}" />
             </Border>
 
             <TextBox
@@ -76,8 +74,6 @@
 
                 <Style Selector="ToggleButton:checked">
                     <Setter Property="Background" Value="#abd7fb" />
-                    <!--  Change to your desired pressed color  -->
-
                 </Style>
                 <Style Selector="ToggleButton">
                     <Setter Property="IsHitTestVisible" Value="False" />
@@ -103,8 +99,9 @@
 
                 <Style Selector="ToggleButton:checked">
                     <Setter Property="Background" Value="#abd7fb" />
-                    <!--  Change to your desired pressed color  -->
-
+                </Style>
+                <Style Selector="ToggleButton">
+                    <Setter Property="IsHitTestVisible" Value="False" />
                 </Style>
 
             </StackPanel.Styles>
@@ -132,11 +129,9 @@
                 <TextBlock
                     Margin="40,0"
                     FontSize="18"
-					Text="{Binding Sharedata.ProgressMessage}"
                     FontStyle="Italic"
-                    FontWeight="Heavy">
-                    
-                </TextBlock>
+                    FontWeight="Heavy"
+                    Text="{Binding Sharedata.ProgressMessage}" />
                 <ProgressBar
                     Height="20"
                     Margin="20,0"
