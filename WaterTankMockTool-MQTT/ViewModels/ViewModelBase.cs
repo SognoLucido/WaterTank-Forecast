@@ -2,7 +2,7 @@
 
 namespace WaterTankMock_MQTT.ViewModels
 {
-    public class ViewModelBase : ObservableObject
+    public class ViewModelBase : ObservableValidator
     {
     }
 }

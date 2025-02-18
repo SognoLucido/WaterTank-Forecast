@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WaterTankMock_MQTT.Models;
 using WaterTankMock_MQTT.Services;
@@ -20,7 +23,7 @@ namespace WaterTankMock_MQTT.ViewModels
             Sharedata = _sharedata;
             mqttInit = _mqtt;
 
-           
+
 
             //BdMessg = build;
         }
@@ -69,7 +72,7 @@ namespace WaterTankMock_MQTT.ViewModels
                     Sharedata.StartTestDate = DateTime.SpecifyKind(DateTime.Parse(value), DateTimeKind.Utc);
 
                     //if (Days is not null)  OnPropertyChanged(nameof(Days));
-                    //if (Days is not null) Days = _days;
+                    if (Days is not null) Days = _days;
 
                 }
 
@@ -82,71 +85,47 @@ namespace WaterTankMock_MQTT.ViewModels
 
 
 
-        //BETTER VALIDATION TODO
+        [ObservableProperty] private string? _dayErrors;
 
-        private int _days;
+        
+
+        private string? _days;
+
+        [Required(ErrorMessage = "The 'Day' field is required.")]
+        [Range(1, 100, ErrorMessage = "The 'Day' value must be between 1 and 100.")]
         public string? Days
         {
-            get => _days.ToString();
+            get => _days;
             set
             {
 
-                if(int.TryParse(value ,out var pep))   
-                SetProperty(ref _days, pep);
-                else
+                SetProperty(ref _days, value, true); // `true` triggers validation
+                DayErrors = GetErrorsAsString(nameof(Days));
+
+
+
+                if (int.TryParse(value, out var pep))
                 {
-                   
-                    return;
-                 
+                    if (pep > 0)
+                        EnddatetextInfo = "End Date: " + Sharedata.StartTestDate.AddDays(pep).ToString();
+                    else EnddatetextInfo = "End Date: ----";
+
                 }
+                else EnddatetextInfo = "End Date: ----";
 
-                if (_days <= 0) return;
-                // if(value is null) return;
-                if (_datepicker is null) return;
-                //if(value <= 0) throw new ArgumentNullException(nameof(Days), "Invalid input: The number must be greater than 0.");
-
-                //OnPropertyChanged(nameof(Days));
-                //if (value is not null)
-                //{
-
-                //   var x = Sharedata.StartTestDate.AddDays((int)value).ToString();
-
-                EnddatetextInfo = "End Date: " + Sharedata.StartTestDate.AddDays(_days).ToString();
-                //}
-
-                //if (string.IsNullOrWhiteSpace(value))
-                //{
-                //    throw new ArgumentNullException(nameof(Days), "This field is required");
-                //}
-
-                //if (int.TryParse(value, out var numb))
-                //{
-                //    Sharedata.Toxdays = numb;
-                //}
-                //else
-                //{
-                //    throw new ArgumentException("Value must be a valid integer", nameof(Days));
-                //}
-
-                //OnPropertyChanged(nameof(Days));
-
-
+                if (!string.IsNullOrEmpty(DayErrors) || Date is null)
+                    EnddatetextInfo = "End Date: ----";
 
             }
         }
 
+        private string GetErrorsAsString(string propertyName)
+        {
+            var errors = GetErrors(propertyName).Cast<ValidationResult>().Select(e => e.ErrorMessage);
+            return errors.Any() ? string.Join("\n", errors) : string.Empty;
+        }
 
 
-
-        //        public string BdMessg { get; } =
-        //        @"{
-        //""tank_id"": ""guid"",
-        //""timestamp"": ""2024-11-27 14:30:00"",
-        //""current_volume"": 500,
-        //""total_capacity"": 1000,
-        //""client_id"": ""guid"",
-        //""zone_code"": ""VARCHAR(10)""
-        //}";
 
         public string BdMessg { get => Pepz(); }
 
@@ -189,10 +168,14 @@ namespace WaterTankMock_MQTT.ViewModels
         [RelayCommand]
         private async Task Continue()
         {
-            if (Days is null) return;
 
-            testclean();
-            Sharedata.Toxdays = _days;
+            //if (Valid is null || !(bool)Valid) return;
+            //if (_days <= 0) return;
+            //if (Regex.IsMatch(_days, @"^\d+$")) return;
+
+            if (!string.IsNullOrEmpty(DayErrors) || Date is null) return;
+
+            Sharedata.Toxdays = int.Parse(_days!);
 
             await Sharedata.Changepage(Page.Start);
             await mqttInit.Startsim();
@@ -201,16 +184,11 @@ namespace WaterTankMock_MQTT.ViewModels
         [RelayCommand]
         private async Task Goback()
         {
-            testclean();
+
             await Sharedata.Changepage(Page.Options);
 
         }
 
-        //temp to fix
-        private void testclean()
-        {
-            EnddatetextInfo = "End Date: ----";
-        }
 
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
@@ -14,25 +16,24 @@ namespace WaterTankMock_MQTT
 {
     public partial class App : Application
     {
+        public IServiceProvider Services =  ConfigureServices();
+
         public override void Initialize()
         {
+           
             AvaloniaXamlLoader.Load(this);
         }
 
         public override void OnFrameworkInitializationCompleted()
         {
+
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 // Line below is needed to remove Avalonia data validation.
                 // Without this line you will get duplicate validations from both Avalonia and CT
-                BindingPlugins.DataValidators.RemoveAt(0);
+                DisableAvaloniaDataAnnotationValidation();
 
-
-                var collection = new ServiceCollection();
-                collection.AddServices();
-                var services = collection.BuildServiceProvider();
-
-                var vm = services.GetRequiredService<MainWindowViewModel>();
+                var vm = Services.GetRequiredService<MainWindowViewModel>();
 
                 desktop.MainWindow = new MainWindow
                 {
@@ -42,13 +43,26 @@ namespace WaterTankMock_MQTT
 
             base.OnFrameworkInitializationCompleted();
         }
-    }
 
 
-    public static class ServiceCollectionExtensions
-    {
-        public static void AddServices(this IServiceCollection services)
+        private void DisableAvaloniaDataAnnotationValidation()
         {
+            // Get an array of plugins to remove
+            var dataValidationPluginsToRemove =
+                BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
+
+            // remove each entry found
+            foreach (var plugin in dataValidationPluginsToRemove)
+            {
+                BindingPlugins.DataValidators.Remove(plugin);
+            }
+        }
+
+
+        private static IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+
             services.AddTransient<SimViewModel>();
             services.AddSingleton<SettingsTankViewModel>();
             services.AddSingleton<MainWindowViewModel>();
@@ -63,13 +77,19 @@ namespace WaterTankMock_MQTT
             services.AddTransient<MainWindow>();
             services.AddTransient<SettingsTankView>();
             services.AddTransient<SimView>();
-          
+
 
             services.AddSingleton<Sharedata>();
             services.AddSingleton<MqttInit>();
             services.AddSingleton<PagesController>();
 
+            return services.BuildServiceProvider();
         }
+
+
+
     }
+
+
 
 }

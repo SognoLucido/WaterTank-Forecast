@@ -1,5 +1,10 @@
 ﻿
+using Avalonia;
+using Avalonia.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using WaterTankMock_MQTT.Models;
 using WaterTankMock_MQTT.ViewModels;
@@ -20,14 +25,16 @@ namespace WaterTankMock_MQTT.Services
     public partial class PagesController : ViewModelBase 
     {
 
- 
+        private readonly IServiceProvider serviceProvider;
         private ViewModelBase[] PageCollection { get; set; } = new ViewModelBase[5];
-        public PagesController(SettingsTankViewModel Tankset,RecapViewModel recap,OptionsViewModel options,SimViewModel sim , StartViewModel start) 
+        public PagesController(IServiceProvider _serviceProvider,SettingsTankViewModel Tankset,RecapViewModel recap,OptionsViewModel options,/*SimViewModel sim ,*/ StartViewModel start) 
         {
+            serviceProvider = _serviceProvider;
+
             PageCollection[0] = Tankset;
             PageCollection[1] = recap;
             PageCollection[2] = options;
-            PageCollection[3] = sim;
+           // PageCollection[3] = sim;
             PageCollection[4] = start;
             
         }
@@ -38,9 +45,21 @@ namespace WaterTankMock_MQTT.Services
 
         public async Task Changepage(Page pagename)
         {
-          
 
-            Pagez = pagename == Page.Null ? null : PageCollection[(int)pagename];
+            Pagez = pagename switch
+            {
+                Page.Null  => null,
+                Page.TankSettings or
+                Page.Options or
+                Page.Start or
+                Page.Recap => PageCollection[(int)pagename],
+                Page.Sim => serviceProvider.GetRequiredService<SimViewModel>(),
+               _ => throw new ArgumentOutOfRangeException("Invalid page index")
+
+
+            };
+
+      
 
 
         }

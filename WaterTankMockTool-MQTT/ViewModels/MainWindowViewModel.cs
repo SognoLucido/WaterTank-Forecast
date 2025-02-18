@@ -65,7 +65,7 @@ namespace WaterTankMock_MQTT.ViewModels
 
         private async void Sharedata_PageItemselected(object? sender, Page e)
         {
-          await  Pages.Changepage(e);
+          await Pages.Changepage(e);
         }
 
 
