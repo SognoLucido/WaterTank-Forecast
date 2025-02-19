@@ -16,7 +16,7 @@ namespace WaterTankMock_MQTT.Services.Mqtt;
 public class MqttInit
 {
     private readonly List<IMqttClient> clients = [];
-    private MqttClientFactory? factory = new(); // to fix this create new one on connection not on class init
+    private MqttClientFactory? factory ; // to fix this create new one on connection not on class init
   
     public event EventHandler<bool>? ConnectionStatus;
     private MqttClientOptions? options;
@@ -37,6 +37,8 @@ public class MqttInit
     public async Task Checkconnection(string ip, int port, CancellationToken ctoken)
     {
         Onlinetoken = ctoken;
+
+        factory = new();
 
         using var mqttClient = factory.CreateMqttClient();
         var mqttClientOptions = new MqttClientOptionsBuilder()
@@ -65,7 +67,7 @@ public class MqttInit
 
             if (mqttClient.IsConnected) ConnectionStatus?.Invoke(this, true);
 
-            while (mqttClient.IsConnected && !ctoken.IsCancellationRequested)
+            while (!ctoken.IsCancellationRequested && mqttClient.IsConnected )
             {
 
                 await Task.Delay(5000, ctoken);
@@ -93,7 +95,7 @@ public class MqttInit
         }
 
         clients.Clear();
-        factory = new();
+        factory = null;
         ResetTriggers();
 
         ip = null;
@@ -105,7 +107,7 @@ public class MqttInit
 
     public async Task Startsim()
     {
-
+        Sharedata.Mqttbusy = true;
         Sharedata.Daycount = 0;
         Sharedata.ProgressBar = 0;
         var DateBackup = Sharedata.StartTestDate;
@@ -119,7 +121,7 @@ public class MqttInit
 
         await Start();
 
-
+        Sharedata.Mqttbusy = false;
     }
 
 

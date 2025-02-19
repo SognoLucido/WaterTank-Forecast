@@ -35,7 +35,7 @@ namespace WaterTankMock_MQTT.Services
             PageCollection[1] = recap;
             PageCollection[2] = options;
            // PageCollection[3] = sim;
-            PageCollection[4] = start;
+            //PageCollection[4] = start;
             
         }
 
@@ -51,9 +51,11 @@ namespace WaterTankMock_MQTT.Services
                 Page.Null  => null,
                 Page.TankSettings or
                 Page.Options or
-                Page.Start or
+                //Page.Start or
                 Page.Recap => PageCollection[(int)pagename],
+                Page.Start => serviceProvider.GetRequiredService<StartViewModel>(),
                 Page.Sim => serviceProvider.GetRequiredService<SimViewModel>(),
+
                _ => throw new ArgumentOutOfRangeException("Invalid page index")
 
 

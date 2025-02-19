@@ -12,6 +12,8 @@ using WaterTankMock_MQTT.Services.Mqtt;
 using WaterTankMock_MQTT.ViewModels;
 using WaterTankMock_MQTT.Views;
 
+
+
 namespace WaterTankMock_MQTT
 {
     public partial class App : Application
@@ -68,7 +70,8 @@ namespace WaterTankMock_MQTT
             services.AddSingleton<MainWindowViewModel>();
             services.AddTransient<RecapViewModel>();
             services.AddTransient<OptionsViewModel>();
-            services.AddSingleton<StartViewModel>();
+            services.AddTransient<StartViewModel>();
+           
 
 
             services.AddTransient<StartView>();
@@ -77,6 +80,7 @@ namespace WaterTankMock_MQTT
             services.AddTransient<MainWindow>();
             services.AddTransient<SettingsTankView>();
             services.AddTransient<SimView>();
+           
 
 
             services.AddSingleton<Sharedata>();

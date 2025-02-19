@@ -1,11 +1,12 @@
 ﻿
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using WaterTankMock_MQTT.Models;
 using WaterTankMock_MQTT.Services;
 using WaterTankMock_MQTT.Services.Mqtt;
@@ -16,7 +17,7 @@ namespace WaterTankMock_MQTT.ViewModels
     {
 
         public Sharedata Sharedata { get; }
-        public PagesController Pages { get; }
+        public  PagesController Pages { get; }
 
         private CancellationTokenSource? _cTokenDisconnectfrommqtt;
 
@@ -26,11 +27,11 @@ namespace WaterTankMock_MQTT.ViewModels
         private readonly MqttInit Mqtt;
         const int Mqttdefport = 1883;
 
-        
 
-        public MainWindowViewModel(MqttInit _mqtt, Sharedata sharedata,PagesController pages)
+
+        public MainWindowViewModel(MqttInit _mqtt, Sharedata sharedata, PagesController pages)
         {
-            
+
             Pages = pages;
             Sharedata = sharedata;
             Sharedata.DataChanged += Sharedata_PageItemselected;
@@ -39,7 +40,7 @@ namespace WaterTankMock_MQTT.ViewModels
             ConnectionIP = "localhost";
             Statustext = "Disconnected";
             Mqtt.ConnectionStatus += HandleConnectionStatus;
-           
+
         }
 
         private async void HandleConnectionStatus(object? sender, bool isConnected)
@@ -47,9 +48,9 @@ namespace WaterTankMock_MQTT.ViewModels
             if (isConnected)
             {
                 Statustext = "Connected";
-               await Pages.Changepage(Page.Recap);
+                await Pages.Changepage(Page.Recap);
                 Connected = true;
-               
+
             }
             else
             {
@@ -58,14 +59,14 @@ namespace WaterTankMock_MQTT.ViewModels
                 Loadingbar = false;
                 Sharedata.SelectedTankItem = null;
                 await Pages.Changepage(Page.Null);
-               
+
             }
-           
+
         }
 
         private async void Sharedata_PageItemselected(object? sender, Page e)
         {
-          await Pages.Changepage(e);
+            await Pages.Changepage(e);
         }
 
 
@@ -75,21 +76,22 @@ namespace WaterTankMock_MQTT.ViewModels
 
 
         [ObservableProperty] private int _keytotriggers;
-      
-        [ObservableProperty]private string _statustext;
-        [ObservableProperty] private bool _loadingbar = false;
-       
-        [ObservableProperty] private bool _addandclearvisib = true;
-        
-     
 
-       
+        [ObservableProperty] private string _statustext;
+        [ObservableProperty] private bool _loadingbar = false;
+
+        [ObservableProperty] private bool _addandclearvisib = true;
+
+
+
+
 
         private ObservableCollection<TankItem>? Backuplist;
 
 
 
-        /*[ObservableProperty]*/ private bool _connected;
+        /*[ObservableProperty]*/
+        private bool _connected;
 
         public bool Connected
         {
@@ -98,7 +100,7 @@ namespace WaterTankMock_MQTT.ViewModels
             {
                 SetProperty(ref _connected, value);
 
-                if (value  && (Pages.Pagez is null || Pages.Pagez is SettingsTankViewModel))
+                if (value && (Pages.Pagez is null || Pages.Pagez is SettingsTankViewModel))
                 {
                     Sharedata.Gotorecap = true;
                 }
@@ -118,9 +120,9 @@ namespace WaterTankMock_MQTT.ViewModels
             {
 
 
-                if(string.IsNullOrEmpty(_search) && !string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(_search) && !string.IsNullOrEmpty(value))
                 {
-                    
+
                     Backuplist = Sharedata.Items;
                     SetProperty(ref _search, value);
                 }
@@ -130,13 +132,13 @@ namespace WaterTankMock_MQTT.ViewModels
                 }
 
 
-               
+
 
                 if (!string.IsNullOrEmpty(value))
                 {
                     Addandclearvisib = false;
 
-                       var orderbysearch = Sharedata.Items.Where(a => a.Name.Contains(value));
+                    var orderbysearch = Sharedata.Items.Where(a => a.Name.Contains(value));
 
                     Sharedata.Items = new ObservableCollection<TankItem>(orderbysearch);
 
@@ -146,7 +148,7 @@ namespace WaterTankMock_MQTT.ViewModels
                     Sharedata.Items = Backuplist;
                     Addandclearvisib = true;
                 }
-              
+
 
 
 
@@ -184,20 +186,20 @@ namespace WaterTankMock_MQTT.ViewModels
             //for (int i = 0; i < 150; i++)
             //{
 
-                var newGuid = Guid.NewGuid();
-                var Newitem = new TankItem
-                {
-                    Name = newGuid.ToString()[..5] + "-TankItem",
-                    Id = newGuid,
-                    Capacity = rnd.Next(500, 1001),
+            var newGuid = Guid.NewGuid();
+            var Newitem = new TankItem
+            {
+                Name = newGuid.ToString()[..5] + "-TankItem",
+                Id = newGuid,
+                Capacity = rnd.Next(500, 1001),
 
-                };
+            };
 
-                Newitem.CurrentLevel = rnd.Next(Newitem.Capacity / 2, Newitem.Capacity);
+            Newitem.CurrentLevel = rnd.Next(Newitem.Capacity / 2, Newitem.Capacity);
 
-                Newitem.Starring = false;
+            Newitem.Starring = false;
 
-                Sharedata.Items.Add(Newitem);
+            Sharedata.Items.Add(Newitem);
             //}
             //Backuplist = Items;
 
@@ -205,9 +207,13 @@ namespace WaterTankMock_MQTT.ViewModels
         }
 
 
+        
+
         [RelayCommand]
         private async Task Testconnection()
         {
+
+
             Loadingbar = true;
 
             _cTokenDisconnectfrommqtt = new CancellationTokenSource();
@@ -217,10 +223,11 @@ namespace WaterTankMock_MQTT.ViewModels
                 port = Mqttdefport;
             }
 
+          
+            await Mqtt.Checkconnection(ConnectionIP, port, _cTokenDisconnectfrommqtt.Token);
+           
 
-             Mqtt.Checkconnection(ConnectionIP,port,_cTokenDisconnectfrommqtt.Token);
-
-
+            Debug.WriteLine("DOONE ");
 
         }
 
@@ -238,7 +245,7 @@ namespace WaterTankMock_MQTT.ViewModels
         {
 
             Sharedata.Gotorecap = false;
-           await Pages.Changepage(Page.Recap);
+            await Pages.Changepage(Page.Recap);
 
 
         }
@@ -250,8 +257,8 @@ namespace WaterTankMock_MQTT.ViewModels
         [RelayCommand]
         private async Task Tests()
         {
-           
-            
+
+
 
 
         }

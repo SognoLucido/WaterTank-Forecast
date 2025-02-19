@@ -19,13 +19,13 @@ namespace WaterTankMock_MQTT.Models
         public event EventHandler<Page>? DataChanged ;
 
 
-        [ObservableProperty]
-        private ObservableCollection<TankItem>? _items;
+        [ObservableProperty] private ObservableCollection<TankItem>? _items;
 
         [ObservableProperty] private bool _gotorecap = false;
 
         public string MqttTopic { get; set; } = "watertank";
 
+        [ObservableProperty] private bool _mqttbusy = false;
 
         private TankItem? _selectedTankItem;
         public TankItem? SelectedTankItem

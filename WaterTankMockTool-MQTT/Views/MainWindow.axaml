@@ -234,6 +234,7 @@
             HorizontalAlignment="Right"
             Classes="accent"
             Command="{Binding TestconnectionCommand}"
+			IsEnabled="{Binding !Sharedata.Mqttbusy}"
             IsVisible="{Binding !Connected}">
             <TextBlock
                 HorizontalAlignment="Center"
