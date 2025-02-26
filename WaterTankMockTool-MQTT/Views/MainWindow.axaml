@@ -63,71 +63,74 @@
             RadiusY="3" />
 
 
-		<Button
-				  Grid.Column="1"
-				  Width="90"
-				  Height="50"
-				  Margin="0,0,10,0"
-				  HorizontalAlignment="Right"
-				  Background="#7c1e8f"
-				  Classes="accent"
-				  Command="{Binding DisconnectCommand}"
-				  IsVisible="{Binding Connected}">
-			<TextBlock
+        <Button
+            Grid.Column="1"
+            Width="90"
+            Height="50"
+            Margin="0,0,10,0"
+            HorizontalAlignment="Right"
+            Background="#7c1e8f"
+            Classes="accent"
+            Command="{Binding DisconnectCommand}"
+            IsVisible="{Binding Connected}">
+            <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontWeight="Bold">
-				Disconn.
-			</TextBlock>
-		</Button>
+                Disconn.
+            </TextBlock>
+        </Button>
 
-		<StackPanel>
-			
-			
-		
-		<!--  {Binding Sharedata.Gotorecap}  -->
-		<Button
-            Margin="6,2,6,0"
-            VerticalAlignment="Top"
-			IsVisible="{Binding Sharedata.Gotorecap}"
-			Command="{Binding GotorecapButtonCommand}"
-            Classes="accent"
-            ZIndex="1">
-			GO to RECAP --->
-		</Button>
-		
-		<TextBlock
-            Margin="10"
-            HorizontalAlignment="Center"
-            Text="{Binding Statustext}" />
+        <StackPanel>
 
 
 
-		<TextBox
-            Height="30"
-            Margin="10,0,10,0"
-			IsVisible="{Binding !Connected}"
-            VerticalAlignment="Bottom"
-            BorderBrush="{Binding $self.Foreground}"
-            BorderThickness="1"
-            Classes="solo"
-            CornerRadius="32"
-            Text="{Binding Search, Mode=OneWayToSource}"
-            Theme="{StaticResource SoloTextBox}"
-            Watermark="Search item">
-            <TextBox.InnerLeftContent >
-                <Border Width="{Binding $self.Bounds.Height}" IsEnabled="{Binding !Connected}" Height="{Binding $parent[TextBox].Height}">
-                    <avalonia:MaterialIcon
-                        Width="20"
-                        Height="20"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Kind="Magnify" />
-                </Border>
-            </TextBox.InnerLeftContent>
-        </TextBox>
-			
-		</StackPanel>
+            <!--  {Binding Sharedata.Gotorecap}  -->
+            <Button
+                Margin="6,2,6,0"
+                VerticalAlignment="Top"
+                Classes="accent"
+                Command="{Binding GotorecapButtonCommand}"
+                IsVisible="{Binding Sharedata.Gotorecap}"
+                ZIndex="1">
+                GO to RECAP --->
+            </Button>
+
+            <TextBlock
+                Margin="10"
+                HorizontalAlignment="Center"
+                Text="{Binding Statustext}" />
+
+
+
+            <TextBox
+                Height="30"
+                Margin="10,0,10,0"
+                VerticalAlignment="Bottom"
+                BorderBrush="{Binding $self.Foreground}"
+                BorderThickness="1"
+                Classes="solo"
+                CornerRadius="32"
+                IsVisible="{Binding !Connected}"
+                Text="{Binding Search, Mode=OneWayToSource}"
+                Theme="{StaticResource SoloTextBox}"
+                Watermark="Search item">
+                <TextBox.InnerLeftContent>
+                    <Border
+                        Width="{Binding $self.Bounds.Height}"
+                        Height="{Binding $parent[TextBox].Height}"
+                        IsEnabled="{Binding !Connected}">
+                        <avalonia:MaterialIcon
+                            Width="20"
+                            Height="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Kind="Magnify" />
+                    </Border>
+                </TextBox.InnerLeftContent>
+            </TextBox>
+
+        </StackPanel>
 
         <StackPanel
             Grid.Column="1"
@@ -158,10 +161,41 @@
             IsIndeterminate="True"
             IsVisible="{Binding Loadingbar}" />
 
-        <StackPanel Grid.Row="1">
+
+
+
+        <Border
+            Grid.Row="1"
+            Width="40"
+            Height="20"
+            Margin="4"
+			ZIndex="1"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Background="#FF3B30"
+            BorderBrush="Black"
+            BorderThickness="1"
+			IsVisible="{Binding Counter}"
+            CornerRadius="5">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Foreground="#FFFFFF"
+				Text="{Binding NotificationItemstring}"
+				>
+                
+            </TextBlock>
+        </Border>
+
+        <Grid
+            Grid.Row="1"
+            RowDefinitions="1.2*,0.4*"
+            ShowGridLines="False">
+
 
             <ListBox
-                Height="280"
+                Height="220"
                 Margin="5"
                 ItemsSource="{Binding Sharedata.Items}"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -191,28 +225,50 @@
 
             <StackPanel
                 Grid.Row="1"
-                Height="30"
-                Margin="2"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Orientation="Horizontal">
-                <Button
-                    Width="100"
-                    Classes="accent"
-                    Command="{Binding AddItemCommand}"
-                    CornerRadius="5,0,0,5"
-                    IsEnabled="{Binding Addandclearvisib}">
-                    Add
-                </Button>
-                <Button
-                    Background="#7c1e8f"
-                    Command="{Binding ClearAllCommand}"
-                    CornerRadius="0,4,4,0"
-                    IsEnabled="{Binding Addandclearvisib}">
-                    Clear
-                </Button>
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
+
+
+				<NumericUpDown
+                    Width="171"
+                    Height="47"
+                    Background="White"
+                    BorderBrush="Black"
+                    BorderThickness="1.2"
+                    CornerRadius="0,0,0,0"
+                    FormatString="0"
+                    Value="{Binding Itemstoadd}" />
+
+                <StackPanel
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+
+
+                    <Button
+                        Width="103"
+                        Classes="accent"
+                        Command="{Binding AddItemCommand}"
+                        CornerRadius="0,0,0,0"
+                        IsEnabled="{Binding Addandclearvisib}">
+                        Add
+                    </Button>
+                    <Button
+                        Width="67"
+                        Background="#7c1e8f"
+                        Classes="accent"
+                        Command="{Binding ClearAllCommand}"
+                        CornerRadius="0,0,0,0"
+                        IsEnabled="{Binding Addandclearvisib}">
+                        Clear
+                    </Button>
+
+                </StackPanel>
+
+
             </StackPanel>
-        </StackPanel>
+        </Grid>
 
         <!--  PAGEEE  -->
         <ContentControl
@@ -234,7 +290,7 @@
             HorizontalAlignment="Right"
             Classes="accent"
             Command="{Binding TestconnectionCommand}"
-			IsEnabled="{Binding !Sharedata.Mqttbusy}"
+            IsEnabled="{Binding !Sharedata.Mqttbusy}"
             IsVisible="{Binding !Connected}">
             <TextBlock
                 HorizontalAlignment="Center"

@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,7 +18,7 @@ namespace WaterTankMock_MQTT.ViewModels
     {
 
         public Sharedata Sharedata { get; }
-        public  PagesController Pages { get; }
+        public PagesController Pages { get; }
 
         private CancellationTokenSource? _cTokenDisconnectfrommqtt;
 
@@ -42,6 +43,8 @@ namespace WaterTankMock_MQTT.ViewModels
             Mqtt.ConnectionStatus += HandleConnectionStatus;
 
         }
+
+
 
         private async void HandleConnectionStatus(object? sender, bool isConnected)
         {
@@ -68,6 +71,21 @@ namespace WaterTankMock_MQTT.ViewModels
         {
             await Pages.Changepage(e);
         }
+
+
+        private int _itemstoadd = 1;
+
+        public int Itemstoadd
+        {
+            get => _itemstoadd;
+            set
+            {
+                SetProperty(ref _itemstoadd, value);
+            }
+        }
+
+
+
 
 
 
@@ -155,8 +173,8 @@ namespace WaterTankMock_MQTT.ViewModels
             }
         }
 
-
-
+        [ObservableProperty] private bool _counter = false;
+        [ObservableProperty] private string _notificationItemstring = string.Empty;
 
 
         [RelayCommand]
@@ -168,7 +186,22 @@ namespace WaterTankMock_MQTT.ViewModels
 
             Sharedata.Items.Clear();
 
-            Sharedata.Items = new ObservableCollection<TankItem>(starredlist);
+            if(starredlist.Length < 7)
+            {
+                Counter = false;
+            }
+
+
+            if (starredlist is not null && starredlist.Length > 0)
+            {
+
+
+                Sharedata.Items = new ObservableCollection<TankItem>(starredlist);
+
+                NotificationItemstring = starredlist.Length.ToString();
+            }
+
+            Itemstoadd = 1;
 
             //OnPropertyChanged(nameof(Items));
 
@@ -183,31 +216,46 @@ namespace WaterTankMock_MQTT.ViewModels
             Random rnd = new();
 
 
-            //for (int i = 0; i < 150; i++)
-            //{
-
-            var newGuid = Guid.NewGuid();
-            var Newitem = new TankItem
+            for (int i = 0; i < Itemstoadd; i++)
             {
-                Name = newGuid.ToString()[..5] + "-TankItem",
-                Id = newGuid,
-                Capacity = rnd.Next(500, 1001),
 
-            };
+                var newGuid = Guid.NewGuid();
+                var Newitem = new TankItem
+                {
+                    Name = newGuid.ToString()[..5] + "-TankItem",
+                    Id = newGuid,
+                    Capacity = rnd.Next(500, 1001),
 
-            Newitem.CurrentLevel = rnd.Next(Newitem.Capacity / 2, Newitem.Capacity);
+                };
 
-            Newitem.Starring = false;
+                Newitem.CurrentLevel = rnd.Next(Newitem.Capacity / 2, Newitem.Capacity);
 
-            Sharedata.Items.Add(Newitem);
-            //}
+                Newitem.Starring = false;
+
+                Sharedata.Items.Add(Newitem);
+            }
+
+
+            if(Itemstoadd > 0)
+            {
+                var itemcount = Sharedata.Items?.Count;
+
+                if (itemcount is not null && itemcount > 7)
+                {
+                    NotificationItemstring = itemcount > 999 ? "999+" : itemcount.ToString();
+                    Counter = true;
+                }
+                else Counter = false;
+
+            }
+
             //Backuplist = Items;
 
 
         }
 
 
-        
+
 
         [RelayCommand]
         private async Task Testconnection()
@@ -223,9 +271,9 @@ namespace WaterTankMock_MQTT.ViewModels
                 port = Mqttdefport;
             }
 
-          
+
             await Mqtt.Checkconnection(ConnectionIP, port, _cTokenDisconnectfrommqtt.Token);
-           
+
 
             Debug.WriteLine("DOONE ");
 

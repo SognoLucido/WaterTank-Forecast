@@ -13,7 +13,12 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
         public DbFetch(IConfiguration _conf) { Connstring = _conf.GetConnectionString("postgresread")!; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tank_ids"></param>
+        /// <param name="Rangedays">Holawz</param>
+        /// <returns></returns>
         public async Task<IEnumerable<DBreturnData>> Fetchdata(Guid[]? tank_ids ,  int Rangedays )
         {
 
@@ -133,5 +138,21 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
         }
 
+        public async Task<IEnumerable<DbDataInfoItem>>? GetinfoItem(Guid[] Ids )
+        {
+            using (var Dbconn = new NpgsqlConnection(Connstring))
+            {
+
+
+                var x = await Dbconn.QueryAsync<DbDataInfoItem>("SELECT Tank_id , Current_volume WHERE Tank_id = ID@", new {ID = Ids[0] });
+
+
+
+
+                return null;
+
+            }
+            
+        }
     }
 }

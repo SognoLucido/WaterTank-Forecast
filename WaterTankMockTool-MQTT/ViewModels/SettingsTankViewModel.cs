@@ -41,7 +41,14 @@ namespace WaterTankMock_MQTT.ViewModels
                 SetProperty(ref _triggeritemselect, value);
 
 
-                if (value is not null) Rangevisible = true;
+                if (value is not null)
+                {
+                    Rangevisible = true;
+
+                    Number1 = value.Rangemin.ToString();
+                    Number2 = value.Rangemax.ToString();
+
+                }
                 else Rangevisible = false;
 
 
@@ -72,11 +79,11 @@ namespace WaterTankMock_MQTT.ViewModels
 
 
         [ObservableProperty]
-        private string? _number1;
+        private string? _number1 ;
 
 
         [ObservableProperty]
-        private string? _number2;
+        private string? _number2 ;
 
 
 

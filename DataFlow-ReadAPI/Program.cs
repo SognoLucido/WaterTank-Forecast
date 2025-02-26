@@ -24,6 +24,7 @@ namespace DataFlow_ReadAPI
             //if (app.Environment.IsDevelopment())
             //{
                 app.MapOpenApi();
+              
             //}
 
             app.MapScalarApiReference(opt =>
