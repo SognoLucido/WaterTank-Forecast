@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -53,8 +54,11 @@ public partial class TankItem : ObservableObject
     //[ObservableProperty]
     //private bool _starred;
 
-    [ObservableProperty] private string? _stariconcolor;
-    [ObservableProperty] private string? _stariconname;
+    [ObservableProperty]
+    private IBrush _stariconcolor = Brushes.Transparent;
+
+    //[ObservableProperty] private string? _stariconcolor = "";
+    [ObservableProperty] private string? _stariconname = "";
 
 
     private bool _starring;
@@ -91,12 +95,12 @@ public partial class TankItem : ObservableObject
 
         if (status)
         {
-            Stariconcolor = "Yellow";
+            Stariconcolor = Brushes.Yellow;
             Stariconname = "Star";
         }
         else
         {
-            Stariconcolor = "";
+            Stariconcolor = Brushes.Black;
             Stariconname = "StarOutline";
         }
 
@@ -216,7 +220,7 @@ public partial class TankItem : ObservableObject
 
 public class TriggerItem(string name ,bool active)
 {
-    public bool Active { get; set; } = active;
+    public bool  Active { get; set; } = active;
 
     
     public int Rangemin { get; set; } = 1;

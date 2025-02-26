@@ -27,7 +27,7 @@ namespace WaterTankMock_MQTT.Services
 
         private readonly IServiceProvider serviceProvider;
         private ViewModelBase[] PageCollection { get; set; } = new ViewModelBase[5];
-        public PagesController(IServiceProvider _serviceProvider,SettingsTankViewModel Tankset,RecapViewModel recap,OptionsViewModel options,/*SimViewModel sim ,*/ StartViewModel start) 
+        public PagesController(IServiceProvider _serviceProvider,SettingsTankViewModel Tankset,RecapViewModel recap,OptionsViewModel options /*,SimViewModel sim , StartViewModel start*/) 
         {
             serviceProvider = _serviceProvider;
 

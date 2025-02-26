@@ -2,15 +2,15 @@
     x:Class="WaterTankMock_MQTT.Views.SettingsTankView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
     xmlns:vm="using:WaterTankMock_MQTT.ViewModels"
-    d:DesignHeight="324" 
+    d:DesignHeight="324"
     d:DesignWidth="600"
     x:DataType="vm:SettingsTankViewModel"
-	xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-	xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-    xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
     mc:Ignorable="d">
 
 
@@ -23,287 +23,289 @@
     </Design.DataContext>
 
 
-	<Grid  ColumnDefinitions="1*,2.5*" >
-		
-	
-	<TabControl Grid.Column="1" Background="White" TabStripPlacement="Top">
-     
-
-		<TabControl.Styles>
-			<Style Selector="TabItem">
-				<Setter Property="MinHeight" Value="35" />
-			</Style>
-		</TabControl.Styles>
-		<TabItem Header="Tank-Info">
+    <Grid ColumnDefinitions="1*,2.5*">
 
 
-			<Grid ColumnDefinitions="1*,0.2*" ShowGridLines="False">
-
-				<StackPanel
-					
-					Grid.Row="1"
-					HorizontalAlignment="Right"
-					VerticalAlignment="Center">
-
-					<TextBox
-						p1:TextFieldAssist.Label="Name"
-						Classes="outline"
-						Text="{Binding Sharedata.SelectedTankItem.Name, Mode=TwoWay}"
-						TextAlignment="Center"
-						Theme="{StaticResource OutlineTextBox}"
-						UseFloatingWatermark="True" />
-					<TextBox
-						p1:TextFieldAssist.Label="Capacity"
-						Classes="outline"
-						IsReadOnly="True"
-						Text="{Binding Sharedata.SelectedTankItem.Capacity, Mode=TwoWay}"
-						TextAlignment="Center"
-						Theme="{StaticResource OutlineTextBox}"
-						UseFloatingWatermark="True" />
-					<TextBox
-						p1:TextFieldAssist.Label="CurrentLv"
-						Classes="outline"
-						IsReadOnly="False"
-						Text="{Binding Sharedata.SelectedTankItem.CurrentLevel, Mode=TwoWay}"
-						TextAlignment="Center"
-						Theme="{StaticResource OutlineTextBox}"
-						UseFloatingWatermark="True" />
-					<TextBox
-						Width="325"
-						HorizontalAlignment="Right"
-						p1:TextFieldAssist.Label="Id"
-						Classes="outline"
-						IsReadOnly="True"
-						Text="{Binding Sharedata.SelectedTankItem.Id}"
-						Theme="{StaticResource OutlineTextBox}"
-						UseFloatingWatermark="True" />
-
-				</StackPanel>
-
-				<StackPanel
-					Grid.Column="1"
-					Margin="10,20,10,10"
-					Spacing="10">
+        <TabControl
+            Grid.Column="1"
+            Background="White"
+            TabStripPlacement="Top">
 
 
-					<!--
+            <TabControl.Styles>
+                <Style Selector="TabItem">
+                    <Setter Property="MinHeight" Value="35" />
+                </Style>
+            </TabControl.Styles>
+            <TabItem Header="Tank-Info">
+
+
+                <Grid ColumnDefinitions="1*,0.2*" ShowGridLines="False">
+
+                    <StackPanel
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center">
+
+                        <TextBox
+                            p1:TextFieldAssist.Label="Name"
+                            Classes="outline"
+                            Text="{Binding Sharedata.SelectedTankItem.Name, Mode=TwoWay}"
+                            TextAlignment="Center"
+                            Theme="{StaticResource OutlineTextBox}"
+                            UseFloatingWatermark="True" />
+                        <TextBox
+                            p1:TextFieldAssist.Label="Capacity"
+                            Classes="outline"
+                            IsReadOnly="True"
+                            Text="{Binding Sharedata.SelectedTankItem.Capacity, Mode=TwoWay}"
+                            TextAlignment="Center"
+                            Theme="{StaticResource OutlineTextBox}"
+                            UseFloatingWatermark="True" />
+                        <TextBox
+                            p1:TextFieldAssist.Label="CurrentLv"
+                            Classes="outline"
+                            IsReadOnly="False"
+                            Text="{Binding Sharedata.SelectedTankItem.CurrentLevel, Mode=TwoWay}"
+                            TextAlignment="Center"
+                            Theme="{StaticResource OutlineTextBox}"
+                            UseFloatingWatermark="True" />
+                        <TextBox
+                            Width="325"
+                            HorizontalAlignment="Right"
+                            p1:TextFieldAssist.Label="Id"
+                            Classes="outline"
+                            IsReadOnly="True"
+                            Text="{Binding Sharedata.SelectedTankItem.Id}"
+                            Theme="{StaticResource OutlineTextBox}"
+                            UseFloatingWatermark="True" />
+
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="10,20,10,10"
+                        Spacing="10">
+
+
+                        <!--
 						<controls:FloatingButton Background="#bdbdbd" Classes="Light Mini">
 							<avalonia:MaterialIcon Kind="PencilOutline" Width="27" Height="27" />
 						</controls:FloatingButton>
 						
 						-->
-					<controls:FloatingButton
-						Background="#bdbdbd"
-						Classes="Light Mini accent"
-						Command="{Binding StarCommand}">
-						<avalonia:MaterialIcon
-							Width="30"
-							Height="30"
-							Foreground="{Binding Sharedata.SelectedTankItem.Stariconcolor}"
-							Kind="{Binding Sharedata.SelectedTankItem.Stariconname}" />
-					</controls:FloatingButton>
-				</StackPanel>
+                        <controls:FloatingButton
+                            Background="#bdbdbd"
+                            Classes="Light Mini accent"
+                            Command="{Binding StarCommand}">
+                            <avalonia:MaterialIcon
+                                Width="30"
+                                Height="30"
+                                Foreground="{Binding Sharedata.SelectedTankItem.Stariconcolor}"
+                                Kind="{Binding Sharedata.SelectedTankItem.Stariconname}" />
+                        </controls:FloatingButton>
+                    </StackPanel>
 
-				<!-- <avalonia:MaterialIcon  Width="30" Height="30" Foreground="Yellow" Kind="Star" /> -->
-
-
-			</Grid>
-		</TabItem>
-
-		<TabItem Header="Tank-Simulation-Settings">
+                    <!-- <avalonia:MaterialIcon  Width="30" Height="30" Foreground="Yellow" Kind="Star" /> -->
 
 
+                </Grid>
+            </TabItem>
 
-
-			<Grid
-				ColumnDefinitions="1*,1*"
-				RowDefinitions="0.2*,1*"
-				ShowGridLines="False">
-
-
-				<Border
-					Grid.ColumnSpan="2"
-					BorderBrush="Black"
-					BorderThickness="0,0,0,1" />
-
-				<StackPanel
-					Grid.ColumnSpan="2"
-					HorizontalAlignment="Center"
-					VerticalAlignment="Center"
-					Orientation="Horizontal">
-
-					<TextBlock
-						VerticalAlignment="Center"
-						FontSize="17"
-						FontWeight="Black" />
-					<TextBox VerticalAlignment="Center">Daily routine</TextBox>
-
-
-					<Border
-						Width="20"
-						Height="20"
-						VerticalAlignment="Center"
-						BorderBrush="Black"
-						BorderThickness="1"
-						CornerRadius="10"
-						ToolTip.Placement="Bottom">
-
-						<StackPanel
-							HorizontalAlignment="Center"
-							VerticalAlignment="Center"
-							ToolTip.Placement="Bottom">
-
-							<avalonia:MaterialIcon Kind="Square" />
-							<ToolTip.Tip>
-								<StackPanel
-									Width="300"
-									Height="200"
-									HorizontalAlignment="Center">
-									<TextBlock FontSize="16">HowtoUse</TextBlock>
-									<TextBlock TextWrapping="Wrap">
-										The simulation runs for X days, with 10 ticks per day—1 tick every 3 seconds.
-										To enable a trigger, toggle the buttons below. When a trigger is enabled,
-										the MQTT tank client will send an MQTT message to the broker and scale resources
-										(water, configurable per trigger in settings).
-										The simulation will progress through each trigger, sending a message for each active one.
-										This process will repeat each day (days are configurable after connection)
-									</TextBlock>
-								</StackPanel>
-							</ToolTip.Tip>
-						</StackPanel>
-
-					</Border>
-
-
-				</StackPanel>
-
-
-				<ToggleButton
-					Grid.ColumnSpan="2"
-					Margin="0,0,10,0"
-					HorizontalAlignment="Right"
-					VerticalAlignment="Center"
-					Content="{Binding Togglesettingbuttonname}"
-					FontSize="12"
-					IsChecked="{Binding Settings}" />
-
-
-				<StackPanel
-					Grid.Row="1"
-					Width="170"
-					HorizontalAlignment="Center"
-					VerticalAlignment="Center"
-					IsVisible="{Binding !Settings}"
-					Spacing="10">
-
-					<StackPanel.Styles>
-
-						<Style Selector="ToggleButton:checked">
-							<Setter Property="Background" Value="#abd7fb" />
-
-						</Style>
-
-					</StackPanel.Styles>
-
-					<ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[0].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 1°</ToggleButton>
-					<ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[1].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 2°</ToggleButton>
-					<ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[2].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 3°</ToggleButton>
-					<ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[3].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 4°</ToggleButton>
-					<ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[4].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 5°</ToggleButton>
-				</StackPanel>
-
-
-				<StackPanel
-					Grid.Row="1"
-					Grid.Column="1"
-					Width="170"
-					HorizontalAlignment="Center"
-					VerticalAlignment="Center"
-					IsVisible="{Binding !Settings}"
-					Spacing="10">
-
-					<StackPanel.Styles>
-
-						<Style Selector="ToggleButton:checked">
-							<Setter Property="Background" Value="#abd7fb" />
-							<!--  Change to your desired pressed color  -->
-
-						</Style>
-
-					</StackPanel.Styles>
-
-					<ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[5].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 6°</ToggleButton>
-					<ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[6].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 7°</ToggleButton>
-					<ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[7].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 8°</ToggleButton>
-					<ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[8].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 9°</ToggleButton>
-					<ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[9].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 10°</ToggleButton>
-				</StackPanel>
+            <TabItem Header="Tank-Simulation-Settings">
 
 
 
-				<StackPanel
-					Grid.Row="1"
-					Grid.ColumnSpan="2"
-					Background="Azure"
-					IsVisible="{Binding Settings}">
 
-					<Border
-						Height="80"
-						Margin="10"
-						BorderBrush="Black"
-						BorderThickness="1"
-						CornerRadius="5">
-						<StackPanel
-							Margin="10"
-							HorizontalAlignment="Center"
-							VerticalAlignment="Bottom"
-							Orientation="Horizontal"
-							Spacing="5">
-							<TextBlock
-								VerticalAlignment="Center"
-								FontSize="17"
-								FontWeight="Black"
-								Text="{Binding Sharedata.SelectedTankItem.Activetriggers}" />
-							<TextBlock
-								Margin="0,0,40,0"
-								VerticalAlignment="Center"
-								FontSize="17"
-								FontWeight="Black"
-								Text="Active Trigger/s" />
-
-							<ComboBox
-								Width="150"
-								Margin="0,0,0,0"
-								VerticalAlignment="Top"
-								p1:ComboBoxAssist.Label="TriggerItem"
-								ItemsSource="{Binding Sharedata.SelectedTankItem.Triggerfiltered}"
-								SelectedItem="{Binding Triggeritemselect, Mode=TwoWay}"
-								Theme="{StaticResource MaterialOutlineComboBox}">
-								<ComboBox.ItemTemplate>
-									<DataTemplate>
-										<TextBlock Text="{Binding Name}" />
-									</DataTemplate>
-								</ComboBox.ItemTemplate>
-							</ComboBox>
-
-						</StackPanel>
-
-					</Border>
-
-					<TextBlock
-						Width="350"
-						Text="The range below represents the resource (water) amount to be scaled each day at the selected trigger. The system will randomly select a value within this range "
-						TextWrapping="Wrap" />
+                <Grid
+                    ColumnDefinitions="1*,1*"
+                    RowDefinitions="0.2*,1*"
+                    ShowGridLines="False">
 
 
-					<StackPanel
-						Margin="20,15,0,0"
-						HorizontalAlignment="Center"
-						IsEnabled="{Binding Rangevisible}"
-						Orientation="Horizontal"
-						Spacing="5">
+                    <Border
+                        Grid.ColumnSpan="2"
+                        BorderBrush="Black"
+                        BorderThickness="0,0,0,1" />
 
-						<!--
+                    <StackPanel
+                        Grid.ColumnSpan="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="17"
+                            FontWeight="Black" />
+                        <TextBox VerticalAlignment="Center">Daily routine</TextBox>
+
+
+                        <Border
+                            Width="20"
+                            Height="20"
+                            VerticalAlignment="Center"
+                            BorderBrush="Black"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            ToolTip.Placement="Bottom">
+
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                ToolTip.Placement="Bottom">
+
+                                <avalonia:MaterialIcon Kind="Square" />
+                                <ToolTip.Tip>
+                                    <StackPanel
+                                        Width="300"
+                                        Height="200"
+                                        HorizontalAlignment="Center">
+                                        <TextBlock FontSize="16">HowtoUse</TextBlock>
+                                        <TextBlock TextWrapping="Wrap">
+                                            The simulation runs for X days, with 10 ticks per day—1 tick every 3 seconds.
+                                            To enable a trigger, toggle the buttons below. When a trigger is enabled,
+                                            the MQTT tank client will send an MQTT message to the broker and scale resources
+                                            (water, configurable per trigger in settings).
+                                            The simulation will progress through each trigger, sending a message for each active one.
+                                            This process will repeat each day (days are configurable after connection)
+                                        </TextBlock>
+                                    </StackPanel>
+                                </ToolTip.Tip>
+                            </StackPanel>
+
+                        </Border>
+
+
+                    </StackPanel>
+
+
+                    <ToggleButton
+                        Grid.ColumnSpan="2"
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Content="{Binding Togglesettingbuttonname}"
+                        FontSize="12"
+                        IsChecked="{Binding Settings}" />
+
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Width="170"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        IsVisible="{Binding !Settings}"
+                        Spacing="10">
+
+                        <StackPanel.Styles>
+
+                            <Style Selector="ToggleButton:checked">
+                                <Setter Property="Background" Value="#abd7fb" />
+
+                            </Style>
+
+                        </StackPanel.Styles>
+
+                        <ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[0].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 1°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[1].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 2°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[2].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 3°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[3].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 4°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[4].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 5°</ToggleButton>
+                    </StackPanel>
+
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Width="170"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        IsVisible="{Binding !Settings}"
+                        Spacing="10">
+
+                        <StackPanel.Styles>
+
+                            <Style Selector="ToggleButton:checked">
+                                <Setter Property="Background" Value="#abd7fb" />
+                                <!--  Change to your desired pressed color  -->
+
+                            </Style>
+
+                        </StackPanel.Styles>
+
+                        <ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[5].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 6°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[6].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 7°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[7].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 8°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[8].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 9°</ToggleButton>
+                        <ToggleButton IsChecked="{Binding Sharedata.SelectedTankItem.Triggers[9].Active}" Theme="{StaticResource MaterialOutlineToggleButton}">Trigger 10°</ToggleButton>
+                    </StackPanel>
+
+
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Background="Azure"
+                        IsVisible="{Binding Settings}">
+
+                        <Border
+                            Height="80"
+                            Margin="10"
+                            BorderBrush="Black"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <StackPanel
+                                Margin="10"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Orientation="Horizontal"
+                                Spacing="5">
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="17"
+                                    FontWeight="Black"
+                                    Text="{Binding Sharedata.SelectedTankItem.Activetriggers}" />
+                                <TextBlock
+                                    Margin="0,0,40,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="17"
+                                    FontWeight="Black"
+                                    Text="Active Trigger/s" />
+
+                                <ComboBox
+                                    Width="150"
+                                    Margin="0,0,0,0"
+                                    VerticalAlignment="Top"
+                                    p1:ComboBoxAssist.Label="TriggerItem"
+                                    ItemsSource="{Binding Sharedata.SelectedTankItem.Triggerfiltered}"
+                                    SelectedItem="{Binding Triggeritemselect, Mode=TwoWay}"
+                                    Theme="{StaticResource MaterialOutlineComboBox}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                            </StackPanel>
+
+                        </Border>
+
+                        <TextBlock
+                            Width="350"
+                            Text="The range below represents the resource (water) amount to be scaled each day at the selected trigger. The system will randomly select a value within this range "
+                            TextWrapping="Wrap" />
+
+
+                        <StackPanel
+                            Margin="20,15,0,0"
+                            HorizontalAlignment="Center"
+                            IsEnabled="{Binding Rangevisible}"
+                            Orientation="Horizontal"
+                            Spacing="5">
+
+                            <!--
 							<StackPanel.Styles>
 								<Style Selector="TextBlock#PART_PlaceholderText">
 									<Setter Property="Opacity" Value="1"></Setter>
@@ -311,59 +313,62 @@
 							</StackPanel.Styles>
 							-->
 
-						<TextBox
-							Width="120"
-							VerticalAlignment="Center"
-							p1:TextFieldAssist.Label="{Binding Triggeritemselect.Rangemin}"
-							Classes="outline dense clearButton"
-							Text="{Binding Number1, Mode=TwoWay}"
-							Theme="{StaticResource OutlineTextBox}"
-							UseFloatingWatermark="True" />
-						<TextBlock
-							Margin="0,5,0,0"
-							VerticalAlignment="Center"
-							FontWeight="ExtraBold"
-							Text="-" />
-						<TextBox
-							Width="120"
-							VerticalAlignment="Center"
-							p1:TextFieldAssist.Label="{Binding Triggeritemselect.Rangemax}"
-							Classes="outline dense clearButton"
-							Text="{Binding Number2, Mode=TwoWay}"
-							Theme="{StaticResource OutlineTextBox}"
-							UseFloatingWatermark="True" />
-						<Button
-							Width="60"
-							Height="40"
-							Margin="10,0,0,0"
-							HorizontalAlignment="Center"
-							VerticalAlignment="Bottom"
-							Classes="accent"
-							Command="{Binding SaverangeCommand}">
-							<avalonia:MaterialIcon Kind="ContentSave" />
-						</Button>
-					</StackPanel>
-					<TextBlock
-						Margin="30,2,0,0"
-						HorizontalAlignment="Left"
-						FontSize="10"
-						Foreground="red"
-						Text="{Binding Settingerror}" />
+                            <!--  p1:TextFieldAssist.Label="{Binding Triggeritemselect.Rangemin}"  -->
+                            <TextBox
+                                Width="120"
+                                VerticalAlignment="Center"
+                                p1:TextFieldAssist.Label="Rangemin"
+                                Classes="outline dense clearButton"
+                                Text="{Binding Number1, Mode=TwoWay}"
+                                Theme="{StaticResource OutlineTextBox}"
+                                UseFloatingWatermark="True" />
+                            <TextBlock
+                                Margin="0,5,0,0"
+                                VerticalAlignment="Center"
+                                FontWeight="ExtraBold"
+                                Text="-" />
 
-				</StackPanel>
+                            <!--  p1:TextFieldAssist.Label="{Binding Triggeritemselect.Rangemax}"  -->
+                            <TextBox
+                                Width="120"
+                                VerticalAlignment="Center"
+                                p1:TextFieldAssist.Label="Rangemax"
+                                Classes="outline dense clearButton"
+                                Text="{Binding Number2, Mode=TwoWay}"
+                                Theme="{StaticResource OutlineTextBox}"
+                                UseFloatingWatermark="True" />
+                            <Button
+                                Width="60"
+                                Height="40"
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Classes="accent"
+                                Command="{Binding SaverangeCommand}">
+                                <avalonia:MaterialIcon Kind="ContentSave" />
+                            </Button>
+                        </StackPanel>
+                        <TextBlock
+                            Margin="30,2,0,0"
+                            HorizontalAlignment="Left"
+                            FontSize="10"
+                            Foreground="red"
+                            Text="{Binding Settingerror}" />
 
-
-
-
-
-			</Grid>
+                    </StackPanel>
 
 
 
 
 
+                </Grid>
 
-			<!--
+
+
+
+
+
+                <!--
 			<StackPanel Margin="10" HorizontalAlignment="Center" Spacing="10" VerticalAlignment="Top">
 				<TextBlock  HorizontalAlignment="Center" Background="Red"   FontWeight="Bold" Text="Daily routine" FontSize="20"  > </TextBlock>
 				<CheckBox HorizontalAlignment="Center"></CheckBox>
@@ -373,11 +378,11 @@
 
 
 
-		</TabItem>
+            </TabItem>
 
 
 
 
-	</TabControl>
-	</Grid>
+        </TabControl>
+    </Grid>
 </UserControl>
