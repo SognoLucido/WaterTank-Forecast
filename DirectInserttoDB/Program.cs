@@ -11,10 +11,10 @@ namespace DirectInserttoDB
 
         static async Task Main(string[] args)
         {
-            //Console.Write("number of item to insert : ");
+            Console.Write("number of items to be inserted : ");
+            int input = int.Parse(Console.ReadLine());
 
 
-            //int input = int.Parse(Console.ReadLine());
             Console.Write("start?");
             Console.ReadLine();
 
@@ -23,7 +23,7 @@ namespace DirectInserttoDB
             //await dbinserttest.Start();
 
             DBBulkinsert dBinsert = new DBBulkinsert();
-            await dBinsert.Start();
+            await dBinsert.Start(input);
           
             
 

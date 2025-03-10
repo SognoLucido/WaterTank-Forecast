@@ -1,5 +1,7 @@
 
+using System.Text.Json.Serialization;
 using DataFlow_ReadAPI.Services.DBFetching;
+using Microsoft.AspNetCore.Http.Json;
 using Scalar.AspNetCore;
 
 namespace DataFlow_ReadAPI
@@ -10,13 +12,21 @@ namespace DataFlow_ReadAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
-            builder.Services.AddControllers();
+
+            builder.Services.AddControllers()
+                  .AddJsonOptions(options =>
+                  {
+                      options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                  }); ;
+
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
             builder.Services.AddScoped<IDbFetch, DbFetch>();
+
+          
+
 
             var app = builder.Build();
 

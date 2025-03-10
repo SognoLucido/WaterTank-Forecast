@@ -23,9 +23,9 @@ namespace DataFlow_ReadAPI.Controllers
         [Route("lightdata")]
         public async Task<IActionResult> GetTankValor(
         [Description("array GUID[] : At least one Id is required . es. CAA73977-B67A-426D-8987-3EBCE846A452")]
-        [Required]
+        //[Required]
         [FromQuery]
-        Guid[] Tankid,
+        Guid[]? Tankid,
         DateTime? dateRange1,
         DateTime? dateRange2,
         bool ClientId = false,
@@ -33,10 +33,18 @@ namespace DataFlow_ReadAPI.Controllers
         bool TotalCapacity = false)
         {
 
+            Guid[] datatest = 
+            {
+                new("05bd994b-5109-438b-92e7-6a14829718d4") , 
+                new("39bf125b-2d2f-4f00-aae8-b5d598f89dbb") , 
+                new("3ff56eb2-4227-4c2e-ae7f-89bffd54ac23")
+            };
 
+           var returz = await dbcall.GetinfoItem(datatest,ClientId,ZoneCode,TotalCapacity);
 
+            return returz is not null ? Ok(returz) : NotFound();
 
-            return Ok();
+           // return Ok();
         }
 
 

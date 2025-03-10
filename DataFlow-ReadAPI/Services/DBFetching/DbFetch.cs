@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Text;
+using Dapper;
 using DataFlow_ReadAPI.Models;
 using Npgsql;
 using Npgsql.Internal;
@@ -138,21 +139,70 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
         }
 
-        public async Task<IEnumerable<DbDataInfoItem>>? GetinfoItem(Guid[] Ids )
+        //TODO
+        public async Task<IEnumerable<DbDataInfoItem>?> GetinfoItem(Guid[] Ids,DateTime a , DateTime b)
         {
             using (var Dbconn = new NpgsqlConnection(Connstring))
             {
 
 
-                var x = await Dbconn.QueryAsync<DbDataInfoItem>("SELECT Tank_id , Current_volume WHERE Tank_id = ID@", new {ID = Ids[0] });
-
-
-
-
                 return null;
 
             }
+
+        }
+
+        public async Task<IEnumerable<DbDataInfoItem>?> GetinfoItem(Guid[] Ids ,bool clientid, bool zcode, bool totcap)
+        {
+
+            StringBuilder sb = new();
+
+            sb.Append(',');
+
+            if (clientid) sb.Append(watertank.client_id.ToString() + ',');
+            if (zcode) sb.Append(watertank.zone_code.ToString() + ',');
+            if (totcap) sb.Append(watertank.total_capacity.ToString() + ',');
+
+
+            if (sb.Length > 0) sb.Length--;
+         
+            string pep = sb.ToString();
+
+
+
+            using var Dbconn = new NpgsqlConnection(Connstring);
+
+
+
+            var dbdata = await Dbconn.QueryAsync<DbDataInfoItem>(
+                "SELECT DISTINCT ON(tank_id) time,tank_id,current_volume " +
+                $"{pep}" +
+                " FROM watertank" +
+                " WHERE tank_id = ANY(@TANKID)" +
+                " ORDER BY tank_id, time DESC"
+                , new { TANKID = Ids });
+
+
+
+            if (!dbdata.Any()) return null;
+
+            foreach(var item in dbdata)
+            {
+                if (clientid)
+                    if (item.client_id is null) item.Client_id_info = "Client ID unavailable/not set for this record";
+
+                if (zcode)
+                    if (item.zone_code is null) item.Zone_code_info = "Zone code unavailable/not set for this record";
+
+                if (totcap)
+                    if (item.total_capacity is null) item.Total_capacity_info = "Total capacity  unavailable/not set for this record ";
             
+            }
+
+            return dbdata;
+
+           // return dbdata.Any() ? dbdata : null;
+
         }
     }
 }
