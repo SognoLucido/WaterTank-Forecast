@@ -1,6 +1,10 @@
-﻿using System.Text;
+﻿using System.Data.Common;
+using System.Text;
+using System.Text.Json;
+using System.Xml.Linq;
 using Dapper;
 using DataFlow_ReadAPI.Models;
+using Microsoft.AspNetCore.Components.Forms;
 using Npgsql;
 using Npgsql.Internal;
 
@@ -124,35 +128,60 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
                 return x;
 
-                //var data = Dbconn.Query(
-                //  sqlfetch)
-                //  .Select(x => new {
-                //      x.tank_id,
-                //      x.range_end,
-                //      x.days_remaining
-                //  })
-                //  .ToList();
-
+            
 
 
             }
 
         }
-
-        //TODO
-        public async Task<IEnumerable<DbDataInfoItem>?> GetinfoItem(Guid[] Ids,DateTime a , DateTime b)
+                
+      
+        public async Task<IEnumerable<DbInfoItemwithDATEtime>?> GetinfoItem(Guid[] Ids, bool clientid, bool zcode, bool totcap ,DateTime min , DateTime max)
         {
+
+            if(max.Hour == 00 && max.Minute == 00 && max.Second == 00)
+                max = max.AddDays(1);
+
             using (var Dbconn = new NpgsqlConnection(Connstring))
             {
+                string sql = @" SELECT 
+                    tank_id,  
+                    jsonb_agg(
+                        jsonb_build_object(
+                            'time', time,
+                            'current_volume', current_volume,
+                            'client_id', client_id,
+                            'zone_code', zone_code,
+                            'total_capacity', total_capacity
+                        ) ORDER BY time ASC     
+                    )  AS Jsondata
+                FROM watertank
+                WHERE (time >= @StartDate AND time <= @EndDate) 
+                 AND tank_id = ANY(@TankIds)
+                GROUP BY tank_id; ";
 
 
-                return null;
+                var Rawdbdata = await Dbconn.QueryAsync<DbjsonparseDTO>(sql,new { StartDate = min , EndDate = max , TankIds = Ids });
+
+
+                var options = new JsonSerializerOptions { Converters = { new UtcDateTimeConverter() } };
+
+
+                var Dbmapped = Rawdbdata.Select(r => new DbInfoItemwithDATEtime
+                {
+                    tank_id = r.tank_id,
+                    data = JsonSerializer.Deserialize<List<DateTimerange>>(r.Jsondata,options)
+                }).ToList();
+
+
+
+                return Dbmapped.Count == 0 ?  null : Dbmapped;
 
             }
 
         }
 
-        public async Task<IEnumerable<DbDataInfoItem>?> GetinfoItem(Guid[] Ids ,bool clientid, bool zcode, bool totcap)
+        public async Task<IEnumerable<DbInfoItem>?> GetinfoItem(Guid[] Ids ,bool clientid, bool zcode, bool totcap)
         {
 
             StringBuilder sb = new();
@@ -174,7 +203,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
 
 
-            var dbdata = await Dbconn.QueryAsync<DbDataInfoItem>(
+            var dbdata = await Dbconn.QueryAsync<DbInfoItem>(
                 "SELECT DISTINCT ON(tank_id) time,tank_id,current_volume " +
                 $"{pep}" +
                 " FROM watertank" +
@@ -195,7 +224,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                     if (item.zone_code is null) item.Zone_code_info = "Zone code unavailable/not set for this record";
 
                 if (totcap)
-                    if (item.total_capacity is null) item.Total_capacity_info = "Total capacity  unavailable/not set for this record ";
+                    if (item.total_capacity is null) item.Total_capacity_info = "Total capacity unavailable/not set for this record ";
             
             }
 

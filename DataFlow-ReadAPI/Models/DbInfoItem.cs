@@ -2,7 +2,7 @@
 
 namespace DataFlow_ReadAPI.Models
 {
-    public class DbDataInfoItem
+    public class DbInfoItem
     {
         public DateTime time { get; set; }
         public Guid tank_id { get; set; }
