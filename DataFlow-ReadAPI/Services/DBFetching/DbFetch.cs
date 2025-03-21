@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System.Data;
+using System.Data.Common;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
@@ -18,22 +19,80 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
         public DbFetch(IConfiguration _conf) { Connstring = _conf.GetConnectionString("postgresread")!; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tank_ids"></param>
-        /// <param name="Rangedays">Holawz</param>
-        /// <returns></returns>
-        public async Task<IEnumerable<DBreturnData>> Fetchdata(Guid[]? tank_ids ,  int Rangedays )
+        
+        public async Task<DBreturnDataDto?> Forecast(Guid[]? tank_ids, int Rangedays, Guid? clientid, string? zcode)
         {
 
-            const string sqlfetch = @"
+            tank_ids =
+            [
+                //new Guid("cc5fee02-03cd-45e9-9565-1e1fcff88d65"),
+                //new Guid("0df66b21-87e5-4cd0-8a85-44e758c207a1"),
+                //new Guid("014d96e3-8cf8-46f2-920f-ec925a8bf0ba"),
+                new Guid("841BA82E-6A6C-43E5-865B-A8D0DAE18D9D") // tankid with clientid and zcode test
+            ];
+
+
+            //CLIENTIDTEST
+            // new Guid("93CA9333-B607-4E74-B95C-9C2006D07BDB")
+            //Zonecodetest
+            // string "pep"
+                                                    
+
+            var sb = new StringBuilder();
+            var param = new DynamicParameters();
+
+
+            if(tank_ids is not null)
+            {
+                sb.Append("WHERE tank_id = ANY(@TankIds) ");
+                param.Add("TankIds", tank_ids);
+
+
+                if(clientid is not null)
+                {
+                    sb.Append("AND client_id = @CLIENTID ");
+                    param.Add("CLIENTID", clientid, DbType.Guid );
+                }
+                if(zcode is not null)
+                {
+                    sb.Append("AND zone_code = @ZONE ");
+                    param.Add("ZONE", zcode, DbType.String);
+                }
+
+
+            }
+            else
+            {
+                sb.Append("WHERE ");
+                bool whereEnable = false;
+
+                if (clientid is not null)
+                {
+                    sb.Append("client_id = @CLIENTID ");
+                    param.Add("CLIENTID", clientid, DbType.Guid);
+                    whereEnable = true;
+                }
+                if(zcode is not null)
+                {
+                    if(whereEnable)sb.Append("AND zone_code = @ZONE ");
+                    else sb.Append("zone_code = @ZONE ");
+                    param.Add("ZONE", zcode, DbType.String);
+                }
+
+            }
+
+
+            // WHERE tank_id = ANY(@TankIds)
+
+
+            string sqlfetch = $@"
                                  WITH tank_last_time AS (
                        SELECT DISTINCT ON (tank_id)
                        tank_id,
                        time AS last_time ,
                        current_volume
                        FROM watertank
+                       {sb}
                        ORDER BY tank_id, time DESC
                    ),
                 date_ranges AS (
@@ -118,17 +177,27 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
             // OLD SELECT g.tank_id, g.range_end ,  (g.last_volume / g.average_daily_consumption) as days_remaining   FROM recap_data as g"
 
+
+          
+
+
             using (var Dbconn = new NpgsqlConnection(Connstring))
             {
 
 
-               var x = await Dbconn.QueryAsync<DBreturnData>(sqlfetch);
+               var x = await Dbconn.QueryAsync<DBreturnData>(sqlfetch, param);
 
-
-
-                return x;
-
-            
+                if (x.Any())
+                {
+                    return new DBreturnDataDto
+                    {
+                        RangeDays = Rangedays,
+                        Clientid = clientid,
+                        Zonecode = zcode,
+                        Data = x
+                    };
+                }
+                else return null;
 
 
             }
@@ -188,9 +257,9 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
             sb.Append(',');
 
-            if (clientid) sb.Append(watertank.client_id.ToString() + ',');
-            if (zcode) sb.Append(watertank.zone_code.ToString() + ',');
-            if (totcap) sb.Append(watertank.total_capacity.ToString() + ',');
+            if (clientid) sb.Append(Watertank.client_id.ToString() + ',');
+            if (zcode) sb.Append(Watertank.zone_code.ToString() + ',');
+            if (totcap) sb.Append(Watertank.total_capacity.ToString() + ',');
 
 
             if (sb.Length > 0) sb.Length--;
@@ -233,5 +302,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
            // return dbdata.Any() ? dbdata : null;
 
         }
+
+      
     }
 }

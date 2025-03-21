@@ -19,13 +19,13 @@ namespace DirectInserttoDB
             Console.ReadLine();
 
 
-            //Dbinserttest dbinserttest = new Dbinserttest();
-            //await dbinserttest.Start();
+            DbCustomInsert dbinserttest = new DbCustomInsert();
+            await dbinserttest.Start();
 
-            DBBulkinsert dBinsert = new DBBulkinsert();
-            await dBinsert.Start(input);
-          
-            
+            //DBBulkinsert dBinsert = new DBBulkinsert();
+            //await dBinsert.Start(input);
+
+
 
             Console.WriteLine("done");
 

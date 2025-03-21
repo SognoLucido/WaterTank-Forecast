@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Eventing.Reader;
 using DataFlow_ReadAPI.Models;
 using DataFlow_ReadAPI.Services.DBFetching;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace DataFlow_ReadAPI.Controllers
             "This endpoint uses `tankid[]` as a query parameter (with a limitation on URL length)." +
             "By default, it returns the MOST RECENT DATA for the provided `Tankid`." +
             "If a `dateRange1/2` query parameter is used, it will return a date range that matches the WHERE clause in the database query." +
-            "All null property values will be IGNORED (in the response body)")]
+            "All null response values will be ignored (in the response body)")]
         [HttpGet]
         [Route("info")]
         [ProducesResponseType(typeof(ResponseWrapper), StatusCodes.Status200OK) ]
@@ -63,42 +64,79 @@ namespace DataFlow_ReadAPI.Controllers
            // return Ok();
         }
 
-        //TODO
-        // GET: api/<WatertankController>
-        [HttpGet]
-        public async Task<IActionResult> Get()
+
+
+        //POST START HERE
+
+
+        [EndpointDescription("" +
+            "'GUID[] tankid' and (optional)`dateRange1/2` as body" +
+            "By default, it returns the MOST RECENT DATA for the provided `Tankid`." +
+            "If both`dateRange1/2` are specified, it returns data within the matching date range based on the WHERE clause in the database query." +
+            "All null response values will be ignored (in the response body)")]
+        [HttpPost]
+        [Route("info")]
+        [ProducesResponseType(typeof(ResponseWrapper), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetTankValorPost(
+        [FromBody] DbinfoPostDTO data,
+        bool ClientId = false,
+        bool ZoneCode = false,
+        bool TotalCapacity = false)
         {
 
-            // await dbcall.Fetchdata(null,0);
 
-            return Ok("TODO");
+            //Guid[] datatest = 
+            //{
+            //    new("05bd994b-5109-438b-92e7-6a14829718d4") , 
+            //    new("39bf125b-2d2f-4f00-aae8-b5d598f89dbb") , 
+            //    new("3ff56eb2-4227-4c2e-ae7f-89bffd54ac23")
+            //};
 
-            //return Ok(await dbcall.Fetchdata(null, 0));
+            if (data.dateRange1 is not null && data.dateRange2 is not null)
+            {
+                //magic swap
+                if (data.dateRange1 > data.dateRange2) (data.dateRange1, data.dateRange2) = (data.dateRange2, data.dateRange1);
+
+                var returnz = await dbcall.GetinfoItem(data.Tankid, ClientId, ZoneCode, TotalCapacity, (DateTime)data.dateRange1, (DateTime)data.dateRange2);
+                return returnz is not null ? Ok(returnz) : NotFound();
+            }
+            else
+            {
+                var returz = await dbcall.GetinfoItem(data.Tankid, ClientId, ZoneCode, TotalCapacity);
+
+                return returz is not null ? Ok(returz) : NotFound();
+            }
+
+
         }
 
-        //// GET api/<WatertankController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
 
-        //// POST api/<WatertankController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
 
-        //// PUT api/<WatertankController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
+      
+        [HttpGet]
+        [Route("forecast")]
+        public async Task<IActionResult> GetForecastdata(
+            [FromQuery]
+            Guid[]? Tankids,
+            Guid? client_id,
+            [MaxLength(10)]
+            string? zone_code,
+            [Range(3,360)]
+            int range_days = 30
+            )
+        {
 
-        //// DELETE api/<WatertankController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+
+            if (client_id is null && zone_code is null && (Tankids is null || Tankids.Length == 0))
+                return BadRequest();
+
+
+            var dbdata = await dbcall.Forecast(Tankids, range_days, client_id, zone_code);
+
+            return dbdata is null ? NotFound() : Ok(dbdata);
+   
+        }
+
+       
     }
 }

@@ -18,7 +18,7 @@ namespace DataIngestAPI.Services
           
             const string sqltable = @"
             CREATE TABLE IF NOT EXISTS watertank (
-            time TIMESTAMPTZ NOT NULL,
+            time TIMESTAMPTZ NOT NULL,                                   
             tank_id UUID NOT NULL,
             current_volume DOUBLE PRECISION NOT NULL,
             client_id UUID,

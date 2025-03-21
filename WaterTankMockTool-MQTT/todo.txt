@@ -1,4 +1,0 @@
-- MainWindow , add x <-- User select (x1 everyclick or x150 )tank items
-- better input validation in TextBoxs
-
-

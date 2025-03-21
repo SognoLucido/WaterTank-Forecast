@@ -15,7 +15,7 @@ internal class DBBulkinsert
 
     public async Task Start(int itemX)
     {
-        const int days = 7;
+        const int days = 30;
        // const int TOTAL_ITEMS = 10000;
         const string sqlinsert = @"INSERT INTO watertank (time ,tank_id, current_volume )VALUES (@Time , @Id , @Lvl )";
 
