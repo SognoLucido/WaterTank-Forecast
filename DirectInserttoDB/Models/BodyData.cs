@@ -9,18 +9,22 @@ namespace DirectInserttoDB.Models
     public class BodyData
     {
        private static Random rng = new();
-       public Guid Id { get;  } = Guid.NewGuid();
+       public Guid Id { get; } = Guid.NewGuid();
        public DateTime Time { get; set; }
-        public Double Lvl { get; private set; } = rng.Next(600, 800);
+        public Double Lvl { get; private set; } 
 
-        Guid? client_id { get; set; }   
-        string? zone_code { get; set; }
-        Double? total_capacity { get; set; }
+        public Guid? Clientid { get; set; }   
+        public string? Zcode { get; set; }
+        public Double? Totcapacity { get; set; }
 
         public BodyData(/*DateTime _time*/) 
         {
 
             Time = new DateTime(2025, 01, 01, 12, 00, 00, DateTimeKind.Utc);
+            Lvl = rng.Next(600, 800);
+            Clientid = Guid.NewGuid();
+            Zcode = rng.Next(2) == 0 ? "pep" : "gog";
+            Totcapacity = Lvl + rng.Next(300);
 
             //Time = _time;
         }

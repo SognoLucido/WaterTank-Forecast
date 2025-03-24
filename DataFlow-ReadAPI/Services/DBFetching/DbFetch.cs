@@ -14,35 +14,34 @@ namespace DataFlow_ReadAPI.Services.DBFetching
     public class DbFetch : IDbFetch
     {
         private readonly string Connstring;
-
-        
-
+     
         public DbFetch(IConfiguration _conf) { Connstring = _conf.GetConnectionString("postgresread")!; }
 
         
         public async Task<DBreturnDataDto?> Forecast(Guid[]? tank_ids, int Rangedays, Guid? clientid, string? zcode)
         {
-
-            tank_ids =
-            [
-                //new Guid("cc5fee02-03cd-45e9-9565-1e1fcff88d65"),
-                //new Guid("0df66b21-87e5-4cd0-8a85-44e758c207a1"),
-                //new Guid("014d96e3-8cf8-46f2-920f-ec925a8bf0ba"),
-                new Guid("841BA82E-6A6C-43E5-865B-A8D0DAE18D9D") // tankid with clientid and zcode test
-            ];
+            //"e3ab8c2b-3a35-40dd-8aea-1035958572e4"
+            //tank_ids =
+            //[
+            //    //new Guid("cc5fee02-03cd-45e9-9565-1e1fcff88d65"),
+            //    //new Guid("0df66b21-87e5-4cd0-8a85-44e758c207a1"),
+            //    //new Guid("014d96e3-8cf8-46f2-920f-ec925a8bf0ba"),
+            //    new Guid("841BA82E-6A6C-43E5-865B-A8D0DAE18D9D") // tankid with clientid and zcode test
+            //];
 
 
             //CLIENTIDTEST
             // new Guid("93CA9333-B607-4E74-B95C-9C2006D07BDB")
             //Zonecodetest
             // string "pep"
-                                                    
+
 
             var sb = new StringBuilder();
             var param = new DynamicParameters();
 
+            param.Add("DAYS", Rangedays, DbType.Int32);
 
-            if(tank_ids is not null)
+            if(tank_ids is not null && tank_ids.Length > 0)
             {
                 sb.Append("WHERE tank_id = ANY(@TankIds) ");
                 param.Add("TankIds", tank_ids);
@@ -103,8 +102,8 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                         COALESCE(
                             (SELECT MIN(time)::date 
                              FROM public.watertank wt 
-                             WHERE wt.tank_id = tl.tank_id AND wt.time >= tl.last_time - INTERVAL '7days'), 
-                            (last_time - INTERVAL '7days')::date
+                             WHERE wt.tank_id = tl.tank_id AND wt.time >= tl.last_time - (@DAYS * INTERVAL '1 day')), 
+                            (last_time - (@DAYS * INTERVAL '1 day'))::date
                         ) AS start_date
                     FROM tank_last_time tl
                 ),

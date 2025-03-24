@@ -17,7 +17,7 @@ internal class DBBulkinsert
     {
         const int days = 30;
        // const int TOTAL_ITEMS = 10000;
-        const string sqlinsert = @"INSERT INTO watertank (time ,tank_id, current_volume )VALUES (@Time , @Id , @Lvl )";
+        const string sqlinsert = @"INSERT INTO watertank (time ,tank_id, current_volume,client_id,zone_code,total_capacity)VALUES (@Time , @Id , @Lvl,@Clientid, @Zcode,@Totcapacity )";
 
         using var Dbconn = new NpgsqlConnection(Connstring);
         //BodyData[] Items = new BodyData[TOTAL_ITEMS];
