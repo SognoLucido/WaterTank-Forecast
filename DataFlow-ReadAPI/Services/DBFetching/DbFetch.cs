@@ -20,21 +20,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
         
         public async Task<DBreturnDataDto?> Forecast(Guid[]? tank_ids, int Rangedays, Guid? clientid, string? zcode)
         {
-            //"e3ab8c2b-3a35-40dd-8aea-1035958572e4"
-            //tank_ids =
-            //[
-            //    //new Guid("cc5fee02-03cd-45e9-9565-1e1fcff88d65"),
-            //    //new Guid("0df66b21-87e5-4cd0-8a85-44e758c207a1"),
-            //    //new Guid("014d96e3-8cf8-46f2-920f-ec925a8bf0ba"),
-            //    new Guid("841BA82E-6A6C-43E5-865B-A8D0DAE18D9D") // tankid with clientid and zcode test
-            //];
-
-
-            //CLIENTIDTEST
-            // new Guid("93CA9333-B607-4E74-B95C-9C2006D07BDB")
-            //Zonecodetest
-            // string "pep"
-
+         
 
             var sb = new StringBuilder();
             var param = new DynamicParameters();
@@ -184,7 +170,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
             {
 
 
-               var x = await Dbconn.QueryAsync<DBreturnData>(sqlfetch, param);
+               var x = await Dbconn.QueryAsync<DbforecastreturnData>(sqlfetch, param);
 
                 if (x.Any())
                 {
@@ -283,22 +269,21 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
             if (!dbdata.Any()) return null;
 
-            foreach(var item in dbdata)
-            {
-                if (clientid)
-                    if (item.client_id is null) item.Client_id_info = "Client ID unavailable/not set for this record";
+            //foreach(var item in dbdata)
+            //{
+            //    if (clientid)
+            //        if (item.client_id is null) item.Client_id_info = "Client ID unavailable/not set for this record";
 
-                if (zcode)
-                    if (item.zone_code is null) item.Zone_code_info = "Zone code unavailable/not set for this record";
+            //    if (zcode)
+            //        if (item.zone_code is null) item.Zone_code_info = "Zone code unavailable/not set for this record";
 
-                if (totcap)
-                    if (item.total_capacity is null) item.Total_capacity_info = "Total capacity unavailable/not set for this record ";
+            //    if (totcap)
+            //        if (item.total_capacity is null) item.Total_capacity_info = "Total capacity unavailable/not set for this record ";
             
-            }
+            //}
 
             return dbdata;
 
-           // return dbdata.Any() ? dbdata : null;
 
         }
 

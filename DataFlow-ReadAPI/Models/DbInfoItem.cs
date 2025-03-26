@@ -9,14 +9,14 @@ namespace DataFlow_ReadAPI.Models
         public Double current_volume {get;set;}
 
         public Guid? client_id { get; set; }
-        public string? Client_id_info { get; set; }
+      //  public string? Client_id_info { get; set; }
 
   
         public string? zone_code { get; set; }
-        public string? Zone_code_info { get; set; }
+      //  public string? Zone_code_info { get; set; }
      
 
         public int? total_capacity { get; set; }
-        public string? Total_capacity_info { get; set; }
+       // public string? Total_capacity_info { get; set; }
     }
 }

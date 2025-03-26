@@ -30,44 +30,35 @@ namespace DataFlow_ReadAPI.Controllers
         [Description("array GUID[] : At least one Id is required . es. CAA73977-B67A-426D-8987-3EBCE846A452")]
         [Required]
         [FromQuery]
-        Guid[] Tankid,
+        Guid[] tankid,
         [Description("the date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z or 2017-07-21 .The end date is already fixed to be inclusive unless the hour, minute, second are specified")]
         DateTime? dateRange1,
         [Description("the date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z or 2017-07-21 .The end date is already fixed to be inclusive unless the hour, minute, second are specified")]
         DateTime? dateRange2,
-        bool ClientId = false,
-        bool ZoneCode = false,
-        bool TotalCapacity = false)
+        bool clientid = false,
+        bool zonecode = false,
+        bool totalcapacity = false)
         {
-
-
-            //Guid[] datatest = 
-            //{
-            //    new("05bd994b-5109-438b-92e7-6a14829718d4") , 
-            //    new("39bf125b-2d2f-4f00-aae8-b5d598f89dbb") , 
-            //    new("3ff56eb2-4227-4c2e-ae7f-89bffd54ac23")
-            //};
 
             if (dateRange1 is not null && dateRange2 is not null)
             {
                 //magic swap
                 if (dateRange1 > dateRange2) (dateRange1, dateRange2) = (dateRange2, dateRange1);
      
-                var returnz = await dbcall.GetinfoItem(Tankid, ClientId, ZoneCode, TotalCapacity, (DateTime)dateRange1, (DateTime)dateRange2);
+                var returnz = await dbcall.GetinfoItem(tankid, clientid, zonecode, totalcapacity, (DateTime)dateRange1, (DateTime)dateRange2);
                 return returnz is not null ? Ok(returnz) : NotFound();
             }
             else 
             {
-                var returz = await dbcall.GetinfoItem(Tankid, ClientId, ZoneCode, TotalCapacity);
+                var returz = await dbcall.GetinfoItem(tankid, clientid, zonecode, totalcapacity);
 
                 return returz is not null ? Ok(returz) : NotFound();
             }
-           // return Ok();
+      
         }
 
 
 
-        //POST START HERE
 
 
         [EndpointDescription("" +
@@ -80,30 +71,23 @@ namespace DataFlow_ReadAPI.Controllers
         [ProducesResponseType(typeof(ResponseWrapper), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetTankValorPost(
         [FromBody] DbinfoPostDTO data,
-        bool ClientId = false,
-        bool ZoneCode = false,
-        bool TotalCapacity = false)
+        bool clientid = false,
+        bool zonecode = false,
+        bool totalcapacity = false)
         {
 
-
-            //Guid[] datatest = 
-            //{
-            //    new("05bd994b-5109-438b-92e7-6a14829718d4") , 
-            //    new("39bf125b-2d2f-4f00-aae8-b5d598f89dbb") , 
-            //    new("3ff56eb2-4227-4c2e-ae7f-89bffd54ac23")
-            //};
 
             if (data.dateRange1 is not null && data.dateRange2 is not null)
             {
                 //magic swap
                 if (data.dateRange1 > data.dateRange2) (data.dateRange1, data.dateRange2) = (data.dateRange2, data.dateRange1);
 
-                var returnz = await dbcall.GetinfoItem(data.Tankid, ClientId, ZoneCode, TotalCapacity, (DateTime)data.dateRange1, (DateTime)data.dateRange2);
+                var returnz = await dbcall.GetinfoItem(data.Tankid, clientid, zonecode, totalcapacity, (DateTime)data.dateRange1, (DateTime)data.dateRange2);
                 return returnz is not null ? Ok(returnz) : NotFound();
             }
             else
             {
-                var returz = await dbcall.GetinfoItem(data.Tankid, ClientId, ZoneCode, TotalCapacity);
+                var returz = await dbcall.GetinfoItem(data.Tankid, clientid, zonecode, totalcapacity);
 
                 return returz is not null ? Ok(returz) : NotFound();
             }
@@ -113,12 +97,15 @@ namespace DataFlow_ReadAPI.Controllers
 
 
 
-      
+        [EndpointDescription("Calculate how many days will be required to empty the item's resource. All possible parameter combinations are allowed, except when all are null and range_days itself " +
+            "'tankids' : multiple items , 'client_id' : single , 'zone_code' : single . 'Guid[] Tankids' as a query parameter ")]
         [HttpGet]
         [Route("forecast")]
+        [ProducesResponseType(typeof(DBreturnDataDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetForecastdata(
             [FromQuery]
-            Guid[]? Tankids,
+            [Description("Guid example in 'scalar form' :123e4567e89b12d3a456426614174000,123e4567-e89b-12d3-a456-426614174001 converted in query tankids=123e4567e89b12d3a456426614174000%2C123e4567-e89b-12d3-a456-426614174001 ")]
+            Guid[]? tankids,
             Guid? client_id,
             [MaxLength(10)]
             string? zone_code,
@@ -128,16 +115,47 @@ namespace DataFlow_ReadAPI.Controllers
         {
 
 
-            if (client_id is null && zone_code is null && (Tankids is null || Tankids.Length == 0))
+            if (client_id is null && zone_code is null && (tankids is null || tankids.Length == 0))
                 return BadRequest();
 
 
-            var dbdata = await dbcall.Forecast(Tankids, range_days, client_id, zone_code);
+            var dbdata = await dbcall.Forecast(tankids, range_days, client_id, zone_code);
 
             return dbdata is null ? NotFound() : Ok(dbdata);
    
         }
 
-       
+
+
+        [EndpointDescription("Forecast POST endpoint, similar to the GET endpoint, using Guid[]? Tankid in the POST body")]
+        [HttpPost]
+        [Route("forecast")]
+        [ProducesResponseType(typeof(DBreturnDataDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> PostForecastdata(    
+        DbforecastbodyParam? bodydata,
+        Guid? client_id,
+        [MaxLength(10)]
+        string? zone_code,
+        [Range(3,360)]
+        int range_days = 30
+        )
+        {
+
+
+            if (client_id is null && zone_code is null && (bodydata?.Tankids is null || bodydata.Tankids.Length == 0))
+                return BadRequest();
+
+
+            var dbdata = await dbcall.Forecast(bodydata?.Tankids, range_days, client_id, zone_code);
+
+            return dbdata is null ? NotFound() : Ok(dbdata);
+
+        }
+
+
+
+
+
+
     }
 }

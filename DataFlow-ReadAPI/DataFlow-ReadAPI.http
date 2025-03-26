@@ -1,6 +1,0 @@
-@DataFlow_ReadAPI_HostAddress = http://localhost:5051
-
-GET {{DataFlow_ReadAPI_HostAddress}}/api/Watertank/
-Accept: application/json
-
-###
