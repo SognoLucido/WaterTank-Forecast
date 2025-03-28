@@ -16,7 +16,7 @@ namespace DataFlow_ReadAPI.Models
       //  public string? Zone_code_info { get; set; }
      
 
-        public int? total_capacity { get; set; }
+        public double? total_capacity { get; set; }
        // public string? Total_capacity_info { get; set; }
     }
 }

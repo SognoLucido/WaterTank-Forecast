@@ -196,23 +196,36 @@ namespace DataFlow_ReadAPI.Services.DBFetching
             if(max.Hour == 00 && max.Minute == 00 && max.Second == 00)
                 max = max.AddDays(1);
 
+
+            StringBuilder sb = new();
+
+            sb.Append(',');
+
+            if (clientid) sb.Append("'client_id', client_id,");
+            if (zcode) sb.Append("'zone_code', zone_code,");
+            if (totcap) sb.Append("'total_capacity', total_capacity,");
+
+            //'client_id', client_id,
+            // 'zone_code', zone_code,
+            //  'total_capacity', total_capacity
+            //{sb}
+            sb.Length--;
+
             using (var Dbconn = new NpgsqlConnection(Connstring))
             {
-                string sql = @" SELECT 
+                string sql = $@" SELECT 
                     tank_id,  
                     jsonb_agg(
                         jsonb_build_object(
                             'time', time,
-                            'current_volume', current_volume,
-                            'client_id', client_id,
-                            'zone_code', zone_code,
-                            'total_capacity', total_capacity
+                            'current_volume', current_volume
+                             {sb}
                         ) ORDER BY time ASC     
                     )  AS Jsondata
                 FROM watertank
                 WHERE (time >= @StartDate AND time <= @EndDate) 
                  AND tank_id = ANY(@TankIds)
-                GROUP BY tank_id; ";
+                GROUP BY tank_id;";
 
 
                 var Rawdbdata = await Dbconn.QueryAsync<DbjsonparseDTO>(sql,new { StartDate = min , EndDate = max , TankIds = Ids });
@@ -249,7 +262,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
             if (sb.Length > 0) sb.Length--;
          
-            string pep = sb.ToString();
+            
 
 
 
@@ -259,7 +272,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
             var dbdata = await Dbconn.QueryAsync<DbInfoItem>(
                 "SELECT DISTINCT ON(tank_id) time,tank_id,current_volume " +
-                $"{pep}" +
+                $"{sb}" +
                 " FROM watertank" +
                 " WHERE tank_id = ANY(@TANKID)" +
                 " ORDER BY tank_id, time DESC"

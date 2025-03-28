@@ -15,7 +15,7 @@ namespace DataFlow_ReadAPI.Models
     public class DbjsonparseDTO
     {
         public Guid tank_id { get; set; }
-        public string? Jsondata { get; set; }
+        public string Jsondata { get; set; } = "";
     }
 
     public class DbInfoItemwithDATEtime
@@ -31,6 +31,7 @@ namespace DataFlow_ReadAPI.Models
         public double current_volume { get; set; }
         public Guid? client_id { get; set; }
         public string? zone_code { get; set; }
+        public double? total_capacity { get; set; }
 
     }
 
