@@ -1,2 +1,2 @@
 -This app is used to fill the server without passing through the MQTT broker and setting up the watertank-mock tool. It allows direct insertion.
-- 10000 insertions per 10min
+- ~10000 insertions per 10min
