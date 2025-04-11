@@ -41,16 +41,16 @@ internal class DbCustomInsert
         //    new WaterTank { Time = DateTime.UtcNow, Id = Guid.NewGuid(), Lvl = 60.0, Clientid = clientid, Zcode = "Z3" }
         //};
 
-        var tanks = new BodyData[]
-        {
-            new(),
-            new(),
-            new()
-        };
+        //var tanks = new BodyData[]
+        //{
+        //    new(),
+        //    new(),
+        //    new()
+        //};
       
           
-            int rowsInserted = Dbconn.Execute(sqlinsert, tanks);
-            Console.WriteLine($"{rowsInserted} rows inserted.");
+            //int rowsInserted = Dbconn.Execute(sqlinsert, tanks);
+            //Console.WriteLine($"{rowsInserted} rows inserted.");
 
         return;
 

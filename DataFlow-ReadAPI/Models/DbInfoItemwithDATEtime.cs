@@ -30,6 +30,8 @@ namespace DataFlow_ReadAPI.Models
         public DateTime time { get; set; }
         public double current_volume { get; set; }
         public Guid? client_id { get; set; }
+
+        //varchar10 
         public string? zone_code { get; set; }
         public double? total_capacity { get; set; }
 
