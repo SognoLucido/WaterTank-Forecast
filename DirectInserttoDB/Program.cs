@@ -60,7 +60,7 @@ namespace DirectInserttoDB
             {
                 case DbMode.MultipleInsertions: await new DBBulkinsert().Start(); break;
                 case DbMode.Custom: await new DbCustomInsert().Start(); break;
-                default: throw new NotImplementedException();
+                default: throw new NotImplementedException("no mode found");
             }
 
 

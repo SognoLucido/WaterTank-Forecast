@@ -17,7 +17,7 @@
         {
             WhenRefillDays = _whenRefill_occur;
             // Time = new DateTime(2025, 01, 01, 12, 00, 00, DateTimeKind.Utc);
-            Time = new DateTime(_time.Year, _time.Day, _time.Hour, 12, 00, 00, DateTimeKind.Unspecified);
+            Time = new DateTime(_time.Year, _time.Month, _time.Day, 12, 00, 00, DateTimeKind.Unspecified);
             Totcapacity = 1000;
             Lvl = (double)Totcapacity - rng.Next(201);
             Clientid = _client_id;
@@ -31,6 +31,7 @@
         public void Scaledown(in int _max_consumption)
         {
             Lvl -= rng.Next(1, _max_consumption);
+            if (Lvl < 0) Lvl = 0;
         }
 
 
@@ -63,6 +64,7 @@
 
 
             Lvl -= rng.Next(1, _max_consumption);
+            if (Lvl < 0) Lvl = 0;
         }
 
 

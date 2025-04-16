@@ -24,7 +24,7 @@ internal class DBBulkinsert
         Connstring = "Host=localhost;Port=5432;Database=WaterTank;Username=postgres;Password=mypassword";
     }
 
-
+    private void Sipario() => Console.WriteLine("\n   --------------------   \n");
     //settings
     public async Task Start()
     {
@@ -38,7 +38,7 @@ internal class DBBulkinsert
             while (true)
             {
 
-                Console.Write("Insert the number of days(forecastApp will not work well with less then 2 refill excluded)\nand the number of items, separated by a space. The total data entries will be calculated as days * items.\nFor example, 30 5 will create 5 items, each with 30 days of simulation \n (like 5 sensors sending data daily for 30 days) : (days item/s):");
+                Console.Write("Insert the number of days(forecastApp will not work well with less then 2 ,refill excluded)\nand the number of items, separated by a space. The total data entries will be calculated\nas days * items.For example, 30 5 will create 5 items, each with 30 days of simulation \n(like 5 sensors sending data daily for 30 days).\ninput:(day/s item/s): ");
                 input = Console.ReadLine();
 
                 if (String.IsNullOrEmpty(input))
@@ -70,13 +70,15 @@ internal class DBBulkinsert
                 break;
             }
 
+            Sipario();
+
             while (true)
             {
                 Enablerefills = default;
                 Nrefills = default;
                 x100_ToRefill = default;
 
-                Console.WriteLine("implement refills ? (y/n)");
+                Console.Write("Implement refills ? (y/n): ");
                 input = Console.ReadLine();
 
                 if (!string.IsNullOrEmpty(input) && input.Equals("y", StringComparison.CurrentCultureIgnoreCase))
@@ -84,7 +86,7 @@ internal class DBBulkinsert
                     Enablerefills = true;
 
 
-                    Console.WriteLine("(Automatic refill at x% of the resource)Input the limit % at which the AUTOMATIC refill should occur\n(e.g., at 30% of the total capacity, the refill will occur — input 30; leave blank to skip)\n(int?): ");
+                    Console.Write("(Automatic refill at x% of the resource)Input the limit % at which the AUTOMATIC refill should occur\n(e.g., at 30% of the total capacity, the refill will occur — input 30; leave blank to skip)\nRange(0-99)(int?): ");
                     input = Console.ReadLine();
 
 
@@ -94,10 +96,18 @@ internal class DBBulkinsert
                         Console.WriteLine("invalid %refill");
                         continue;
                     }
-                    else { x100_ToRefill = _inputRefull; }
+                    else 
+                    {
+                        if(_inputRefull >= 0 && _inputRefull <100)x100_ToRefill = _inputRefull;
+                        Console.WriteLine("invalid %refill");
+                        continue;
+                    }
 
 
-                    Console.WriteLine($"Refills apply to random day choosen from the range 1 to maxdays:\nApply to all items, or some (x items will be randomly picked).\nEnter a number(must be <= of {items} item/s) or leave blank to skip (int?): ");
+                    //Console.WriteLine($"Refills will be applied on a random day chosen between 1 and the maximum number of days({days}).\n(x days foreach item will be randomly selected).\nEnter a number (input must be ≤ {days}) or leave blank to skip (int?): ");
+                    
+                    Console.Write($"\nInsert the number x, where x is the number of randomly chosen day(s) selected for refill\n(generated during TankItemClass init; all items({items}) will be targeted).x must be <= ({days})days.\nLeave empty to skip(int?):");
+
                     input = Console.ReadLine();
 
                     if (!int.TryParse(input, out int _inputNrefills))
@@ -107,7 +117,7 @@ internal class DBBulkinsert
                     }
                     else
                     {
-                        if (Nrefills > items)
+                        if (Nrefills > days)
                         {
                             Console.WriteLine("invalid N refill");
                             continue;
@@ -125,10 +135,11 @@ internal class DBBulkinsert
 
             if (Nrefills is null && x100_ToRefill is null) Enablerefills = false;
 
+            Sipario();
 
             while (true)
             {
-                Console.WriteLine("Enable zonecode (all generated records will have a zcode if enabled).Leave empty to skip (VARCHAR10): ");
+                Console.Write("Enable zonecode (all generated records will include zone code if enabled).\nLeave empty to skip(VARCHAR10): ");
                 input = Console.ReadLine();
 
                 if (String.IsNullOrEmpty(input)) break;
@@ -149,12 +160,12 @@ internal class DBBulkinsert
             while (true)
             {
 
-                Console.WriteLine("Enable Client ID (all generated records will have a client id if enabled).(y/n): ");
+                Console.Write("\nEnable Client ID (all generated records will include a client id if enabled).\nEmpty or 'n' to skip (y/n): ");
                 input = Console.ReadLine();
 
                 if (!string.IsNullOrEmpty(input) && input.Equals("y", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Console.WriteLine("Insert a valid GUID or leave blank to generate one randomly (GUID?): ");
+                    Console.Write("\nInsert a valid GUID or leave blank to generate one randomly (GUID?): ");
                     input = Console.ReadLine();
 
                     if (String.IsNullOrEmpty(input))
@@ -177,7 +188,7 @@ internal class DBBulkinsert
 
                     }
 
-                    if (Client_id is not null) Console.WriteLine($"client_Id is: {Client_id}");
+                    if (Client_id is not null) Console.WriteLine($"client_Id is: {Client_id}\n");
 
                 }
                 else break;
@@ -185,11 +196,13 @@ internal class DBBulkinsert
                 break;
             }
 
+            Sipario();
+
             while (true)
             {
 
 
-                Console.WriteLine("Insert start time , Empty/Default = 2025-01-01 (YYYY-MM-DD)?:");
+                Console.Write("Insert start time , Empty/Default = 2025-01-01 (YYYY-MM-DD)?: ");
                 input = Console.ReadLine();
 
                 if (!String.IsNullOrEmpty(input))
@@ -207,11 +220,11 @@ internal class DBBulkinsert
 
             }
 
-
+            Sipario();
 
             while (true)
             {
-                Console.WriteLine("Insert consumption rate (the input number will be used to randomly scale daily consumption from 1 to the input value).Empty/default = 20 (int?):");
+                Console.Write("Insert consumption rate (the input number will be used to randomly scale daily consumption from 1 to the input value).\nEmpty/default = 20 (int?): ");
                 input = Console.ReadLine();
 
                 if (!String.IsNullOrEmpty(input))
@@ -241,7 +254,7 @@ internal class DBBulkinsert
             Recap();
 
 
-            Console.WriteLine("Start seed - y , Redo the init - n : ");
+            Console.Write("\nStart seed - y , Redo the initialization - n : ");
             input = Console.ReadLine();
 
             if (!string.IsNullOrEmpty(input) && input.Equals("y", StringComparison.CurrentCultureIgnoreCase))
@@ -279,10 +292,10 @@ internal class DBBulkinsert
         Console.WriteLine("{0,-25}{1,-20}", "Currentcapacuty(item)", "hardcoded->[Totcapacity - rng.Next(201)]");
         Console.WriteLine("{0,-25}{1,-20}", "client_id", Client_id is null ? "Disabled/null" : Client_id);
         Console.WriteLine("{0,-25}{1,-20}", "zone_code", Zcode is null ? "Disabled/null" : Zcode);
-        Console.WriteLine("{0,-25}{1,-20}", "ConsumptionRate", "1 ~ " + (ConsumptionRate - 1));
+        Console.WriteLine("{0,-25}{1,-20}", "ConsumptionRate", "1 ~ " + (ConsumptionRate));
         Console.WriteLine("{0,-25}{1,-20}", "Enablerefills", Enablerefills);
         Console.WriteLine("{0,-25}{1,-20}", "Refill at %", x100_ToRefill is not null && Enablerefills ? x100_ToRefill : "disabled");
-        Console.WriteLine("{0,-25}{1,-20}", "X Random day/s choosen to fill(x generated on obj init)", Nrefills is not null && Enablerefills ? Nrefills : "disabled");
+        Console.WriteLine("{0,-25}{1,-20}", "X Random day/s choosen to fill(x generated on obj init)", Nrefills is not null && Enablerefills ? Nrefills : "  disabled");
         Console.WriteLine();
         // Console.WriteLine("{0,-8}{1,-12}{2,-20}{3,-14}{4,-14}{5,-14}", "time", "tank_id", "current_volume", "client_id", "zone_code", "total_capacity");//, "client_id", "zone_code", "total_capacity");
 
@@ -317,6 +330,10 @@ internal class DBBulkinsert
 
     public async Task Dblogic()
     {
+
+        Console.Clear();
+        Recap();
+        Sipario();
 
         Random rng = new();
 
