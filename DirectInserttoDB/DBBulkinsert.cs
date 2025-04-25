@@ -381,7 +381,7 @@ internal class DBBulkinsert
 
         var timerange = Stopwatch.GetElapsedTime(Stime, Stopwatch.GetTimestamp());
 
-        Console.WriteLine(timerange);
+        Console.WriteLine("ElapsedTime : " + timerange);
 
 
     }
