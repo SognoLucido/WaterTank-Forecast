@@ -7,7 +7,7 @@ namespace DirectInserttoDB;
 
 internal class DBBulkinsert
 {
-    private string Connstring;
+    
     private int days;
     private int items;
     private bool Enablerefills;
@@ -18,10 +18,11 @@ internal class DBBulkinsert
     private DateTime StartTime;
     private int ConsumptionRate;
 
+    readonly string conn;
 
-    internal DBBulkinsert()
+    internal DBBulkinsert(string _connstring)
     {
-        Connstring = "Host=localhost;Port=5432;Database=WaterTank;Username=postgres;Password=mypassword";
+        conn = _connstring;
     }
 
     private void Sipario() => Console.WriteLine("\n   --------------------   \n");
@@ -339,7 +340,7 @@ internal class DBBulkinsert
 
         const string sqlinsert = @"INSERT INTO watertank (time ,tank_id, current_volume,client_id,zone_code,total_capacity)VALUES (@Time , @Id , @Lvl,@Clientid, @Zcode,@Totcapacity )";
 
-        using var Dbconn = new NpgsqlConnection(Connstring);
+        using var Dbconn = new NpgsqlConnection(conn);
 
         BodyData[] Items = new BodyData[items];
 

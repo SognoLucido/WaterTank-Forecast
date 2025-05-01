@@ -22,11 +22,9 @@ internal class DbCustomInsert
     readonly string Connstring;
 
 
-
-
-    internal DbCustomInsert()
+    internal DbCustomInsert(string _connstring)
     {
-        Connstring  = "Host=localhost;Port=5432;Database=WaterTank;Username=postgres;Password=mypassword"; 
+        Connstring  = _connstring;
     }
 
 
@@ -49,7 +47,7 @@ internal class DbCustomInsert
 
 
 
-            //string input =
+            //string testinput =
             //    "2025-01-01 12:00:00,C05471B-7B777-442D-900F-55479B799444,500,8C3BDB05-8277-4A45-93F5-DDBBE2235562,RC-002Z,1000\n" +  //1 error wrong tankid guid
             //    "2025-01-02 12:00:00,C05471BC-7B77-442D-900F-55479B799444,450,8C3BDB05-8277-4A45-93F5-DDBBE2235562,RC-002Z,\n" +     //2  OK, empty totalcap ; nullable
             //    "2025-01-02 12:00:00,C05471BC-7B77-442D-900F-55479B799444,450,8C3BDB05-8277-4A45-93F5-DDBBE2235562,RC-002Z,hello\n" + //3 totalcap wrong pars

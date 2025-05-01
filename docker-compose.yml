@@ -1,33 +1,68 @@
 
-#TODO 
+
 
 
 services:
   dataflow-readapi:
     image: ${DOCKER_REGISTRY-}dataflowreadapi
+    container_name: ForecastAPI_B
     build:
       context: .
       dockerfile: DataFlow-ReadAPI/Dockerfile
+    ports:
+      - "0:8080"
+    depends_on:
+        timescaledb_read:
+           condition: service_healthy
+ 
+  timescaledb_read:
+    image: timescale/timescaledb:latest-pg16 
+    container_name: WaterTankDB_B
+    environment:
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: WaterTank
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - timescaledb-data:/var/lib/postgresql/data
 
-  # dataingestapi:
-  #   image: ${DOCKER_REGISTRY-}dataingestapi
-  #   container_name: MqttToDBServiceAPP - A
-  #   build:
-  #     context: .
-  #     dockerfile: DataIngestAPI/Dockerfile
+  dataingestapi:
+    image: ${DOCKER_REGISTRY-}dataingestapi
+    container_name: MqttDbBridge_A
+    build:
+      context: .
+      dockerfile: DataIngestAPI/Dockerfile
+    depends_on:   # using one database as R/W for now
+      mosquitto:
+        condition: service_healthy
+      timescaledb_read:
+        condition: service_healthy
+  
+
 
   mosquitto:
     build:
       context: .
       dockerfile: Mosquitto-MQTT-Broker/Dockerfile
     image: mosquitto  
-    container_name: mosquitto_broker - A
+    container_name: mosquittoBroker_A
     ports:
       - "1883:1883"
+    healthcheck:
+      test: ["CMD", "sh", "-c", "nc -z localhost 1883"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     volumes:
       - mosquitto-data:/mosquitto/data
       - mosquitto-log:/mosquitto/log
-
+  
 volumes:
   mosquitto-data:
   mosquitto-log:
+  timescaledb-data:

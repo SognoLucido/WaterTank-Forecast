@@ -34,13 +34,17 @@ namespace DataFlow_ReadAPI
             //if (app.Environment.IsDevelopment())
             //{
                 app.MapOpenApi();
-              
+
             //}
 
-            app.MapScalarApiReference(opt =>
+           
+            app.MapScalarApiReference("/" ,opt =>
             {
+            
                 opt.WithTitle("TankForecast API");
-                opt.AddServer("http://localhost:5051");
+                opt.AddServer(""); //  docker 
+                opt.AddServer("http://localhost:5051"); // no docker , dbconnection manual edit req *** TODO dynamic 
+                
             });
 
            // app.UseAuthorization();
