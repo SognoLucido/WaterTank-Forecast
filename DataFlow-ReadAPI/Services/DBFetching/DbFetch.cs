@@ -15,7 +15,14 @@ namespace DataFlow_ReadAPI.Services.DBFetching
     {
         private readonly string Connstring;
      
-        public DbFetch(IConfiguration _conf) { Connstring = _conf.GetConnectionString("postgresread")!; }
+        public DbFetch(IConfiguration _conf) 
+        {
+            Connstring =
+              _conf["DCOMPOSE_DATABASEHOST"] ??
+              _conf.GetConnectionString("postgwhost") ?? "localhost";
+
+            Connstring += _conf.GetConnectionString("postgwbody") ?? throw new NotImplementedException("db connection body string missing ; check appsetting.json");
+        }
 
         
         public async Task<DBreturnDataDto?> Forecast(Guid[]? tank_ids, int Rangedays, Guid? clientid, string? zcode)

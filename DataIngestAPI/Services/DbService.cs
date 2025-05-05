@@ -12,7 +12,15 @@ namespace DataIngestAPI.Services
     {
         //private string Connstring = "Host=localhost;Port=5432;Database=WaterTank;Username=postgres;Password=mypassword";
         private readonly string Connstring;
-        public DbService(IConfiguration conf) { Connstring = conf.GetConnectionString("postgreswrite")!; }
+        public DbService(IConfiguration conf) 
+        { 
+            
+            Connstring = "Host=" + (
+                conf["DCOMPOSE_DATABASEHOST"] ??
+                conf.GetConnectionString("postgwhost") ?? "localhost");
+
+            Connstring += conf.GetConnectionString("postgwbody") ?? throw new NotImplementedException("db connection body string missing ; check appsetting.json");
+        }
         public async Task InitCreation()
         {
           

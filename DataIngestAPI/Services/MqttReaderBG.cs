@@ -13,7 +13,7 @@ namespace DataIngestAPI.Services
     internal class MqttReaderBG(DbService db , IConfiguration conf) : BackgroundService
     {
         private readonly DbService dbcall = db;
-        private string MqttServerIP = conf.GetConnectionString("mqtt") ;
+        private string MqttServerIP = conf["DCOMPOSE_MQTTBROKERHOST"] ?? conf.GetConnectionString("mqtt") ?? "localhost"  ;
 
         protected override async Task ExecuteAsync(CancellationToken ctoken)
         {
