@@ -11,7 +11,7 @@ namespace DataIngestAPI.Services
 
         Task Insertdata(string data);
         Task InitCreation();
-        Task Cleantable(); //opt
+       // Task Cleantable(); //opt
 
     }
 }

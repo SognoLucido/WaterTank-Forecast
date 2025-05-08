@@ -70,7 +70,6 @@ internal class DbCustomInsert
         var tanks = input
         .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
         .Select(TankdataParse.Parse)
-
         .ToList();
 
         List<int> errosLines = new(tanks.Count);
@@ -86,7 +85,7 @@ internal class DbCustomInsert
 
         }
 
-        if (errosLines.Any())
+        if (errosLines.Count != 0)
         {
             Console.Write("\nError to parse these lines :");
             foreach (var item in errosLines)
@@ -94,21 +93,22 @@ internal class DbCustomInsert
                 if (item != 0) Console.Write(" " + item);
             }
 
+            Console.Write("\nFilter out unparsed items and proceed ?(y,exit): ");
 
+            string? inputCS = Console.ReadLine();
+
+            if (!string.IsNullOrEmpty(inputCS) && inputCS.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+            {
+
+                tanks.RemoveAll(x => x is null);
+
+            }
+            else return;
 
         }
 
-        Console.Write("\nFilter out unparsed items and proceed ?(y,exit): ");
 
-        string? inputCS = Console.ReadLine();
 
-        if (!string.IsNullOrEmpty(inputCS) && inputCS.Equals("y", StringComparison.CurrentCultureIgnoreCase))
-        {
-
-            tanks.RemoveAll(x => x is null);
-
-        }
-        else return;
 
         if (tanks.Count == 0) 
         {

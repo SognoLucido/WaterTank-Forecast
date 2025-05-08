@@ -39,7 +39,9 @@ internal class DBBulkinsert
             while (true)
             {
 
-                Console.Write("Insert the number of days(forecastApp will not work well with less then 2 ,refill excluded)\nand the number of items, separated by a space. The total data entries will be calculated\nas days * items.For example, 30 5 will create 5 items, each with 30 days of simulation \n(like 5 sensors sending data daily for 30 days).\ninput:(day/s item/s): ");
+                // Console.Write("Insert the number of days(forecastApp will not work well with less then 2 ,refill excluded)\nand the number of items, separated by a space. The total data entries will be calculated\nas days * items.For example, 30 5 will create 5 items, each with 30 days of simulation \n(like 5 sensors sending data daily for 30 days).\ninput:(day/s item/s): ");
+                Console.Write("Insert number of days and number of items (separated by space): \r\nNote: ForecastApp may not work correctly with fewer than 2 days (refills excluded).\r\nExample: '30 5' will create 5 items, each with 30 days of simulation \r\n(simulates 5 sensors sending data daily for 30 days).\r\nInput (days items):");
+                
                 input = Console.ReadLine();
 
                 if (String.IsNullOrEmpty(input))
@@ -293,7 +295,7 @@ internal class DBBulkinsert
         Console.WriteLine("{0,-25}{1,-20}", "Currentcapacuty(item)", "hardcoded->[Totcapacity - rng.Next(201)]");
         Console.WriteLine("{0,-25}{1,-20}", "client_id", Client_id is null ? "Disabled/null" : Client_id);
         Console.WriteLine("{0,-25}{1,-20}", "zone_code", Zcode is null ? "Disabled/null" : Zcode);
-        Console.WriteLine("{0,-25}{1,-20}", "ConsumptionRate", "1 ~ " + (ConsumptionRate));
+        Console.WriteLine("{0,-25}{1,-20}", "ConsumptionRate", "1 ~ " + (ConsumptionRate - 1));
         Console.WriteLine("{0,-25}{1,-20}", "Enablerefills", Enablerefills);
         Console.WriteLine("{0,-25}{1,-20}", "Refill at %", x100_ToRefill is not null && Enablerefills ? x100_ToRefill : "disabled");
         Console.WriteLine("{0,-25}{1,-20}", "X Random day/s choosen to fill(x generated on obj init)", Nrefills is not null && Enablerefills ? Nrefills : "  disabled");

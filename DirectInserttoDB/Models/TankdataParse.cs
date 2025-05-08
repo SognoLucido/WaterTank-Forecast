@@ -26,12 +26,14 @@ namespace DirectInserttoDB.Models
             try
             {
 
-                if (!DateTime.TryParseExact(parts[0], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var _date)) return null;
+                if (!DateTime.TryParse(parts[0], out var _date)) return null;
                 if (!Guid.TryParse(parts[1], out var _tankid)) return null;
                 if (!double.TryParse(parts[2], out var _currentVol)) return null;
 
 
-                if (!Guid.TryParse(parts[3], out var _clientId))
+                Guid _clientId = Guid.Empty;
+
+                if (parts.Length > 3 && !Guid.TryParse(parts[3], out _clientId))
                 {
                     if (_clientId != Guid.Empty) return null;
                 }
@@ -39,6 +41,7 @@ namespace DirectInserttoDB.Models
 
                 string? _zoneCode = String.Empty;
                 //db VARCHAR10 check
+                if(parts.Length > 4 )
                 if (parts[4].Length <= 10)
                 {
                     _zoneCode = string.IsNullOrEmpty(parts[4]) ? null : parts[4];
@@ -48,7 +51,7 @@ namespace DirectInserttoDB.Models
 
                 Double? _totalCap;
 
-                if (!string.IsNullOrEmpty(parts[5]))
+                if (parts.Length > 5 && !string.IsNullOrEmpty(parts[5]))
                 {
                     if (!double.TryParse(parts[5], out var _totalCapTEMP)) return null;
                     else

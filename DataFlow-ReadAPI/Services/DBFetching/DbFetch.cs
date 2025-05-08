@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Xml.Linq;
 using Dapper;
 using DataFlow_ReadAPI.Models;
+using Dbcheck;
 using Microsoft.AspNetCore.Components.Forms;
 using Npgsql;
 using Npgsql.Internal;
@@ -14,20 +15,30 @@ namespace DataFlow_ReadAPI.Services.DBFetching
     public class DbFetch : IDbFetch
     {
         private readonly string Connstring;
-     
-        public DbFetch(IConfiguration _conf) 
+      
+        public DbFetch(Dbinit _dbinit) 
         {
-            Connstring =
-              _conf["DCOMPOSE_DATABASEHOST"] ??
-              _conf.GetConnectionString("postgwhost") ?? "localhost";
 
-            Connstring += _conf.GetConnectionString("postgwbody") ?? throw new NotImplementedException("db connection body string missing ; check appsetting.json");
+            Connstring = _dbinit.Connstring;
+
+            //dbinit = _dbinit;
+
+            //dbinit.InitCreation();
+            //Connstring = dbinit.Connstring;
+
+            //Connstring = "Host=" + (
+            //  _conf["DCOMPOSE_DATABASEHOST"] ??
+            //  _conf.GetConnectionString("postgwhost") ?? "localhost");
+
+            //Connstring += _conf.GetConnectionString("postgwbody") ?? throw new NotImplementedException("db connection body string missing ; check appsetting.json");
+
         }
 
         
         public async Task<DBreturnDataDto?> Forecast(Guid[]? tank_ids, int Rangedays, Guid? clientid, string? zcode)
         {
-         
+
+            // WHERE current_volume != '0' todo
 
             var sb = new StringBuilder();
             var param = new DynamicParameters();
@@ -36,7 +47,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
             if(tank_ids is not null && tank_ids.Length > 0)
             {
-                sb.Append("WHERE tank_id = ANY(@TankIds) ");
+                sb.Append("AND tank_id = ANY(@TankIds) ");
                 param.Add("TankIds", tank_ids);
 
 
@@ -55,19 +66,21 @@ namespace DataFlow_ReadAPI.Services.DBFetching
             }
             else
             {
-                sb.Append("WHERE ");
-                bool whereEnable = false;
+                //sb.Append("WHERE ");
+                //bool whereEnable = false;
 
                 if (clientid is not null)
                 {
-                    sb.Append("client_id = @CLIENTID ");
+                    sb.Append("AND client_id = @CLIENTID ");
                     param.Add("CLIENTID", clientid, DbType.Guid);
-                    whereEnable = true;
+                  //  whereEnable = true;
                 }
                 if(zcode is not null)
                 {
-                    if(whereEnable)sb.Append("AND zone_code = @ZONE ");
-                    else sb.Append("zone_code = @ZONE ");
+                    //if(whereEnable)sb.Append("AND zone_code = @ZONE ");
+                    //else sb.Append("zone_code = @ZONE ");
+
+                    sb.Append("AND zone_code = @ZONE ");
                     param.Add("ZONE", zcode, DbType.String);
                 }
 
@@ -84,6 +97,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                        time AS last_time ,
                        current_volume
                        FROM watertank
+                       WHERE current_volume != '0' 
                        {sb}
                        ORDER BY tank_id, time DESC
                    ),

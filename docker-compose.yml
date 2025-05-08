@@ -27,9 +27,10 @@ services:
       - "5432:5432"
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 5s
+      interval: 60s
       timeout: 3s
-      retries: 5
+      retries: 2
+      start_period: 10s 
     volumes:
       - timescaledb-data:/var/lib/postgresql/data
 

@@ -204,7 +204,7 @@ public class MqttInit
                     //    Sharedata.StartTestDate = Sharedata.StartTestDate.AddHours(2);
                     //}
 
-                    await Task.Delay(1000);
+                    await Task.Delay(200);
                 }
 
                 if (Sharedata.Items[i].Triggers[t].Active)
@@ -249,7 +249,7 @@ public class MqttInit
 
             }
 
-            await Task.Delay(1000);
+            await Task.Delay(200);
 
             ResetTriggers();
 

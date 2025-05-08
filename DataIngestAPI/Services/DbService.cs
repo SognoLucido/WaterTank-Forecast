@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Dapper;
 using DataIngestAPI.Models;
+using Dbcheck;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
@@ -11,45 +12,57 @@ namespace DataIngestAPI.Services
     public class DbService : IDbService
     {
         //private string Connstring = "Host=localhost;Port=5432;Database=WaterTank;Username=postgres;Password=mypassword";
-        private readonly string Connstring;
-        public DbService(IConfiguration conf) 
-        { 
-            
-            Connstring = "Host=" + (
-                conf["DCOMPOSE_DATABASEHOST"] ??
-                conf.GetConnectionString("postgwhost") ?? "localhost");
+        //private readonly string Connstring;
+        private readonly Dbinit dbinit;
+        private string Connstring = string.Empty;
+        public DbService(Dbinit _dbinit) 
+        {
+           dbinit = _dbinit;
 
-            Connstring += conf.GetConnectionString("postgwbody") ?? throw new NotImplementedException("db connection body string missing ; check appsetting.json");
+            //Connstring = "Host=" + (
+            //    conf["DCOMPOSE_DATABASEHOST"] ??
+            //    conf.GetConnectionString("postgwhost") ?? "localhost");
+
+            //Connstring += conf.GetConnectionString("postgwbody") ?? throw new NotImplementedException("db connection body string missing ; check appsetting.json");
         }
+
         public async Task InitCreation()
         {
+            await dbinit.InitCreationAsync();
+
+            Connstring = dbinit.Connstring;
+        }
+
+
+        //public async Task InitCreation()
+        //{
           
-            const string sqltable = @"
-            CREATE TABLE IF NOT EXISTS watertank (
-            time TIMESTAMPTZ NOT NULL,                                   
-            tank_id UUID NOT NULL,
-            current_volume DOUBLE PRECISION NOT NULL,
-            client_id UUID,
-            zone_code VARCHAR(10),
-            total_capacity DOUBLE PRECISION
-                );";
+        //    const string sqltable = @"
+        //    CREATE TABLE IF NOT EXISTS watertank (
+        //    time TIMESTAMPTZ NOT NULL,                                   
+        //    tank_id UUID NOT NULL,
+        //    current_volume DOUBLE PRECISION NOT NULL,
+        //    client_id UUID,
+        //    zone_code VARCHAR(10),
+        //    total_capacity DOUBLE PRECISION
+        //        );";
 
-            const string sqlhypertable = @"SELECT create_hypertable('WaterTank', by_range('time') , if_not_exists => TRUE);";
+        //    const string sqlhypertable = @"SELECT create_hypertable('WaterTank', by_range('time') , if_not_exists => TRUE);";
 
 
-            using var conn = new NpgsqlConnection(Connstring);
+        //    using var conn = new NpgsqlConnection(Connstring);
 
             
-            //await conn.OpenAsync();
+        //    //await conn.OpenAsync();
 
-            //const string checkDbQuery = "SELECT 1 FROM pg_database WHERE datname = 'WaterTank'";
-            //var result = await conn.ExecuteScalarAsync(checkDbQuery);
+        //    //const string checkDbQuery = "SELECT 1 FROM pg_database WHERE datname = 'WaterTank'";
+        //    //var result = await conn.ExecuteScalarAsync(checkDbQuery);
 
 
-            var x =  await conn.ExecuteAsync(sqltable);
-            var y = await conn.ExecuteAsync(sqlhypertable);
+        //    var x =  await conn.ExecuteAsync(sqltable);
+        //    var y = await conn.ExecuteAsync(sqlhypertable);
 
-        }
+        //}
 
         public async Task Insertdata(string data)
         {
@@ -97,17 +110,17 @@ namespace DataIngestAPI.Services
            
         }
 
-        //optional
-        public async Task Cleantable()
-        {
-            const string sqldel = @"DROP TABLE IF EXISTS WaterTank";
+        ////optional
+        //public async Task Cleantable()
+        //{
+        //    const string sqldel = @"DROP TABLE IF EXISTS WaterTank";
 
-            using var conn = new NpgsqlConnection(Connstring);
+        //    using var conn = new NpgsqlConnection(Connstring);
 
-            var x = await conn.ExecuteAsync(sqldel);
+        //    var x = await conn.ExecuteAsync(sqldel);
 
-            Console.WriteLine("table cleaned");
-        }
+        //    Console.WriteLine("table cleaned");
+        //}
 
 
     }

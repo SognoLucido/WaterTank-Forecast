@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.Json.Serialization;
 using DataFlow_ReadAPI.Services.DBFetching;
+using Dbcheck;
 using Microsoft.AspNetCore.Http.Json;
 using Scalar.AspNetCore;
 
@@ -9,7 +10,7 @@ namespace DataFlow_ReadAPI
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -25,17 +26,20 @@ namespace DataFlow_ReadAPI
             builder.Services.AddOpenApi();
 
             builder.Services.AddScoped<IDbFetch, DbFetch>();
-
+            builder.Services.AddSingleton<Dbinit>();
 
 
            
 
             var app = builder.Build();
 
+            var dbInit = app.Services.GetRequiredService<Dbinit>();
+            await dbInit.InitCreationAsync();
+
             //// Configure the HTTP request pipeline.
             //if (app.Environment.IsDevelopment())
             //{
-                app.MapOpenApi();
+            app.MapOpenApi();
 
             //}
 
