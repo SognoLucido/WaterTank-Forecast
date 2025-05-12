@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet;
+using MQTTnet.Formatter;
 using WaterTankMock_MQTT.Models;
 using WaterTankMock_MQTT.Services.Mqtt.Models;
 
@@ -16,8 +17,8 @@ namespace WaterTankMock_MQTT.Services.Mqtt;
 public class MqttInit
 {
     private readonly List<IMqttClient> clients = [];
-    private MqttClientFactory? factory ; // to fix this create new one on connection not on class init
-  
+    private MqttClientFactory? factory; // to fix this create new one on connection not on class init
+
     public event EventHandler<bool>? ConnectionStatus;
     private MqttClientOptions? options;
     private string? ip;
@@ -42,6 +43,7 @@ public class MqttInit
 
         using var mqttClient = factory.CreateMqttClient();
         var mqttClientOptions = new MqttClientOptionsBuilder()
+            .WithProtocolVersion(MqttProtocolVersion.V500)
             .WithTcpServer(ip, port)
             .WithCleanSession(true)
             .WithClientId("ConnectionCheck")
@@ -67,7 +69,7 @@ public class MqttInit
 
             if (mqttClient.IsConnected) ConnectionStatus?.Invoke(this, true);
 
-            while (!ctoken.IsCancellationRequested && mqttClient.IsConnected )
+            while (!ctoken.IsCancellationRequested && mqttClient.IsConnected)
             {
 
                 await Task.Delay(5000, ctoken);
@@ -136,6 +138,8 @@ public class MqttInit
 
         var applicationMessage = new MqttApplicationMessageBuilder()
         .WithTopic(Sharedata.MqttTopic)
+        .WithUserProperty("tankid", "")
+        .WithUserProperty("mqttid", "")
         //.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce)
         .Build();
 
@@ -153,8 +157,8 @@ public class MqttInit
 
         int triggerStateProgressbar = 0;
 
-       // Sharedata.StartTestDate  // Display DateTime; this shows the progress 
-          
+        // Sharedata.StartTestDate  // Display DateTime; this shows the progress 
+
 
 
 
@@ -162,14 +166,14 @@ public class MqttInit
         {
 
 
-           //  var testdatepint = Sharedata.StartTestDate;
+            //  var testdatepint = Sharedata.StartTestDate;
             //await Task.Delay(2000);
 
             //   Sharedata.Simtriggers[0] = true;
 
             await Task.Delay(1000);
 
-            for (int i = 0, t = 0; ;++i)  // clients i  ; triggers t
+            for (int i = 0, t = 0; ; ++i)  // clients i  ; triggers t
             {
 
                 if (i >= Sharedata.Items.Count)
@@ -209,7 +213,7 @@ public class MqttInit
 
                 if (Sharedata.Items[i].Triggers[t].Active)
                 {
-                    if (Onlinetoken.IsCancellationRequested) return; 
+                    if (Onlinetoken.IsCancellationRequested) return;
 
                     var resourcescale = rng.Next(Sharedata.Items[i].Triggers[t].Rangemin, Sharedata.Items[i].Triggers[t].Rangemax);
                     Sharedata.Items[i].CurrentLevel = (Sharedata.Items[i].CurrentLevel - resourcescale) < 0 ? 0 : Sharedata.Items[i].CurrentLevel - resourcescale;
@@ -234,8 +238,15 @@ public class MqttInit
                          }, options
                    );
 
+                  
+
                     if (!Onlinetoken.IsCancellationRequested)
+                    {
+
+                        applicationMessage.UserProperties[0] = new(applicationMessage.UserProperties[0].Name, Sharedata.Items[i].Id.ToString());
+                        applicationMessage.UserProperties[1] = new(applicationMessage.UserProperties[1].Name, clients[i].Options.ClientId);
                         await clients[i].PublishAsync(applicationMessage, Onlinetoken);
+                    }
                     else return;
 
                 }
@@ -245,7 +256,7 @@ public class MqttInit
 
                 Sharedata.ProgressBar = (int)(100 * (triggerStateProgressbar) / ((10 * Sharedata.Toxdays) - 1));
 
-             
+
 
             }
 
@@ -277,6 +288,7 @@ public class MqttInit
     {
 
         options = new MqttClientOptionsBuilder()
+            .WithProtocolVersion(MqttProtocolVersion.V500)
             .WithTcpServer(ip, port)
             .WithCleanSession(true)
             .WithClientId("")

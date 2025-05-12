@@ -12,6 +12,8 @@ namespace DataIngestAPI
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder();
 
+            builder.Services.AddLogging();
+
             builder.Services.AddHostedService<MqttReaderBG>();
             builder.Services.AddSingleton<DbService>();
 

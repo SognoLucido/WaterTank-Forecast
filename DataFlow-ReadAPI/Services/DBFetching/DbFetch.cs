@@ -97,7 +97,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                        time AS last_time ,
                        current_volume
                        FROM watertank
-                       WHERE current_volume != '0' 
+                       WHERE current_volume > 0 
                        {sb}
                        ORDER BY tank_id, time DESC
                    ),

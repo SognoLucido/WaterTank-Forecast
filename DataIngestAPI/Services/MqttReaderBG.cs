@@ -34,12 +34,16 @@ namespace DataIngestAPI.Services
 
             mqttClient.ApplicationMessageReceivedAsync += async e =>
             {
-
+                var test = e.ApplicationMessage.UserProperties;
 
 
                 //Console.WriteLine($"Topic : {e.ApplicationMessage.Topic} and Message : {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}"); 
 
-              await dbcall.Insertdata(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
+              await dbcall.Insertdata(Encoding.UTF8.GetString(
+                  e.ApplicationMessage.Payload),
+                  e.ApplicationMessage.UserProperties[0].Value, 
+                  e.ApplicationMessage.UserProperties[1].Value,
+                  e.ClientId);
 
               //return Task.CompletedTask;
             };

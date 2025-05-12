@@ -9,7 +9,7 @@ namespace DataIngestAPI.Services
     public interface IDbService
     {
 
-        Task Insertdata(string data);
+        Task Insertdata(string data,string _idTankitem , string _idMqttclient,string _thisAPPsubmqttID);
         Task InitCreation();
        // Task Cleantable(); //opt
 
