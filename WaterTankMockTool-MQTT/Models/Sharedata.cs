@@ -2,11 +2,12 @@
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using WaterTankMock_MQTT.Services;
 using WaterTankMock_MQTT.ViewModels;
+using WaterTankMockTool_MQTT.Services;
 
 namespace WaterTankMock_MQTT.Models
 {
@@ -26,12 +27,16 @@ namespace WaterTankMock_MQTT.Models
             get => _items;
             set
             {
-
                 SetProperty(ref _items, value);
+
+                //if (Items != null && Items.Any()) Itemsempty = true;   //DA FIXARE
+                //else Itemsempty = false;
+
             }
         }
 
         [ObservableProperty] private bool _gotorecap = false;
+        [ObservableProperty] private bool _itemsNotempty = false;
 
         public string MqttTopic { get; set; } = "watertank";
 
@@ -52,7 +57,7 @@ namespace WaterTankMock_MQTT.Models
 
                     
 
-                    SelectedTankItem.Triggerfiltered = new ObservableCollection<TriggerItem>(SelectedTankItem.Triggers.Where(x => x.Active == true).ToArray());
+                    SelectedTankItem.Triggerfiltered = [.. SelectedTankItem.Triggers.Where(x => x.Active == true).ToArray()];
 
 
                     DataChanged?.Invoke(this, Page.TankSettings);
@@ -85,40 +90,26 @@ namespace WaterTankMock_MQTT.Models
 
         /////sim settings 
       
-        [ObservableProperty]private bool _seeddata = false;
-        [ObservableProperty] private bool _capacity = false;
+   
 
 
-        //START client OPTIONs
-        //[ObservableProperty]
-        private bool _clientidenable = false;
-        public bool ClientidEnable
-        {
-            get => _clientidenable;
-            set
-            {
-                SetProperty(ref _clientidenable, value);
+        public bool Seeddata = false;
+        public bool Capacity = false;
+        public bool ClientidEnable = false;
+        public bool ZonecodeEnable = false;
 
-                if (value)
-                {
-                    Clientfont = 17;
-                    Clienttext = "Client ID";
-                }
-                else
-                {
-                    Clientfont = 20;
-                    Clienttext = "Enable \"Client ID\"";
-                }
 
-            }
-        }
 
-        [ObservableProperty] private string _clienttext = "Enable \"Client ID\"";
-        [ObservableProperty] private int _clientfont = 20;
-        [ObservableProperty] private Guid _clientguid = new();
+       
 
-        [RelayCommand] 
-        private async Task GenerateNewGuid() => Clientguid = Guid.NewGuid();
+
+
+
+        // private string _clientguid = new Guid().ToString();
+
+
+        public Guid Clientguid;
+        public string ZonecodeID;
 
 
         //END client OPTIONs
@@ -127,34 +118,22 @@ namespace WaterTankMock_MQTT.Models
 
         //START ZONECODE OPTIONs
 
-        //[ObservableProperty]
-        private bool _zonecodeenable ;
-        
-        public bool ZonecodeEnable
-        {
-            get => _zonecodeenable;
-            set
-            {
-                SetProperty(ref _zonecodeenable, value);
-
-                if (value)
-                {
-
-                    Zonetext = "Zone Code";
-                }
-                else
-                {
-
-                    Zonetext = "Enable \"Zone Code\"";
-                }
-
-            }
-        }
 
 
 
-        [ObservableProperty] private string? _zonetext = "Enable \"Zone Code\"";
-        [ObservableProperty] private string? _zonecodeID ;
+        //partial void OnZoneCodeIDChanged(string value)
+        //{
+        //    ClearErrors(nameof(Input));
+
+        //    // Try parsing
+        //    if (!Guid.TryParse(value, out _))
+        //    {
+        //        // Trigger validation error
+        //        SetErrors(nameof(Input), new[] { "Invalid GUID format." });
+        //    }
+        //}
+
+
 
         //END ZONECODE OPTIONs
 
@@ -168,7 +147,7 @@ namespace WaterTankMock_MQTT.Models
             get => _startdate;
             set 
             {
-                
+              
                 
                 SetProperty(ref _startdate, value);
 

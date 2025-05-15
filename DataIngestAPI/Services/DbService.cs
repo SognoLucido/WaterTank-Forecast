@@ -59,8 +59,8 @@ namespace DataIngestAPI.Services
             }
             catch (Exception ex) 
             {
-               // logger.LogWarning("ClientId : {} --- MqttclientId :{} --- subid : {} --- ex{}", _idTankitem,_idMqttclient,_thisAPPsubmqttID, ex.Message);
-                logger.LogWarning("ClientId: {ClientId} --- MqttClientId: {MqttClientId} --- SubId: {SubId} --- Exception: {ExceptionMessage}",_idTankitem, _idMqttclient, _thisAPPsubmqttID, ex.Message);
+               
+                logger.LogWarning("TankitemId: {TankitemId} --- MqttClientId: {MqttClientId} --- SubId: {SubId} --- Exception: {ExceptionMessage}",_idTankitem, _idMqttclient, _thisAPPsubmqttID, ex.Message);
             }
            
         }

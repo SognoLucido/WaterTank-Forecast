@@ -27,12 +27,14 @@ public class MqttInit
     private CancellationToken Onlinetoken;
     //int[] Htriggers = [3,5,7,9,11,13,15,17,19,21];
 
-
+    readonly JsonSerializerOptions JsonOptions ;
     readonly Sharedata Sharedata;
 
     public MqttInit(Sharedata sharedata)
     {
         Sharedata = sharedata;
+        JsonOptions = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+
     }
 
     public async Task Checkconnection(string ip, int port, CancellationToken ctoken)
@@ -117,8 +119,7 @@ public class MqttInit
         await ClientConnector();
 
 
-        if (Sharedata.Seeddata)
-            await Seeddata();
+        if (Sharedata.Seeddata) await Seeddata();
 
 
         await Start();
@@ -128,11 +129,11 @@ public class MqttInit
 
 
 
-    private async Task Start() //buggy to fix
+    private async Task Start() 
     {
 
         Random rng = new();
-        var options = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+
         Sharedata.ProgressBar = 0;
         Sharedata.ProgressMessage = "Sending...";
 
@@ -235,7 +236,7 @@ public class MqttInit
                              zone_code = Sharedata.ZonecodeEnable ? Sharedata.ZonecodeID : null,
 
 
-                         }, options
+                         }, JsonOptions
                    );
 
                   
@@ -284,7 +285,7 @@ public class MqttInit
         }
     }
 
-    private async Task ClientConnector()
+    private async Task ClientConnector() //buggy to fix
     {
 
         options = new MqttClientOptionsBuilder()
@@ -337,41 +338,67 @@ public class MqttInit
 
 
         await Task.Delay(1000);
-        var applicationMessage = new MqttApplicationMessageBuilder()
-          .WithTopic(Sharedata.MqttTopic)
-          .Build();
+
+        var Message = new MqttApplicationMessageBuilder()
+        .WithTopic(Sharedata.MqttTopic)
+        .WithUserProperty("tankid", "")
+        .WithUserProperty("mqttid", "")
+        //.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce)
+        .Build();
 
 
-        rawdataclients = [];
+        //rawdataclients = [];
 
 
 
-        foreach (var item in Sharedata.Items)
-        {
-            rawdataclients.Add
-                (
-                    new MqttBodyJsonModel
-                    {
-                        tank_id = item.Id,
-                        timestamp = Sharedata.StartTestDate,
-                        current_volume = item.CurrentLevel,
-                        total_capacity = item.Capacity
-                        //capacity = new()
-                        //{
-                        //    current_volume = item.CurrentLevel,
-                        //    total_capacity = item.Capacity
-                        //}
+        //foreach (var item in Sharedata.Items)
+        //{
+        //    rawdataclients.Add
+        //        (
+        //            new MqttBodyJsonModel
+        //            {
+        //                tank_id = item.Id,
+        //                timestamp = Sharedata.StartTestDate,
+        //                current_volume = item.CurrentLevel,
+        //                total_capacity = item.Capacity
+        //                //capacity = new()
+        //                //{
+        //                //    current_volume = item.CurrentLevel,
+        //                //    total_capacity = item.Capacity
+        //                //}
 
-                    }
-                );
-        }
+        //            }
+        //        );
+        //}
 
 
         for (int i = 0; i < clients.Count; i++)
         {
 
-            applicationMessage.PayloadSegment = JsonSerializer.SerializeToUtf8Bytes(rawdataclients[i]);
-            await clients[i].PublishAsync(applicationMessage, Onlinetoken);
+            //applicationMessage.PayloadSegment = JsonSerializer.SerializeToUtf8Bytes(rawdataclients[i]);
+
+            var split = new MqttBodyJsonModel
+            {
+                tank_id = Sharedata.Items[i].Id,
+                timestamp = Sharedata.StartTestDate, // OLDSharedata.StartTestDate, // trigger 3:am
+                current_volume = Sharedata.Items[i].CurrentLevel,
+                total_capacity = Sharedata.Capacity ? Sharedata.Items[i].Capacity : null,
+                client_id = Sharedata.ClientidEnable ? Sharedata.Clientguid : null,
+                zone_code = Sharedata.ZonecodeEnable ? Sharedata.ZonecodeID : null,
+            };
+
+
+       Message.PayloadSegment = JsonSerializer.SerializeToUtf8Bytes(split, JsonOptions);
+
+
+            if (!Onlinetoken.IsCancellationRequested)
+            {
+                Message.UserProperties[0] = new(Message.UserProperties[0].Name, Sharedata.Items[i].Id.ToString());
+                Message.UserProperties[1] = new(Message.UserProperties[1].Name, clients[i].Options.ClientId);
+                await clients[i].PublishAsync(Message, Onlinetoken);
+            }
+            else return;
+
             Sharedata.ProgressBar = (int)((i + 1) * (100.0 / Sharedata.Items.Count));
         }
 

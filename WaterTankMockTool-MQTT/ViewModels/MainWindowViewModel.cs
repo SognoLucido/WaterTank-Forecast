@@ -200,6 +200,10 @@ namespace WaterTankMock_MQTT.ViewModels
 
                 NotificationItemstring = starredlist.Length.ToString();
             }
+            else
+            {
+                Sharedata.ItemsNotempty = false;
+            }
 
             Itemstoadd = 1;
 
@@ -238,6 +242,9 @@ namespace WaterTankMock_MQTT.ViewModels
 
             if(Itemstoadd > 0)
             {
+
+                Sharedata.ItemsNotempty = true;
+
                 var itemcount = Sharedata.Items?.Count;
 
                 if (itemcount is not null && itemcount > 7)
@@ -248,6 +255,7 @@ namespace WaterTankMock_MQTT.ViewModels
                 else Counter = false;
 
             }
+        
 
             //Backuplist = Items;
 
@@ -271,8 +279,14 @@ namespace WaterTankMock_MQTT.ViewModels
                 port = Mqttdefport;
             }
 
+            if (string.IsNullOrEmpty(ConnectionIP)) 
+            {
+                ConnectionIP = "localhost";
+            }
 
-            await Mqtt.Checkconnection(ConnectionIP, port, _cTokenDisconnectfrommqtt.Token);
+
+
+                await Mqtt.Checkconnection(ConnectionIP, port, _cTokenDisconnectfrommqtt.Token);
 
 
             Debug.WriteLine("DOONE ");

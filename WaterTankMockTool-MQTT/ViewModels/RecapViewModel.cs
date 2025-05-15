@@ -13,9 +13,8 @@ namespace WaterTankMock_MQTT.ViewModels
 {
     public partial class RecapViewModel : ViewModelBase
     {
-        public Sharedata Sharedata { get; set; }
+        public Sharedata Sharedata { get; }
 
-       
 
         public RecapViewModel() { }
 
@@ -25,6 +24,8 @@ namespace WaterTankMock_MQTT.ViewModels
          
             Sharedata = sharedata;
         }
+
+
 
 
 

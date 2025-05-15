@@ -72,8 +72,8 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 BorderBrush="Black"
-								IsEnabled="False"
-                                IsChecked="{Binding Sharedata.Seeddata}" />
+                                IsChecked="{Binding Formseeddata}"
+                                IsEnabled="True" />
                         </Border>
 
 
@@ -106,7 +106,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 BorderBrush="Black"
-                                IsChecked="{Binding Sharedata.Capacity}" />
+                                IsChecked="{Binding Formcapacity}" />
                         </Border>
 
 
@@ -123,40 +123,48 @@
                             BorderThickness="1,1,0,1"
                             CornerRadius="10,0,0,10">
 
-							
-							<StackPanel Spacing="15"  Orientation="Horizontal" HorizontalAlignment="Center">
 
-								<StackPanel  VerticalAlignment="Center">
-									<TextBlock
-							           Margin="10"
-							           HorizontalAlignment="Center"
-							           VerticalAlignment="Center"
-							           FontSize="{Binding Sharedata.Clientfont}" Text="{Binding Sharedata.Clienttext}">
-								
-									</TextBlock>
-									<Button IsVisible="{Binding Sharedata.ClientidEnable}" Command="{Binding Sharedata.GenerateNewGuidCommand}" Classes="accent" FontSize="13" Margin="0,-4,0,0" Height="30" Width="90">
-										new GUID
-									</Button>
-								</StackPanel>
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="15">
 
-
-								
-								<TextBox
-								   Width="260"
-								   VerticalAlignment="Center"
-								   HorizontalContentAlignment="Center"
-								   Classes="outline dense "
-								   FontSize="12"
-								   Text="{Binding Sharedata.Clientguid}"
-								   IsVisible="{Binding Sharedata.ClientidEnable}"
-								   Watermark="GUID" 
-								  />
-								
-							</StackPanel>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock
+                                        Margin="10"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="{Binding Clientfont}"
+                                        Text="{Binding Clienttext}" />
+                                    <Button
+                                        Width="90"
+                                        Height="30"
+                                        Margin="0,-4,0,0"
+                                        Classes="accent"
+                                        Command="{Binding GenerateNewGuidCommand}"
+                                        FontSize="13"
+                                        IsVisible="{Binding FormClientidEnable}">
+                                        new GUID
+                                    </Button>
+                                </StackPanel>
 
 
 
-						</Border>
+                                <TextBox
+                                    Width="260"
+                                    VerticalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Classes="outline dense "
+                                    FontSize="12"
+                                    IsVisible="{Binding FormClientidEnable}"
+                                    Text="{Binding FormClientGuid, Mode=TwoWay}"
+                                    Watermark="GUID" />
+
+                            </StackPanel>
+
+
+
+                        </Border>
                         <Border
                             Width="100"
                             BorderThickness="1"
@@ -165,7 +173,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 BorderBrush="Black"
-                                IsChecked="{Binding Sharedata.ClientidEnable}" />
+                                IsChecked="{Binding FormClientidEnable}" />
                         </Border>
 
 
@@ -173,60 +181,60 @@
 
                     <!--  Zone code  -->
 
-					<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
 
-						<Border
+                        <Border
                             Width="440"
                             Height="80"
                             BorderThickness="1,1,0,1"
                             CornerRadius="10,0,0,10">
 
 
-							<StackPanel Spacing="15"  Orientation="Horizontal" HorizontalAlignment="Center">
-
-								
-									<TextBlock
-							           Margin="10"
-							           HorizontalAlignment="Center"
-							           VerticalAlignment="Center"
-							           FontSize="20" Text="{Binding Sharedata.Zonetext}"
-									   IsVisible="{Binding !Sharedata.ZonecodeEnable}">
-									  
-
-									</TextBlock>
-							
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="15">
 
 
-
-								<TextBox
-								   Width="260"
-								   VerticalAlignment="Center"
-								   HorizontalContentAlignment="Center"
-								   Classes="outline dense "
-								   FontSize="12"
-								   Text="{Binding Sharedata.ZonecodeID}"
-								   IsVisible="{Binding Sharedata.ZonecodeEnable}"
-								   Watermark="VARCHAR(10)"
-								  />
-
-							</StackPanel>
+                                <TextBlock
+                                    Margin="10"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"
+                                    IsVisible="{Binding !FormZonecodeEnable}"
+                                    Text="{Binding Zonetext}" />
 
 
 
-						</Border>
-						<Border
+
+                                <TextBox
+                                    Width="260"
+                                    VerticalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Classes="outline dense "
+                                    FontSize="12"
+                                    IsVisible="{Binding FormZonecodeEnable}"
+                                    Text="{Binding FormzonecodeID, Mode=TwoWay}"
+                                    Watermark="VARCHAR(10)" />
+
+                            </StackPanel>
+
+
+
+                        </Border>
+                        <Border
                             Width="100"
                             BorderThickness="1"
                             CornerRadius="0,10,10,0">
-							<ToggleSwitch
+                            <ToggleSwitch
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 BorderBrush="Black"
-                                IsChecked="{Binding Sharedata.ZonecodeEnable}" />
-						</Border>
+                                IsChecked="{Binding FormZonecodeEnable}" />
+                        </Border>
 
 
-					</StackPanel>
+                    </StackPanel>
 
                     <!--  Mqtt TOPIC  -->
 
@@ -237,19 +245,22 @@
                             Height="80"
                             BorderThickness="1,1,0,1"
                             CornerRadius="10,0,0,10">
-                            <TextBlock
-                                Margin="10"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="25">
-                                MQTT Topic
-                            </TextBlock>
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock FontSize="25">
+                                    MQTT Topic
+                                </TextBlock>
+                                <TextBlock FontSize="11" TextAlignment="Center">
+                                    ( Default/empty is watertank )
+                                </TextBlock>
+                            </StackPanel>
+
 
                         </Border>
                         <Border
                             Width="270"
                             BorderThickness="1"
                             CornerRadius="0,10,10,0">
+
                             <TextBox
                                 Width="150"
                                 HorizontalAlignment="Center"

@@ -113,7 +113,8 @@
                 VerticalAlignment="Center"
                 Classes="accent"
                 Command="{Binding ContinueCommand}"
-                Content="Continue" />
+                Content="Continue"
+                IsEnabled="{Binding Sharedata.ItemsNotempty}" />
 
         </Grid>
 

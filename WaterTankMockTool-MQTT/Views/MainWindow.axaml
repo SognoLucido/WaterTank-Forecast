@@ -81,9 +81,8 @@
             </TextBlock>
         </Button>
 
-        <StackPanel>
-
-
+        <!--  .  -->
+        <StackPanel VerticalAlignment="Center">
 
             <!--  {Binding Sharedata.Gotorecap}  -->
             <Button
@@ -97,7 +96,7 @@
             </Button>
 
             <TextBlock
-                Margin="10"
+                Margin="6"
                 HorizontalAlignment="Center"
                 Text="{Binding Statustext}" />
 
@@ -137,13 +136,14 @@
             Margin="30,0,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
+            IsEnabled="{Binding !Connected}"
             Orientation="Horizontal"
             Spacing="5">
             <TextBox
                 Width="200"
                 p1:TextFieldAssist.Label="MQTT Broker IP"
                 Classes="outline dense clearButton"
-                Text="{Binding ConnectionIP}"
+                Text="{Binding ConnectionIP, Mode=TwoWay}"
                 Theme="{StaticResource OutlineTextBox}"
                 UseFloatingWatermark="True" />
 
@@ -169,23 +169,20 @@
             Width="40"
             Height="20"
             Margin="4"
-			ZIndex="1"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Background="#FF3B30"
             BorderBrush="Black"
             BorderThickness="1"
-			IsVisible="{Binding Counter}"
-            CornerRadius="5">
+            CornerRadius="5"
+            IsVisible="{Binding Counter}"
+            ZIndex="1">
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontWeight="Bold"
                 Foreground="#FFFFFF"
-				Text="{Binding NotificationItemstring}"
-				>
-                
-            </TextBlock>
+                Text="{Binding NotificationItemstring}" />
         </Border>
 
         <Grid
@@ -230,7 +227,7 @@
                 Orientation="Vertical">
 
 
-				<NumericUpDown
+                <NumericUpDown
                     Width="171"
                     Height="47"
                     Background="White"
