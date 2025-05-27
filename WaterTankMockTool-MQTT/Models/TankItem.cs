@@ -84,6 +84,7 @@ public partial class TankItem : ObservableObject
 
     public int Capacity { get; set; }
 
+   
     public int CurrentLevel { get; set; }
 
 

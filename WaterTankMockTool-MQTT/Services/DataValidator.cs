@@ -24,8 +24,6 @@ public sealed class GuidAttribute : ValidationAttribute
 
         return false;
 
-        // only check string length if empty strings are not allowed
-        //  return AllowGuid || value is not string stringValue || !string.IsNullOrWhiteSpace(stringValue);
     }
 
 

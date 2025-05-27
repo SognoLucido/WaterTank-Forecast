@@ -18,19 +18,20 @@ namespace WaterTankMock_MQTT.ViewModels
         private readonly MqttInit mqttInit;
         public SimViewModel() { }
 
+        private string _enddatetextInfo = "End Date: ----";
+        private string? _datepicker;
+        private string? _days;
+
+        [ObservableProperty] private string? _dayErrors;
+
         public SimViewModel(Sharedata _sharedata, MqttInit _mqtt)
         {
             Sharedata = _sharedata;
             mqttInit = _mqtt;
 
-
-
-            //BdMessg = build;
         }
 
 
-        /* [ObservableProperty]*/
-        private string _enddatetextInfo = "End Date: ----";
 
         public string EnddatetextInfo
         {
@@ -43,11 +44,6 @@ namespace WaterTankMock_MQTT.ViewModels
 
         }
 
-
-
-
-        //[ObservableProperty]
-        private string? _datepicker;
 
         public string? Date
         {
@@ -80,16 +76,6 @@ namespace WaterTankMock_MQTT.ViewModels
             }
         }
 
-
-        //public  int _days { get; set; } = 1;
-
-
-
-        [ObservableProperty] private string? _dayErrors;
-
-        
-
-        private string? _days;
 
         [Required(ErrorMessage = "The 'Day' field is required.")]
         [Range(1, 100, ErrorMessage = "The 'Day' value must be between 1 and 100.")]
@@ -177,7 +163,7 @@ namespace WaterTankMock_MQTT.ViewModels
 
             Sharedata.Toxdays = int.Parse(_days!);
 
-            await Sharedata.Changepage(Page.Start);
+            await Changepage(Page.Start);
             await mqttInit.Startsim();
         }
 
@@ -185,7 +171,7 @@ namespace WaterTankMock_MQTT.ViewModels
         private async Task Goback()
         {
 
-            await Sharedata.Changepage(Page.Options);
+            await Changepage(Page.Options);
 
         }
 

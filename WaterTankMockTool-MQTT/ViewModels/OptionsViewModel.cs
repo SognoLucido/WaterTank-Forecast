@@ -167,7 +167,7 @@ namespace WaterTankMock_MQTT.ViewModels
         private async Task Goback()
         {
 
-            await Sharedata.Changepage(Page.Recap);
+            await Changepage(Page.Recap);
 
         }
 
@@ -180,7 +180,7 @@ namespace WaterTankMock_MQTT.ViewModels
             if (!HasErrors)
             {
                 SaveDatatoShareclass();
-                await Sharedata.Changepage(Page.Sim);
+                await Changepage(Page.Sim);
 
             }
         }

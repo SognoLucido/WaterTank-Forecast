@@ -40,10 +40,11 @@
             <TabItem Header="Tank-Info">
 
 
-                <Grid ColumnDefinitions="1*,0.2*" ShowGridLines="False">
+                <Grid ColumnDefinitions="1*,0.2*" ShowGridLines="True">
 
                     <StackPanel
                         Grid.Row="1"
+                        Width="320"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center">
 
@@ -71,13 +72,13 @@
                             Theme="{StaticResource OutlineTextBox}"
                             UseFloatingWatermark="True" />
                         <TextBox
-                            Width="325"
+                            Width="320"
                             HorizontalAlignment="Right"
                             p1:TextFieldAssist.Label="Id"
                             Classes="outline"
-							TextAlignment="Center"
                             IsReadOnly="True"
                             Text="{Binding Sharedata.SelectedTankItem.Id}"
+                            TextAlignment="Center"
                             Theme="{StaticResource OutlineTextBox}"
                             UseFloatingWatermark="True" />
 
@@ -164,12 +165,12 @@
                                         HorizontalAlignment="Center">
                                         <TextBlock FontSize="16">HowtoUse</TextBlock>
                                         <TextBlock TextWrapping="Wrap">
-                                            The simulation runs for X days, with 10 ticks per day—1 tick every 3 seconds.
-                                            To enable a trigger, toggle the buttons below. When a trigger is enabled,
+                                            The simulation runs for X days, with 10 ticks per day.
+                                            to enable a trigger,toggle the buttons below.When a trigger is enabled,
                                             the MQTT tank client will send an MQTT message to the broker and scale resources
-                                            (water, configurable per trigger in settings).
+                                            (e.g., water—configurable per trigger in the settings).
                                             The simulation will progress through each trigger, sending a message for each active one.
-                                            This process will repeat each day (days are configurable after connection)
+                                            This process repeats daily (the number of days is configurable after connection)."
                                         </TextBlock>
                                     </StackPanel>
                                 </ToolTip.Tip>

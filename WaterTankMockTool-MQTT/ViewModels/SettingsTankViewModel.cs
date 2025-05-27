@@ -15,18 +15,23 @@ namespace WaterTankMock_MQTT.ViewModels
 
         public SettingsTankViewModel() { }
 
+        private TriggerItem? _triggeritemselect;
+        private bool _settings;
+
+
+        [ObservableProperty] private string? _settingerror;
+        [ObservableProperty] private string _togglesettingbuttonname;
+        [ObservableProperty] private bool _rangevisible;
+        [ObservableProperty] private string? _test = "ACTIVE";
+        [ObservableProperty] private string? _number1;
+        [ObservableProperty] private string? _number2;
+
         public SettingsTankViewModel(Sharedata sharedata) 
         {
             Sharedata = sharedata;
             Togglesettingbuttonname = "Settings";
         }
 
-        [ObservableProperty] private string? _settingerror;
-        [ObservableProperty] private string _togglesettingbuttonname ;
-        [ObservableProperty] private bool _rangevisible;
-        [ObservableProperty] private string? _test = "ACTIVE";
-        //[ObservableProperty]
-        private TriggerItem? _triggeritemselect;
 
         public TriggerItem? Triggeritemselect
         {
@@ -55,7 +60,7 @@ namespace WaterTankMock_MQTT.ViewModels
             }
         }
 
-        private bool _settings;
+
         public bool Settings
         {
             get => _settings;
@@ -78,12 +83,6 @@ namespace WaterTankMock_MQTT.ViewModels
         }
 
 
-        [ObservableProperty]
-        private string? _number1 ;
-
-
-        [ObservableProperty]
-        private string? _number2 ;
 
 
 

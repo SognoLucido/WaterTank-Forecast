@@ -26,20 +26,15 @@ namespace WaterTankMock_MQTT.ViewModels
         }
 
 
-
-
-
-
-
         [RelayCommand]
         private async Task Goback()
         {
            
             if(Sharedata.SelectedTankItem is null)
             {
-                await Sharedata.Changepage(Page.Null);
+                await Changepage(Page.Null);
             }
-            else await Sharedata.Changepage(Page.TankSettings);
+            else await Changepage(Page.TankSettings);
 
             Sharedata.Gotorecap = true;
 
@@ -50,7 +45,7 @@ namespace WaterTankMock_MQTT.ViewModels
         [RelayCommand]
         private async Task Continue()
         {
-            await Sharedata.Changepage(Page.Options);
+            await Changepage(Page.Options);
         }
 
 

@@ -27,33 +27,60 @@ namespace WaterTankMock_MQTT.ViewModels
 
         private readonly MqttInit Mqtt;
         const int Mqttdefport = 1883;
+        private ObservableCollection<TankItem>? Backuplist;
+        private int _itemstoadd = 1;
+        private bool _connected;
+        private string? _search;
 
-
+        [ObservableProperty] private string _connectionIP;
+        [ObservableProperty] private string? _connectionPort;
+        [ObservableProperty] private int _keytotriggers;
+        [ObservableProperty] private string _statustext;
+        [ObservableProperty] private bool _loadingbar = false;
+        [ObservableProperty] private bool _addandclearvisib = true;
+        [ObservableProperty] private bool _counter = false;
+        [ObservableProperty] private string _notificationItemstring = string.Empty;
 
         public MainWindowViewModel(MqttInit _mqtt, Sharedata sharedata, PagesController pages)
         {
 
             Pages = pages;
             Sharedata = sharedata;
-            Sharedata.DataChanged += Sharedata_PageItemselected;
+           // Sharedata.DataChanged += Sharedata_PageItemselected;
             Mqtt = _mqtt;
             Sharedata.Items = [];
             ConnectionIP = "localhost";
             Statustext = "Disconnected";
             Mqtt.ConnectionStatus += HandleConnectionStatus;
-
+            CPage += Pagecheck;
         }
 
+        private async Task Pagecheck(Page page)
+        {
 
+            switch (page) 
+            {
+                case Page.Null:
+                case Page.TankSettings:
+                    {
+                        
+                        if (Sharedata.Items?.Count > 7)Counter = true;
+                        break;
+                    }
+                   
+                default: Counter = false; break;
+            }
+        }
+        
 
         private async void HandleConnectionStatus(object? sender, bool isConnected)
         {
             if (isConnected)
             {
                 Statustext = "Connected";
-                await Pages.Changepage(Page.Recap);
+                await Changepage(Page.Recap);
                 Connected = true;
-
+              
             }
             else
             {
@@ -61,19 +88,11 @@ namespace WaterTankMock_MQTT.ViewModels
                 Connected = false;
                 Loadingbar = false;
                 Sharedata.SelectedTankItem = null;
-                await Pages.Changepage(Page.Null);
+                await Changepage(Page.Null);
 
             }
 
         }
-
-        private async void Sharedata_PageItemselected(object? sender, Page e)
-        {
-            await Pages.Changepage(e);
-        }
-
-
-        private int _itemstoadd = 1;
 
         public int Itemstoadd
         {
@@ -83,33 +102,6 @@ namespace WaterTankMock_MQTT.ViewModels
                 SetProperty(ref _itemstoadd, value);
             }
         }
-
-
-
-
-
-
-        [ObservableProperty] private string _connectionIP;
-        [ObservableProperty] private string? _connectionPort;
-
-
-        [ObservableProperty] private int _keytotriggers;
-
-        [ObservableProperty] private string _statustext;
-        [ObservableProperty] private bool _loadingbar = false;
-
-        [ObservableProperty] private bool _addandclearvisib = true;
-
-
-
-
-
-        private ObservableCollection<TankItem>? Backuplist;
-
-
-
-        /*[ObservableProperty]*/
-        private bool _connected;
 
         public bool Connected
         {
@@ -127,10 +119,7 @@ namespace WaterTankMock_MQTT.ViewModels
             }
         }
 
-
-
-        private string? _search;
-
+      
         public string? Search
         {
             get => _search;
@@ -172,9 +161,6 @@ namespace WaterTankMock_MQTT.ViewModels
 
             }
         }
-
-        [ObservableProperty] private bool _counter = false;
-        [ObservableProperty] private string _notificationItemstring = string.Empty;
 
 
         [RelayCommand]
@@ -286,11 +272,10 @@ namespace WaterTankMock_MQTT.ViewModels
 
 
 
-                await Mqtt.Checkconnection(ConnectionIP, port, _cTokenDisconnectfrommqtt.Token);
+           await Mqtt.Checkconnection(ConnectionIP, port, _cTokenDisconnectfrommqtt.Token);
 
 
-            Debug.WriteLine("DOONE ");
-
+           
         }
 
         [RelayCommand]
@@ -307,30 +292,11 @@ namespace WaterTankMock_MQTT.ViewModels
         {
 
             Sharedata.Gotorecap = false;
-            await Pages.Changepage(Page.Recap);
+            // await Pages.Changepage(Page.Recap);
 
-
-        }
-
-
-
-
-
-        [RelayCommand]
-        private async Task Tests()
-        {
-
-
-
+            await Changepage(Page.Recap);
 
         }
-
-
-
-
-
-
-
 
 
     }

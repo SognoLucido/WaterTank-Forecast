@@ -66,10 +66,10 @@ namespace WaterTankMock_MQTT
             var services = new ServiceCollection();
 
             services.AddTransient<SimViewModel>();
-            services.AddSingleton<SettingsTankViewModel>();
+            services.AddTransient<SettingsTankViewModel>();
             services.AddSingleton<MainWindowViewModel>();
             services.AddTransient<RecapViewModel>();
-            services.AddTransient<OptionsViewModel>();
+            services.AddSingleton<OptionsViewModel>();
             services.AddTransient<StartViewModel>();
            
 

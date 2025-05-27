@@ -30,7 +30,7 @@
             <Grid
                 ColumnDefinitions="*,*"
                 RowDefinitions="0.2*,*,*,0.6*"
-                ShowGridLines="True">
+                ShowGridLines="False">
 
 
 
@@ -112,8 +112,8 @@
 
         <Border
             Grid.Row="1"
-            Width="315"
-            Margin="3"
+			Height="41"
+            Width="316"
             Background="#f9fbfa"
             BorderBrush="Black"
             BorderThickness="2"
@@ -121,7 +121,9 @@
 
             <StackPanel
                 HorizontalAlignment="Center"
+				VerticalAlignment="Center"
                 Orientation="Horizontal"
+				
                 Spacing="5">
 
 

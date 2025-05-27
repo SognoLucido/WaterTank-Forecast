@@ -22,7 +22,7 @@
     <Grid
         Background="White"
         RowDefinitions="6*,*"
-        ShowGridLines="True">
+        ShowGridLines="False">
 
         <Border
             Margin="10"

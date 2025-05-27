@@ -26,14 +26,17 @@ namespace WaterTankMock_MQTT.Services
     {
 
         private readonly IServiceProvider serviceProvider;
-        private ViewModelBase[] PageCollection { get; set; } = new ViewModelBase[5];
-        public PagesController(IServiceProvider _serviceProvider,SettingsTankViewModel Tankset,RecapViewModel recap,OptionsViewModel options /*,SimViewModel sim , StartViewModel start*/) 
+       // private ViewModelBase[] PageCollection { get; set; } = new ViewModelBase[5];
+        public PagesController(IServiceProvider _serviceProvider/*,SettingsTankViewModel Tankset,RecapViewModel recap,OptionsViewModel options*/ /*,SimViewModel sim , StartViewModel start*/) 
         {
-            serviceProvider = _serviceProvider;
 
-            PageCollection[0] = Tankset;
-            PageCollection[1] = recap;
-            PageCollection[2] = options;
+            serviceProvider = _serviceProvider;
+            CPage += PageHandler;
+
+
+           // PageCollection[0] = Tankset;
+          //  PageCollection[1] = recap;
+          //  PageCollection[2] = options;
            // PageCollection[3] = sim;
             //PageCollection[4] = start;
             
@@ -43,28 +46,55 @@ namespace WaterTankMock_MQTT.Services
         private ViewModelBase? _pagez;
 
 
-        public async Task Changepage(Page pagename)
+
+
+        private async Task PageHandler(Page pagename)
         {
 
             Pagez = pagename switch
             {
-                Page.Null  => null,
-                Page.TankSettings or
-                Page.Options or
-                //Page.Start or
-                Page.Recap => PageCollection[(int)pagename],
+                Page.Null => null,
+                //Page.TankSettings or
+                //Page.Options or
+                ////Page.Start or
+                //Page.Recap => PageCollection[(int)pagename],
+                Page.TankSettings => serviceProvider.GetRequiredService<SettingsTankViewModel>(),
+                Page.Options => serviceProvider.GetRequiredService<OptionsViewModel>(),
+                Page.Recap => serviceProvider.GetRequiredService<RecapViewModel>(),
                 Page.Start => serviceProvider.GetRequiredService<StartViewModel>(),
                 Page.Sim => serviceProvider.GetRequiredService<SimViewModel>(),
 
-               _ => throw new ArgumentOutOfRangeException("Invalid page index")
+                _ => throw new ArgumentOutOfRangeException("Invalid page index")
 
 
             };
 
+        }
+
+
+
+        //public async Task Changepage(Page pagename)
+        //{
+
+        //    Pagez = pagename switch
+        //    {
+        //        Page.Null  => null,
+        //        Page.TankSettings or
+        //        Page.Options or
+        //        //Page.Start or
+        //        Page.Recap => PageCollection[(int)pagename],
+        //        Page.Start => serviceProvider.GetRequiredService<StartViewModel>(),
+        //        Page.Sim => serviceProvider.GetRequiredService<SimViewModel>(),
+
+        //       _ => throw new ArgumentOutOfRangeException("Invalid page index")
+
+
+        //    };
+
       
 
 
-        }
+        //}
 
 
     }
