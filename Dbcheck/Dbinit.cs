@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 
 namespace Dbcheck
@@ -6,15 +7,30 @@ namespace Dbcheck
     public class Dbinit
     {
         public string Connstring { get; }
-
-        public Dbinit(IConfiguration _conf)
+        private readonly ILogger logger;
+        private readonly bool logENV = false;
+        public Dbinit(IConfiguration _conf,ILogger<Dbinit> _logger)
         {
+           
+            logger = _logger;
 
-            Connstring = "Host=" + (
+            
+            try
+            {
+              
+                if (bool.TryParse(_conf["LOGGING_ALLINFO"], out bool logENV)) { };
+
+                Connstring = "Host=" + (
                 _conf["DCOMPOSE_DATABASEHOST"] ??
                 _conf.GetConnectionString("postgwhost") ?? "localhost");
 
-            Connstring += _conf.GetConnectionString("postgwbody") ?? throw new NotImplementedException("db connection body string missing ; check appsetting.json");
+                Connstring += _conf.GetConnectionString("postgwbody") ?? throw new NotImplementedException("db connection body string missing ; check appsetting.json");
+            }
+            catch(Exception ex) 
+            {
+                logger.LogWarning("{}",ex.Message);
+            }
+           
         }
 
 
@@ -33,33 +49,46 @@ namespace Dbcheck
 
             const string sqlhypertable = @"SELECT create_hypertable('WaterTank', by_range('time') , if_not_exists => TRUE);";
 
+            try
+            {
 
-            using var conn = new NpgsqlConnection(Connstring);
+
+                using var conn = new NpgsqlConnection(Connstring);
 
 
-            await conn.OpenAsync();
+                await conn.OpenAsync();
 
-            //const string checkDbQuery = "SELECT 1 FROM pg_database WHERE datname = 'WaterTank'";
-            //var result = await conn.ExecuteScalarAsync(checkDbQuery);
+                logger.LogInformation("database connection , SUCCESSFUL");
 
-            using var cmd = new NpgsqlCommand(sqltable, conn);
-            using var cmd1 = new NpgsqlCommand(sqlhypertable, conn);
+                //const string checkDbQuery = "SELECT 1 FROM pg_database WHERE datname = 'WaterTank'";
+                //var result = await conn.ExecuteScalarAsync(checkDbQuery);
 
-            //try
-            //{
+                using var cmd = new NpgsqlCommand(sqltable, conn);
+                using var cmd1 = new NpgsqlCommand(sqlhypertable, conn);
+
+                //try
+                //{
                 await cmd.ExecuteNonQueryAsync();
                 await cmd1.ExecuteNonQueryAsync();
-            //}
-            //catch (Exception ex)
-            //{
-
-            //}
-            
 
 
+                //}
+                //catch (Exception ex)
+                //{
 
-            //var x = await conn.ExecuteAsync(sqltable);
-            //var y = await conn.ExecuteAsync(sqlhypertable);
+                //}
+                logger.LogInformation("db Hypertable tables initialized/checked successfully");
+
+
+
+                //var x = await conn.ExecuteAsync(sqltable);
+                //var y = await conn.ExecuteAsync(sqlhypertable);
+
+            }
+            catch (Exception ex) 
+            {
+                logger.LogWarning("{}",ex.Message);
+            }
 
         }
 
@@ -79,14 +108,18 @@ namespace Dbcheck
 
             const string sqlhypertable = @"SELECT create_hypertable('WaterTank', by_range('time') , if_not_exists => TRUE);";
 
+            try
+            {
 
+            
             using var conn = new NpgsqlConnection(Connstring);
 
 
             conn.Open();
 
-            //const string checkDbQuery = "SELECT 1 FROM pg_database WHERE datname = 'WaterTank'";
-            //var result = await conn.ExecuteScalarAsync(checkDbQuery);
+            logger.LogInformation("database connection , SUCCESSFUL");
+                //const string checkDbQuery = "SELECT 1 FROM pg_database WHERE datname = 'WaterTank'";
+                //var result = await conn.ExecuteScalarAsync(checkDbQuery);
 
             using var cmd = new NpgsqlCommand(sqltable, conn);
             using var cmd1 = new NpgsqlCommand(sqlhypertable, conn);
@@ -95,13 +128,17 @@ namespace Dbcheck
             //{
              cmd.ExecuteNonQuery();
              cmd1.ExecuteNonQuery();
-            //}
-            //catch (Exception ex)
-            //{
+                //}
+                //catch (Exception ex)
+                //{
 
-            //}
+                //}
 
-
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning("{}", ex.Message);
+            }
 
 
             //var x = await conn.ExecuteAsync(sqltable);

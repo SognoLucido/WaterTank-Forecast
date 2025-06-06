@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:avalonia_controls="using:Avalonia.Controls"
     xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -45,21 +46,47 @@
                     <StackPanel
                         Grid.Row="1"
                         Width="320"
-                        HorizontalAlignment="Right"
+                        HorizontalAlignment="Center"
                         VerticalAlignment="Center">
+
+                        <StackPanel.Styles>
+                            <Style Selector="TextBox">
+                                <Setter Property="MaxHeight" Value="70" />
+
+                            </Style>
+
+                        </StackPanel.Styles>
 
                         <TextBox
                             p1:TextFieldAssist.Label="Name"
                             Classes="outline"
-                            Text="{Binding Sharedata.SelectedTankItem.Name, Mode=TwoWay}"
+                            Text="{Binding Tempname, Mode=TwoWay}"
                             TextAlignment="Center"
                             Theme="{StaticResource OutlineTextBox}"
-                            UseFloatingWatermark="True" />
+                            UseFloatingWatermark="True">
+
+                            <!--<TextBox.Resources>
+                                <ControlTheme x:Key="{x:Type DataValidationErrors}" TargetType="DataValidationErrors">
+
+                                    <Style Selector="^ /template/ ContentControl#PART_ErrorPresenter">
+                                        <Setter Property="DockPanel.Dock" Value="Bottom" />
+                                        <Setter Property="Margin" Value="0,0,0,0" />
+                                    </Style>
+                                </ControlTheme>
+                            </TextBox.Resources>-->
+
+                            <!--<TextBox.Styles>
+                                <Style Selector="avalonia_controls|TextBlock#PART_ErrorText">
+                                    <Setter Property="IsVisible" Value="True" />
+                                </Style>
+                            </TextBox.Styles>-->
+
+                        </TextBox>
                         <TextBox
                             p1:TextFieldAssist.Label="Capacity"
                             Classes="outline"
-                            IsReadOnly="True"
-                            Text="{Binding Sharedata.SelectedTankItem.Capacity, Mode=TwoWay}"
+                            IsReadOnly="False"
+                            Text="{Binding TempCap, Mode=TwoWay}"
                             TextAlignment="Center"
                             Theme="{StaticResource OutlineTextBox}"
                             UseFloatingWatermark="True" />
@@ -67,7 +94,7 @@
                             p1:TextFieldAssist.Label="CurrentLv"
                             Classes="outline"
                             IsReadOnly="False"
-                            Text="{Binding Sharedata.SelectedTankItem.CurrentLevel, Mode=TwoWay}"
+                            Text="{Binding TempCurrlvl, Mode=TwoWay}"
                             TextAlignment="Center"
                             Theme="{StaticResource OutlineTextBox}"
                             UseFloatingWatermark="True" />
@@ -76,8 +103,8 @@
                             HorizontalAlignment="Right"
                             p1:TextFieldAssist.Label="Id"
                             Classes="outline"
-                            IsReadOnly="True"
-                            Text="{Binding Sharedata.SelectedTankItem.Id}"
+                            IsReadOnly="False"
+                            Text="{Binding TempGuidid}"
                             TextAlignment="Center"
                             Theme="{StaticResource OutlineTextBox}"
                             UseFloatingWatermark="True" />
@@ -106,7 +133,27 @@
                                 Foreground="{Binding Sharedata.SelectedTankItem.Stariconcolor}"
                                 Kind="{Binding Sharedata.SelectedTankItem.Stariconname}" />
                         </controls:FloatingButton>
+
+
+
+
+
                     </StackPanel>
+
+                    <Button
+                        Grid.Column="1"
+                        Width="45"
+                        Height="150"
+                        Margin="0,0,0,45"
+                        VerticalAlignment="Bottom"
+                        Classes="accent"
+                        Command="{Binding SavedataCommand}">
+                        <avalonia:MaterialIcon
+                            Width="25"
+                            Height="25"
+                            Foreground="White"
+                            Kind="ContentSave" />
+                    </Button>
 
                     <!-- <avalonia:MaterialIcon  Width="30" Height="30" Foreground="Yellow" Kind="Star" /> -->
 
@@ -303,9 +350,31 @@
                         <StackPanel
                             Margin="20,15,0,0"
                             HorizontalAlignment="Center"
+                            Background=""
                             IsEnabled="{Binding Rangevisible}"
                             Orientation="Horizontal"
                             Spacing="5">
+
+
+                            <StackPanel.Resources>
+                                <ControlTheme x:Key="{x:Type DataValidationErrors}" TargetType="DataValidationErrors">
+
+                                    <Style Selector="^ /template/ ContentControl#PART_ErrorPresenter">
+                                        <Setter Property="DockPanel.Dock" Value="Bottom" />
+                                        <Setter Property="Margin" Value="0,0,0,0" />
+                                    </Style>
+                                </ControlTheme>
+
+
+                            </StackPanel.Resources>
+                            <StackPanel.Styles>
+
+                                <Style Selector="avalonia_controls|TextBlock#PART_ErrorText">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </Style>
+
+                            </StackPanel.Styles>
+
 
                             <!--
 							<StackPanel.Styles>
@@ -324,6 +393,8 @@
                                 Text="{Binding Number1, Mode=TwoWay}"
                                 Theme="{StaticResource OutlineTextBox}"
                                 UseFloatingWatermark="True" />
+							
+							
                             <TextBlock
                                 Margin="0,5,0,0"
                                 VerticalAlignment="Center"
@@ -350,12 +421,12 @@
                                 <avalonia:MaterialIcon Kind="ContentSave" />
                             </Button>
                         </StackPanel>
-                        <TextBlock
+                        <!--<TextBlock
                             Margin="30,2,0,0"
                             HorizontalAlignment="Left"
                             FontSize="10"
                             Foreground="red"
-                            Text="{Binding Settingerror}" />
+                            Text="{Binding Settingerror}" />-->
 
                     </StackPanel>
 

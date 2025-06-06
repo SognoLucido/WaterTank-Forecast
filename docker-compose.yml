@@ -11,6 +11,7 @@ services:
       dockerfile: DataFlow-ReadAPI/Dockerfile
     environment: 
         - DCOMPOSE_DATABASEHOST=timescaledb_read
+        - LOGGING_ALLINFO=true
     ports:
       - "0:8080"
     depends_on:
@@ -43,6 +44,7 @@ services:
     environment: 
        - DCOMPOSE_DATABASEHOST=timescaledb_read
        - DCOMPOSE_MQTTBROKERHOST=mosquitto
+       - LOGGING_ALLINFO=true
     depends_on:   # using one database as R/W for now
       mosquitto:
         condition: service_healthy

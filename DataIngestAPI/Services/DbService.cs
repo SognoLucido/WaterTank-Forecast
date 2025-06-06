@@ -15,9 +15,12 @@ namespace DataIngestAPI.Services
         private readonly ILogger<DbService> logger = _logger;
         private readonly Dbinit dbinit = _dbinit;
         private string Connstring = string.Empty;
+        private bool InfoLogEnable;
+        
 
-        public async Task InitCreation()
+        public async Task InitCreation(bool _enableinfoLog)
         {
+            InfoLogEnable = _enableinfoLog;
             await dbinit.InitCreationAsync();
 
             Connstring = dbinit.Connstring;
@@ -56,11 +59,13 @@ namespace DataIngestAPI.Services
 
                 var result = await conn.ExecuteAsync(insertQuery, TankItemclass);
 
+                if(InfoLogEnable) logger.LogInformation ("TankitemId: {TankitemId} --- MqttClientId: {MqttClientId} --- SubId: {SubId}",  _idTankitem, _idMqttclient, _thisAPPsubmqttID);
+
             }
             catch (Exception ex) 
             {
                
-                logger.LogWarning("TankitemId: {TankitemId} --- MqttClientId: {MqttClientId} --- SubId: {SubId} --- Exception: {ExceptionMessage}",_idTankitem, _idMqttclient, _thisAPPsubmqttID, ex.Message);
+                logger.LogWarning("{Timestamp:yyyy-MM-dd HH:mm:ss} UTC --- TankitemId: {TankitemId} --- MqttClientId: {MqttClientId} --- SubId: {SubId} --- Exception: {ExceptionMessage}",DateTime.UtcNow, _idTankitem, _idMqttclient, _thisAPPsubmqttID, ex.Message);
             }
            
         }

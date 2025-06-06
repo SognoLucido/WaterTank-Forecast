@@ -1,9 +1,7 @@
 
-using System.IO;
 using System.Text.Json.Serialization;
 using DataFlow_ReadAPI.Services.DBFetching;
 using Dbcheck;
-using Microsoft.AspNetCore.Http.Json;
 using Scalar.AspNetCore;
 
 namespace DataFlow_ReadAPI
@@ -28,8 +26,17 @@ namespace DataFlow_ReadAPI
             builder.Services.AddScoped<IDbFetch, DbFetch>();
             builder.Services.AddSingleton<Dbinit>();
 
+            builder.Services.AddLogging(opt =>
+            {
+                opt.AddSimpleConsole(opt =>
+                {
+                    opt.TimestampFormat = "yyyy-MM-dd HH:mm:ss 'UTC' ";
+                    opt.UseUtcTimestamp = true;
+                    opt.SingleLine = true;
+                });
+            });
 
-           
+
 
             var app = builder.Build();
 

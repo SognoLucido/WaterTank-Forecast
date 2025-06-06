@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WaterTankMock_MQTT.Models;
@@ -176,6 +177,10 @@ namespace WaterTankMock_MQTT.ViewModels
         [RelayCommand]
         private async Task Continue()
         {
+
+         var x = GetErrors(null);
+
+
             ValidateAllProperties();
             if (!HasErrors)
             {

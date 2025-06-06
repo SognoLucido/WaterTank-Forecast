@@ -7,19 +7,39 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using MQTTnet.Formatter;
 using MQTTnet;
+using Microsoft.Extensions.Logging;
 
 namespace DataIngestAPI.Services
 {
-    internal class MqttReaderBG(DbService db , IConfiguration conf) : BackgroundService
+    internal class MqttReaderBG : BackgroundService
     {
-        private readonly DbService dbcall = db;
-        private string MqttServerIP = conf["DCOMPOSE_MQTTBROKERHOST"] ?? conf.GetConnectionString("mqtt") ?? "localhost"  ;
+        private readonly IConfiguration conf;
+        private readonly ILogger logger;
+        private readonly DbService dbcall ;
+        private string MqttServerIP ;
+        private (byte,byte) trylog { get; set; } = (0,3); // 0 start , up to 3 tries // hardcoded
+
+        public MqttReaderBG(DbService _db, IConfiguration _conf, ILogger<MqttReaderBG> _logger)
+        {
+            conf = _conf;
+            logger = _logger;
+            dbcall = _db;
+            MqttServerIP = conf["DCOMPOSE_MQTTBROKERHOST"] ?? conf.GetConnectionString("mqtt") ?? "localhost";
+
+
+        }
+
+
 
         protected override async Task ExecuteAsync(CancellationToken ctoken)
         {
+
             //while (!stoppingToken.IsCancellationRequested)
             //{
-            await dbcall.InitCreation();
+            if (bool.TryParse(conf["LOGGING_ALLINFO"], out bool logENV)) { };
+
+            await dbcall.InitCreation(logENV);
+
             var mqttFactory = new MqttClientFactory();
 
                 using var mqttClient = mqttFactory.CreateMqttClient();
@@ -30,14 +50,24 @@ namespace DataIngestAPI.Services
                 .WithKeepAlivePeriod(TimeSpan.FromMinutes(5))
                 .Build();
 
-            var response = await mqttClient.ConnectAsync(mqttClientOptions, ctoken);
-
+            try
+            {
+                await mqttClient.ConnectAsync(mqttClientOptions, ctoken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning("{}",ex.Message);
+                logger.LogInformation("Retring to connect");
+            }
+            
+            
             mqttClient.ApplicationMessageReceivedAsync += async e =>
             {
                 var test = e.ApplicationMessage.UserProperties;
 
 
-                //Console.WriteLine($"Topic : {e.ApplicationMessage.Topic} and Message : {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}"); 
+                
+                Console.WriteLine($"Topic : {e.ApplicationMessage.Topic} and Message : {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}"); 
 
               await dbcall.Insertdata(Encoding.UTF8.GetString(
                   e.ApplicationMessage.Payload),

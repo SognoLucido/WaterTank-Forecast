@@ -10,7 +10,7 @@ namespace DataIngestAPI.Services
     {
 
         Task Insertdata(string data,string _idTankitem , string _idMqttclient,string _thisAPPsubmqttID);
-        Task InitCreation();
+        Task InitCreation(bool _enableinfoLog);
        // Task Cleantable(); //opt
 
     }

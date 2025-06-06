@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿
 using DataIngestAPI.Services;
 using Dbcheck;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+
 
 namespace DataIngestAPI
 {
@@ -12,7 +14,15 @@ namespace DataIngestAPI
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder();
 
-            builder.Services.AddLogging();
+            builder.Services.AddLogging(opt =>
+            {
+                opt.AddSimpleConsole(opt =>
+                {
+                    opt.TimestampFormat = "yyyy-MM-dd HH:mm:ss 'UTC' ";
+                    opt.UseUtcTimestamp = true;
+                    opt.SingleLine = true;
+                });
+            });
 
             builder.Services.AddHostedService<MqttReaderBG>();
             builder.Services.AddSingleton<DbService>();
