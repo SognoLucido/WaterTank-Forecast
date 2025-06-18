@@ -278,6 +278,31 @@ namespace WaterTankMock_MQTT.ViewModels
            
         }
 
+
+        [RelayCommand]
+        private async Task Remove(TankItem item)
+        {
+
+            Sharedata.Items?.Remove(item);
+
+
+
+            if((Sharedata.Items?.Count ?? 0) <= 7 )
+            {
+                Counter = false;
+                return;
+            }
+
+            if(Sharedata.Items is not null && Sharedata.Items.Count > 0)
+            {
+                Counter = true;
+                NotificationItemstring = Sharedata.Items.Count.ToString();
+            }
+
+
+            
+        }
+
         [RelayCommand]
         private async Task Disconnect()
         {

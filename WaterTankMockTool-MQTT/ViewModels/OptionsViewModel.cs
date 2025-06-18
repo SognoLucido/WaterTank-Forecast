@@ -41,7 +41,7 @@ namespace WaterTankMock_MQTT.ViewModels
 
 
 
-
+        
 
 
 
@@ -55,7 +55,7 @@ namespace WaterTankMock_MQTT.ViewModels
             get => _formClientId;
             set
             {
-                SetProperty(ref _formClientId, value, true);
+                SetProperty(ref _formClientId, value);
 
                 if (HasErrors)
                 {
@@ -96,6 +96,7 @@ namespace WaterTankMock_MQTT.ViewModels
                 }
                 else
                 {
+                    FormClientGuid = new Guid().ToString();
                     Clientfont = 20;
                     Clienttext = "Enable \"Client ID\"";
                 }

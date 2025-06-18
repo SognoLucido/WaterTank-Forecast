@@ -192,6 +192,7 @@
 
 
             <ListBox
+                x:Name="TankList"
                 Height="220"
                 Margin="5"
                 ItemsSource="{Binding Sharedata.Items}"
@@ -201,14 +202,42 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
 
-                        <Grid ColumnDefinitions="1*,0.2*">
-                            <TextBlock Text="{Binding Name, Mode=OneWay}" />
 
-                            <avalonia:MaterialIcon
-                                Grid.Column="1"
-                                IsVisible="{Binding Starring}"
-                                Kind="Star" />
-                        </Grid>
+
+
+
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal"
+                            Spacing="3">
+
+                            <TextBlock MaxWidth="118" Text="{Binding Name, Mode=OneWay}" />
+
+
+                            <avalonia:MaterialIcon IsVisible="{Binding Starring}" Kind="Star" />
+
+                            <Button
+                                Width="9"
+                                Height="9"
+                                Background="Red"
+                                Command="{Binding #TankList.DataContext.RemoveCommand}"
+                                CommandParameter="{Binding}">
+
+                                <Button.Styles>
+                                    <Style Selector="Button">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </Style>
+
+                                    <Style Selector=" ListBoxItem:pointerover   StackPanel > Button">
+                                        <Setter Property="IsVisible" Value="True" />
+                                    </Style>
+                                </Button.Styles>
+
+                            </Button>
+
+                        </StackPanel>
+
+
 
 
 
