@@ -6,12 +6,21 @@ using Scalar.AspNetCore;
 
 namespace DataFlow_ReadAPI
 {
-    public class Program
+    public partial class Program
     {
+        
+
         public static async Task Main(string[] args)
         {
+            bool Docker = false;
+
             var builder = WebApplication.CreateBuilder(args);
 
+           
+            foreach(var env in builder.Configuration.AsEnumerable())
+            {
+                if (env.Key.Contains("DCOMPOSE", StringComparison.OrdinalIgnoreCase)) Docker = true;
+            }
 
 
             builder.Services.AddControllers()
@@ -55,9 +64,11 @@ namespace DataFlow_ReadAPI
             {
             
                 opt.WithTitle("TankForecast API");
-                opt.AddServer(""); //  docker 
-                opt.AddServer("http://localhost:5051"); // no docker , dbconnection manual edit req *** TODO dynamic 
-                
+
+                if(Docker) opt.AddServer("");
+                else opt.AddServer("http://localhost:5051");
+          
+
             });
 
            // app.UseAuthorization();
@@ -68,4 +79,7 @@ namespace DataFlow_ReadAPI
             app.Run();
         }
     }
+
+    public partial class Program { }
+
 }

@@ -16,6 +16,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
     {
         private readonly string Connstring;
       
+        //check dbinit SHAREDLIB for connectionstring source
         public DbFetch(Dbinit _dbinit) 
         {
 

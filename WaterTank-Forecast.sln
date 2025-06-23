@@ -28,6 +28,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbcheck", "Dbcheck\Dbcheck.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedLib", "SharedLib", "{DF5C2AA4-9A93-4793-9250-012049EB2512}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{52F2F617-FC89-457C-9880-9A21B4A206C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watertank.api.integration.test", "Tests\Watertank.api.integration.test\Watertank.api.integration.test.csproj", "{1BF75CCE-9F93-4DDA-BF1D-427BC53F8CE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +62,10 @@ Global
 		{AAC026F5-5008-40D3-BB9C-A4B2E26876CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAC026F5-5008-40D3-BB9C-A4B2E26876CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAC026F5-5008-40D3-BB9C-A4B2E26876CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BF75CCE-9F93-4DDA-BF1D-427BC53F8CE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BF75CCE-9F93-4DDA-BF1D-427BC53F8CE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BF75CCE-9F93-4DDA-BF1D-427BC53F8CE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BF75CCE-9F93-4DDA-BF1D-427BC53F8CE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +76,8 @@ Global
 		{AFF8E898-D6C7-4C1A-B9DA-9D0C375492A0} = {CB58C5DB-0A84-4E4A-A76B-C2751BD7DA1D}
 		{5F3D6972-41A1-46B8-BB98-41AC79D449A1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{AAC026F5-5008-40D3-BB9C-A4B2E26876CB} = {DF5C2AA4-9A93-4793-9250-012049EB2512}
+		{52F2F617-FC89-457C-9880-9A21B4A206C7} = {CB58C5DB-0A84-4E4A-A76B-C2751BD7DA1D}
+		{1BF75CCE-9F93-4DDA-BF1D-427BC53F8CE4} = {52F2F617-FC89-457C-9880-9A21B4A206C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BEDF588-5462-44B7-86C9-6359BE6F9A97}

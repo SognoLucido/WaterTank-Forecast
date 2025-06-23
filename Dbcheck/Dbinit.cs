@@ -6,31 +6,39 @@ namespace Dbcheck
 {
     public class Dbinit
     {
-        public string Connstring { get; }
-        private readonly ILogger logger;
+        public  string Connstring { get; }
+        private readonly ILogger? logger;
         private readonly bool logENV = false;
-        public Dbinit(IConfiguration _conf,ILogger<Dbinit> _logger)
+        public Dbinit(IConfiguration? _conf, ILogger<Dbinit>? _logger, string? DirectConnectionstring = null)
         {
-           
+
             logger = _logger;
 
-            
+
             try
             {
-              
-                if (bool.TryParse(_conf["LOGGING_ALLINFO"], out bool logENV)) { };
+                if (DirectConnectionstring is null)
+                {
+                    if (bool.TryParse(_conf["LOGGING_ALLINFO"], out bool logENV)) { }
+                    ;
 
-                Connstring = "Host=" + (
-                _conf["DCOMPOSE_DATABASEHOST"] ??
-                _conf.GetConnectionString("postgwhost") ?? "localhost");
+                    Connstring = "Host=" + (
+                    _conf["DCOMPOSE_DATABASEHOST"] ??
+                    _conf.GetConnectionString("postgwhost") ?? "localhost");
 
-                Connstring += _conf.GetConnectionString("postgwbody") ?? throw new NotImplementedException("db connection body string missing ; check appsetting.json");
+                    Connstring += _conf.GetConnectionString("postgwbody") ?? throw new NotImplementedException("db connection body string missing ; check appsetting.json");
+                }
+                else
+                {
+                    Connstring = DirectConnectionstring!;
+                }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-                logger.LogWarning("{}",ex.Message);
+                if (logger is not null)
+                    logger!.LogWarning("{}", ex.Message);
             }
-           
+
         }
 
 
@@ -58,7 +66,8 @@ namespace Dbcheck
 
                 await conn.OpenAsync();
 
-                logger.LogInformation("database connection , SUCCESSFUL");
+                if (logger is not null)
+                    logger.LogInformation("database connection , SUCCESSFUL");
 
                 //const string checkDbQuery = "SELECT 1 FROM pg_database WHERE datname = 'WaterTank'";
                 //var result = await conn.ExecuteScalarAsync(checkDbQuery);
@@ -77,7 +86,8 @@ namespace Dbcheck
                 //{
 
                 //}
-                logger.LogInformation("db Hypertable tables initialized/checked successfully");
+                if (logger is not null)
+                    logger.LogInformation("db Hypertable tables initialized/checked successfully");
 
 
 
@@ -85,9 +95,9 @@ namespace Dbcheck
                 //var y = await conn.ExecuteAsync(sqlhypertable);
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                logger.LogWarning("{}",ex.Message);
+                logger.LogWarning("{}", ex.Message);
             }
 
         }
@@ -111,23 +121,23 @@ namespace Dbcheck
             try
             {
 
-            
-            using var conn = new NpgsqlConnection(Connstring);
+
+                using var conn = new NpgsqlConnection(Connstring);
 
 
-            conn.Open();
+                conn.Open();
 
-            logger.LogInformation("database connection , SUCCESSFUL");
+                logger.LogInformation("database connection , SUCCESSFUL");
                 //const string checkDbQuery = "SELECT 1 FROM pg_database WHERE datname = 'WaterTank'";
                 //var result = await conn.ExecuteScalarAsync(checkDbQuery);
 
-            using var cmd = new NpgsqlCommand(sqltable, conn);
-            using var cmd1 = new NpgsqlCommand(sqlhypertable, conn);
+                using var cmd = new NpgsqlCommand(sqltable, conn);
+                using var cmd1 = new NpgsqlCommand(sqlhypertable, conn);
 
-            //try
-            //{
-             cmd.ExecuteNonQuery();
-             cmd1.ExecuteNonQuery();
+                //try
+                //{
+                cmd.ExecuteNonQuery();
+                cmd1.ExecuteNonQuery();
                 //}
                 //catch (Exception ex)
                 //{
