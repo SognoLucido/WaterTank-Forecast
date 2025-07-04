@@ -1,6 +1,6 @@
 ####################################################################################################
 Package:Avalonia
-Version:11.2.4
+Version:11.3.2
 project URL:https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 Description:Avalonia is a cross-platform UI framework for .NET providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, macOS and with experimental support for Android, iOS and WebAssembly.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -8,7 +8,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Avalonia.Desktop
-Version:11.2.4
+Version:11.3.2
 project URL:https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 Description:Avalonia is a cross-platform UI framework for .NET providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, macOS and with experimental support for Android, iOS and WebAssembly.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -16,7 +16,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Avalonia.Diagnostics
-Version:11.2.4
+Version:11.3.2
 project URL:https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 Description:Avalonia is a cross-platform UI framework for .NET providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, macOS and with experimental support for Android, iOS and WebAssembly.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -24,7 +24,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Avalonia.Fonts.Inter
-Version:11.2.4
+Version:11.3.2
 project URL:https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 Description:Avalonia is a cross-platform UI framework for .NET providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, macOS and with experimental support for Android, iOS and WebAssembly.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -47,6 +47,14 @@ licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
+Package:coverlet.collector
+Version:6.0.4
+project URL:https://github.com/coverlet-coverage/coverlet
+Description:Coverlet is a cross platform code coverage library for .NET, with support for line, branch and method coverage.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
 Package:Dapper
 Version:2.1.66
 project URL:https://github.com/DapperLib/Dapper
@@ -55,24 +63,8 @@ licenseUrl:https://licenses.nuget.org/Apache-2.0
 license Type:Apache-2.0
 
 ####################################################################################################
-Package:Dapper
-Version:2.1.35
-project URL:https://github.com/DapperLib/Dapper
-Description:A high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc..
-licenseUrl:https://licenses.nuget.org/Apache-2.0
-license Type:Apache-2.0
-
-####################################################################################################
-Package:Dapper
-Version:2.1.35
-project URL:https://github.com/DapperLib/Dapper
-Description:A high performance Micro-ORM supporting SQL Server, MySQL, Sqlite, SqlCE, Firebird etc..
-licenseUrl:https://licenses.nuget.org/Apache-2.0
-license Type:Apache-2.0
-
-####################################################################################################
 Package:Dapper.AOT
-Version:1.0.31
+Version:1.0.48
 project URL:https://aot.dapperlib.dev/
 Description:Build time (AOT) tools for Dapper
 licenseUrl:https://licenses.nuget.org/Apache-2.0
@@ -80,7 +72,7 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:Material.Avalonia
-Version:3.9.2
+Version:3.12.0
 project URL:https://github.com/AvaloniaCommunity/Material.Avalonia
 Description:This repository is a set of styles that will help you customize your application in an appropriate material design.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -88,25 +80,35 @@ license Type:MIT
 
 ####################################################################################################
 Package:Material.Icons.Avalonia
-Version:2.2.0
+Version:2.4.1
 project URL:https://github.com/AvaloniaUtils/Material.Icons.Avalonia/
 Description:Avalonia control for display material icons from Material.Icons
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
+Package:Microsoft.AspNetCore.Mvc.Testing
+Version:9.0.7
+project URL:https://asp.net/
+Description:Support for writing functional tests for MVC applications.
+
+This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/f6b3a5da75eb405046889a5447ec9b14cc29d285
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
 Package:Microsoft.AspNetCore.OpenApi
-Version:9.0.2
+Version:9.0.7
 project URL:https://asp.net/
 Description:Provides APIs for annotating route handler endpoints in ASP.NET Core with OpenAPI annotations.
 
-This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/704f7cb1d2cea33afb00c2097731216f121c2c73
+This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/f6b3a5da75eb405046889a5447ec9b14cc29d285
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.Extensions.Configuration.Abstractions
-Version:9.0.4
+Version:9.0.7
 project URL:https://dot.net/
 Description:Provides abstractions of key-value pair based configuration. Interfaces defined in this package are implemented by classes in Microsoft.Extensions.Configuration and other configuration packages.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -114,7 +116,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.Extensions.DependencyInjection
-Version:9.0.2
+Version:9.0.7
 project URL:https://dot.net/
 Description:Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -122,35 +124,27 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.Extensions.Hosting
-Version:9.0.0
+Version:9.0.7
 project URL:https://dot.net/
 Description:Hosting and startup infrastructures for applications.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
-Package:Microsoft.VisualStudio.Azure.Containers.Tools.Targets
-Version:1.21.2
-project URL:https://aka.ms/vscontainertools
-Description:Targets files to enable the Visual Studio Tools for Containers.
-licenseUrl:https://www.nuget.org/packages/Microsoft.VisualStudio.Azure.Containers.Tools.Targets/1.21.2/License
-license Type:EULA.md
-
-####################################################################################################
-Package:Microsoft.VisualStudio.Azure.Containers.Tools.Targets
-Version:1.21.0
-project URL:https://aka.ms/vscontainertools
-Description:Targets files to enable the Visual Studio Tools for Containers.
-licenseUrl:https://www.nuget.org/packages/Microsoft.VisualStudio.Azure.Containers.Tools.Targets/1.21.0/License
-license Type:EULA.md
-
-####################################################################################################
-Package:MQTTnet
-Version:5.0.1.1416
-project URL:https://github.com/dotnet/MQTTnet
-Description:MQTTnet is a high performance .NET library for MQTT based communication. It provides a MQTT client and a MQTT server (broker) and supports v3.1.0, v3.1.1 and v5.0.0 of the MQTT protocol.
+Package:Microsoft.NET.Test.Sdk
+Version:17.14.1
+project URL:https://github.com/microsoft/vstest
+Description:The MSbuild targets and properties for building .NET test projects.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
+
+####################################################################################################
+Package:Microsoft.VisualStudio.Azure.Containers.Tools.Targets
+Version:1.22.1
+project URL:https://aka.ms/vscontainertools
+Description:Targets files to enable the Visual Studio Tools for Containers.
+licenseUrl:https://www.nuget.org/packages/Microsoft.VisualStudio.Azure.Containers.Tools.Targets/1.22.1/License
+license Type:EULA.md
 
 ####################################################################################################
 Package:MQTTnet
@@ -163,22 +157,6 @@ license Type:MIT
 ####################################################################################################
 Package:Npgsql
 Version:9.0.3
-project URL:https://github.com/npgsql/npgsql
-Description:Npgsql is the open source .NET data provider for PostgreSQL.
-licenseUrl:https://licenses.nuget.org/PostgreSQL
-license Type:PostgreSQL
-
-####################################################################################################
-Package:Npgsql
-Version:9.0.3
-project URL:https://github.com/npgsql/npgsql
-Description:Npgsql is the open source .NET data provider for PostgreSQL.
-licenseUrl:https://licenses.nuget.org/PostgreSQL
-license Type:PostgreSQL
-
-####################################################################################################
-Package:Npgsql
-Version:9.0.2
 project URL:https://github.com/npgsql/npgsql
 Description:Npgsql is the open source .NET data provider for PostgreSQL.
 licenseUrl:https://licenses.nuget.org/PostgreSQL
@@ -186,9 +164,43 @@ license Type:PostgreSQL
 
 ####################################################################################################
 Package:Scalar.AspNetCore
-Version:2.0.22
+Version:2.5.6
 project URL:https://scalar.com/
 Description:Generate beautiful interactive API documentation from OpenAPI/Swagger documents.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
+
+####################################################################################################
+Package:Testcontainers
+Version:4.6.0
+project URL:https://dotnet.testcontainers.org/
+Description:Testcontainers for .NET is a library to support tests with throwaway instances of Docker containers for all compatible .NET Standard versions.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Testcontainers.PostgreSql
+Version:4.6.0
+project URL:https://dotnet.testcontainers.org/
+Description:Testcontainers for .NET is a library to support tests with throwaway instances of Docker containers for all compatible .NET Standard versions.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:xunit
+Version:2.9.3
+project URL:
+Description:xUnit.net is a developer testing framework, built to support Test Driven Development, with a design goal of extreme simplicity and alignment with framework features.
+
+Installing this package installs xunit.core, xunit.assert, and xunit.analyzers.
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
+
+####################################################################################################
+Package:xunit.runner.visualstudio
+Version:3.1.1
+project URL:
+Description:Visual Studio 2022+ Test Explorer runner for the xUnit.net framework. Capable of running xUnit.net v1, v2, and v3 tests. Supports .NET 4.7.2 or later, and .NET 8 or later.
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
 

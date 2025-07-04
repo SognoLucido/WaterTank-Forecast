@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using WaterTankMock_MQTT.Models;
 using WaterTankMock_MQTT.Services;
 using WaterTankMock_MQTT.Services.Mqtt;
+using WaterTankMockTool_MQTT.Services;
 
 namespace WaterTankMock_MQTT.ViewModels
 {
@@ -22,8 +23,7 @@ namespace WaterTankMock_MQTT.ViewModels
         private string? _datepicker;
         private string? _days;
 
-        [ObservableProperty] private string? _dayErrors;
-
+     
         public SimViewModel(Sharedata _sharedata, MqttInit _mqtt)
         {
             Sharedata = _sharedata;
@@ -78,39 +78,33 @@ namespace WaterTankMock_MQTT.ViewModels
 
 
         [Required(ErrorMessage = "The 'Day' field is required.")]
-        [Range(1, 100, ErrorMessage = "The 'Day' value must be between 1 and 100.")]
+        [RangeStringtoInt(1, 100, ErrorMessage = "The 'Day' value must be between 1 and 100.")]
         public string? Days
         {
             get => _days;
             set
             {
 
-                SetProperty(ref _days, value, true); // `true` triggers validation
-                DayErrors = GetErrorsAsString(nameof(Days));
+                SetProperty(ref _days, value,true); // `true` triggers validation
+                                               //   DayErrors = GetErrorsAsString(nameof(Days));
 
-
+               // ValidateProperty(value, nameof(Days));
 
                 if (int.TryParse(value, out var pep))
                 {
-                    if (pep > 0)
-                        EnddatetextInfo = "End Date: " + Sharedata.StartTestDate.AddDays(pep).ToString();
-                    else EnddatetextInfo = "End Date: ----";
+                    if (pep > 0) 
+                    { 
+                         EnddatetextInfo = "End Date: " + Sharedata.StartTestDate.AddDays(pep).ToString();
+                    }
+                else EnddatetextInfo = "End Date: ----";
 
                 }
                 else EnddatetextInfo = "End Date: ----";
 
-                if (!string.IsNullOrEmpty(DayErrors) || Date is null)
-                    EnddatetextInfo = "End Date: ----";
+                if (Date is null)  EnddatetextInfo = "End Date: ----";
 
             }
         }
-
-        private string GetErrorsAsString(string propertyName)
-        {
-            var errors = GetErrors(propertyName).Cast<ValidationResult>().Select(e => e.ErrorMessage);
-            return errors.Any() ? string.Join("\n", errors) : string.Empty;
-        }
-
 
 
         public string BdMessg { get => Pepz(); }
@@ -159,7 +153,9 @@ namespace WaterTankMock_MQTT.ViewModels
             //if (_days <= 0) return;
             //if (Regex.IsMatch(_days, @"^\d+$")) return;
 
-            if (!string.IsNullOrEmpty(DayErrors) || Date is null) return;
+            if (Date is null) return;
+
+            if(HasErrors) return;
 
             Sharedata.Toxdays = int.Parse(_days!);
 

@@ -60,7 +60,7 @@ namespace DataFlow_ReadAPI
             //}
 
            
-            app.MapScalarApiReference("/" ,opt =>
+            app.MapScalarApiReference("" ,opt =>
             {
             
                 opt.WithTitle("TankForecast API");

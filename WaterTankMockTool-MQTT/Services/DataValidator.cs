@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -95,4 +97,47 @@ public sealed class LessThanAttribute : ValidationAttribute
     //}
 
 
+}
+
+
+
+
+/// <summary>
+///     Used for specifying a range constraint
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter,
+    AllowMultiple = false)]
+public class RangeStringtoIntAttribute : ValidationAttribute
+{
+
+    public int Minimum { get; private set; }
+    public int Maximum { get; private set; }
+
+
+    /// <summary>
+    ///     Constructor that takes integer minimum and maximum values
+    /// </summary>
+    /// <param name="minimum">The minimum value, inclusive</param>
+    /// <param name="maximum">The maximum value, inclusive</param>
+    public RangeStringtoIntAttribute(int minimum, int maximum)
+        
+    {
+        Minimum = minimum;
+        Maximum = maximum;
+
+    }
+
+
+    public override bool IsValid(object? value)
+    {
+
+        if(value is null) return false;
+
+        if(int.TryParse(value.ToString(),out var i))return (i >= Minimum && i <= Maximum);
+        return false;
+
+   
+    }
+
+  
 }

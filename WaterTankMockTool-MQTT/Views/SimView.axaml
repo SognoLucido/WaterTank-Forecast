@@ -29,7 +29,7 @@
 
             <Grid
                 ColumnDefinitions="*,*"
-                RowDefinitions="0.2*,*,*,0.6*"
+                RowDefinitions="0.2*,0.5*,0.6*"
                 ShowGridLines="False">
 
 
@@ -48,8 +48,9 @@
 
                 <StackPanel
                     Grid.Row="2"
-                    Margin="0,20,0,0"
-                    HorizontalAlignment="Center">
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
 
                     <TextBlock FontSize="13" Text="{Binding EnddatetextInfo}" />
 
@@ -58,7 +59,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
                         Classes="outline"
-                        Text="{Binding Days, Mode=OneWayToSource}"
+                        Text="{Binding Days}"
                         TextAlignment="Center"
                         Theme="{StaticResource OutlineTextBox}"
                         UseFloatingWatermark="False"
@@ -67,14 +68,14 @@
                 </StackPanel>
 
                 <!--  Text="{Binding DayErrors} #9d2520"  -->
-                <TextBlock
+                <!--<TextBlock
 					Margin="0,3,0,0"
 					Grid.Row="3"
                     Width="200"
 					FontWeight="Bold"
                     Foreground="Red"
                     Text="{Binding DayErrors}"
-                    TextWrapping="Wrap" />
+                    TextWrapping="Wrap" />-->
 
 
 
@@ -112,8 +113,8 @@
 
         <Border
             Grid.Row="1"
-			Height="41"
             Width="316"
+            Height="41"
             Background="#f9fbfa"
             BorderBrush="Black"
             BorderThickness="2"
@@ -121,9 +122,8 @@
 
             <StackPanel
                 HorizontalAlignment="Center"
-				VerticalAlignment="Center"
+                VerticalAlignment="Center"
                 Orientation="Horizontal"
-				
                 Spacing="5">
 
 

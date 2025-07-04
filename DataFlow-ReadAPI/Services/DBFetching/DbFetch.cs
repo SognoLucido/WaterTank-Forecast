@@ -1,23 +1,19 @@
 ﻿using System.Data;
-using System.Data.Common;
 using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
 using Dapper;
 using DataFlow_ReadAPI.Models;
 using Dbcheck;
-using Microsoft.AspNetCore.Components.Forms;
 using Npgsql;
-using Npgsql.Internal;
 
 namespace DataFlow_ReadAPI.Services.DBFetching
 {
     public class DbFetch : IDbFetch
     {
         private readonly string Connstring;
-      
+
         //check dbinit SHAREDLIB for connectionstring source
-        public DbFetch(Dbinit _dbinit) 
+        public DbFetch(Dbinit _dbinit)
         {
 
             Connstring = _dbinit.Connstring;
@@ -35,7 +31,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
         }
 
-        
+
         public async Task<DBreturnDataDto?> Forecast(Guid[]? tank_ids, int Rangedays, Guid? clientid, string? zcode)
         {
 
@@ -46,18 +42,18 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
             param.Add("DAYS", Rangedays, DbType.Int32);
 
-            if(tank_ids is not null && tank_ids.Length > 0)
+            if (tank_ids is not null && tank_ids.Length > 0)
             {
                 sb.Append("AND tank_id = ANY(@TankIds) ");
                 param.Add("TankIds", tank_ids);
 
 
-                if(clientid is not null)
+                if (clientid is not null)
                 {
                     sb.Append("AND client_id = @CLIENTID ");
-                    param.Add("CLIENTID", clientid, DbType.Guid );
+                    param.Add("CLIENTID", clientid, DbType.Guid);
                 }
-                if(zcode is not null)
+                if (zcode is not null)
                 {
                     sb.Append("AND zone_code = @ZONE ");
                     param.Add("ZONE", zcode, DbType.String);
@@ -74,9 +70,9 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                 {
                     sb.Append("AND client_id = @CLIENTID ");
                     param.Add("CLIENTID", clientid, DbType.Guid);
-                  //  whereEnable = true;
+                    //  whereEnable = true;
                 }
-                if(zcode is not null)
+                if (zcode is not null)
                 {
                     //if(whereEnable)sb.Append("AND zone_code = @ZONE ");
                     //else sb.Append("zone_code = @ZONE ");
@@ -92,7 +88,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
 
             string sqlfetch = $@"
-                                 WITH tank_last_time AS (
+                                 WITH RECURSIVE tank_last_time AS (
                        SELECT DISTINCT ON (tank_id)
                        tank_id,
                        time AS last_time ,
@@ -125,39 +121,60 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                     SELECT 
                         ad.tank_id,
                         ad.consumption_day,
-                        wt.current_volume
+                        wt.current_volume,
+                        wt.time
                     FROM all_dates ad
                     LEFT JOIN public.watertank wt 
                         ON ad.tank_id = wt.tank_id AND ad.consumption_day = wt.time::date
-                ),
-                filled_data AS (
+                ), 
+                 last_time_filter AS(
+                    SELECT * 
+                    FROM (
+	                    SELECT DISTINCT ON (tank_id,consumption_day) * FROM consumption_data 
+	                    ORDER BY tank_id,consumption_day ,time DESC
+	                    )
+                    ORDER BY consumption_day ASC
+                    ),
+                fill_forward AS (
                     SELECT 
                         tank_id,
                         consumption_day,
-                        COALESCE(
-                            current_volume, 
-                            LAG(current_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day) 
-                        ) AS filled_volume
-                    FROM consumption_data
-                ),
-                final_consumption AS (
+                        current_volume AS filled_volume
+                    FROM last_time_filter
+                    WHERE (tank_id, consumption_day) IN (
+                        SELECT tank_id, MIN(consumption_day)
+                        FROM last_time_filter
+                        GROUP BY tank_id
+                    )
+
+                    UNION ALL
                     SELECT 
-                        tank_id,
-                        consumption_day,
-                        filled_volume AS current_volume,
-                        LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day) AS previous_volume,
-                        CASE 
-                            WHEN filled_volume < LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day)
-                            THEN LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day) - filled_volume
-                            ELSE 0
-                        END AS daily_consumption,
-                        CASE 
-                            WHEN filled_volume > LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day)
-                            THEN 1
-                            ELSE 0
-                        END AS is_refill
-                    FROM filled_data
+                        ltf.tank_id,
+                        ltf.consumption_day,
+                        COALESCE(ltf.current_volume, ff.filled_volume) AS filled_volume
+                    FROM last_time_filter ltf
+                    JOIN fill_forward ff
+                      ON ltf.tank_id = ff.tank_id
+                     AND ltf.consumption_day = ff.consumption_day + INTERVAL '1 day'
                 ),
+                 final_consumption AS (
+                     SELECT 
+                         tank_id,
+                         consumption_day,
+                         filled_volume AS current_volume,
+                         LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day) AS previous_volume,
+                         CASE 
+                             WHEN filled_volume < LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day)
+                             THEN LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day) - filled_volume
+                             ELSE 0
+                         END AS daily_consumption,
+                         CASE 
+                             WHEN filled_volume > LAG(filled_volume) OVER (PARTITION BY tank_id ORDER BY consumption_day)
+                             THEN 1
+                             ELSE 0
+                         END AS is_refill
+                     FROM fill_forward
+                 ),
                 summary_data AS(
                     SELECT 
                         tank_id,
@@ -179,20 +196,20 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                 FROM summary_data sd
                 JOIN date_ranges dr ON sd.tank_id = dr.tank_id
                 )
-                SELECT g.tank_id, g.range_end + INTERVAL '1 day' * (g.last_volume/ g.average_daily_consumption )::INTEGER as empty_at_day 
+               SELECT g.tank_id, (g.range_end + INTERVAL '1 day' * (g.last_volume/ g.average_daily_consumption )::INTEGER)::date as empty_at_day 
                 FROM recap_data as g";
 
             // OLD SELECT g.tank_id, g.range_end ,  (g.last_volume / g.average_daily_consumption) as days_remaining   FROM recap_data as g"
 
 
-          
+
 
 
             using (var Dbconn = new NpgsqlConnection(Connstring))
             {
 
 
-               var x = await Dbconn.QueryAsync<DbforecastreturnData>(sqlfetch, param);
+                var x = await Dbconn.QueryAsync<DbforecastreturnData>(sqlfetch, param);
 
                 if (x.Any())
                 {
@@ -210,12 +227,12 @@ namespace DataFlow_ReadAPI.Services.DBFetching
             }
 
         }
-                
-      
-        public async Task<IEnumerable<DbInfoItemwithDATEtime>?> GetinfoItem(Guid[] Ids, bool clientid, bool zcode, bool totcap ,DateTime min , DateTime max)
+
+
+        public async Task<IEnumerable<DbInfoItemwithDATEtime>?> GetinfoItem(Guid[] Ids, bool clientid, bool zcode, bool totcap, DateTime min, DateTime max)
         {
 
-            if(max.Hour == 00 && max.Minute == 00 && max.Second == 00)
+            if (max.Hour == 00 && max.Minute == 00 && max.Second == 00)
                 max = max.AddDays(1);
 
 
@@ -250,7 +267,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                 GROUP BY tank_id;";
 
 
-                var Rawdbdata = await Dbconn.QueryAsync<DbjsonparseDTO>(sql,new { StartDate = min , EndDate = max , TankIds = Ids });
+                var Rawdbdata = await Dbconn.QueryAsync<DbjsonparseDTO>(sql, new { StartDate = min, EndDate = max, TankIds = Ids });
 
 
                 var options = new JsonSerializerOptions { Converters = { new UtcDateTimeConverter() } };
@@ -259,18 +276,18 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                 var Dbmapped = Rawdbdata.Select(r => new DbInfoItemwithDATEtime
                 {
                     tank_id = r.tank_id,
-                    data = JsonSerializer.Deserialize<List<DateTimerange>>(r.Jsondata,options)
+                    data = JsonSerializer.Deserialize<List<DateTimerange>>(r.Jsondata, options)
                 }).ToList();
 
 
 
-                return Dbmapped.Count == 0 ?  null : Dbmapped;
+                return Dbmapped.Count == 0 ? null : Dbmapped;
 
             }
 
         }
 
-        public async Task<IEnumerable<DbInfoItem>?> GetinfoItem(Guid[] Ids ,bool clientid, bool zcode, bool totcap)
+        public async Task<IEnumerable<DbInfoItem>?> GetinfoItem(Guid[] Ids, bool clientid, bool zcode, bool totcap)
         {
 
             StringBuilder sb = new();
@@ -283,8 +300,8 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
 
             if (sb.Length > 0) sb.Length--;
-         
-            
+
+
 
 
 
@@ -314,7 +331,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
             //    if (totcap)
             //        if (item.total_capacity is null) item.Total_capacity_info = "Total capacity unavailable/not set for this record ";
-            
+
             //}
 
             return dbdata;
@@ -322,6 +339,6 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
         }
 
-      
+
     }
 }
