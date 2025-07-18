@@ -6,6 +6,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <PackageIcon></PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,5 +28,11 @@
     <PackageReference Include="Material.Icons.Avalonia" Version="2.4.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
     <PackageReference Include="MQTTnet" Version="5.0.1.1416" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Update="Assets\PSREADY.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
   </ItemGroup>
 </Project>

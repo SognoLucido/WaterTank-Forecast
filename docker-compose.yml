@@ -13,7 +13,7 @@ services:
         - DCOMPOSE_DATABASEHOST=timescaledb_read
         - LOGGING_ALLINFO=true
     ports:
-      - "0:8080"
+      - "9944:8080"
     depends_on:
         timescaledb_read:
            condition: service_healthy

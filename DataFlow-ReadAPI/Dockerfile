@@ -12,6 +12,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["DataFlow-ReadAPI/DataFlow-ReadAPI.csproj", "DataFlow-ReadAPI/"]
+COPY ["Dbcheck/Dbcheck.csproj", "Dbcheck/"]
 RUN dotnet restore "./DataFlow-ReadAPI/DataFlow-ReadAPI.csproj"
 COPY . .
 WORKDIR "/src/DataFlow-ReadAPI"

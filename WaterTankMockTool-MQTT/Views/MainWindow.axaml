@@ -14,7 +14,7 @@
     Height="400"
     x:DataType="vm:MainWindowViewModel"
     CanResize="False"
-    Icon="/Assets/avalonia-logo.ico">
+    Icon="/Assets/PSREADY.ico">
 
 
 

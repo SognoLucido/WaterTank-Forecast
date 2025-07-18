@@ -20,6 +20,7 @@ RUN apt-get update \
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["DataIngestAPI/DataIngestAPI.csproj", "DataIngestAPI/"]
+COPY ["Dbcheck/Dbcheck.csproj", "Dbcheck/"]
 RUN dotnet restore "./DataIngestAPI/DataIngestAPI.csproj"
 COPY . .
 WORKDIR "/src/DataIngestAPI"

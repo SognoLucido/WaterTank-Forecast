@@ -66,7 +66,7 @@ namespace DataFlow_ReadAPI
                 opt.WithTitle("TankForecast API");
 
                 if(Docker) opt.AddServer("");
-                else opt.AddServer("http://localhost:5051");
+                else opt.AddServer("http://localhost:9944");
           
 
             });
