@@ -42,6 +42,7 @@ until the specified range is reached, excluding refills and accounting for missi
 ## Build
 > [!IMPORTANT]
 > Require docker engine
+> 
 Startup:
  - `docker compose -p watertank_project up`
  - go to http://localhost:9944/
