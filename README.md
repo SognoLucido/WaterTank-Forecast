@@ -5,7 +5,7 @@ This project is a **prototype/conceptual system** designed to simulate and forec
 
 -   [ASP.NET Core](https://dotnet.microsoft.com/en-us/apps/aspnet) - Cross-platform. Open source.  
 A framework for building web apps and services with .NET and C#
--   .NET 8-9
+-   .NET 9
 -   [Scalar](https://github.com/scalar/scalar/tree/main/integrations/aspnetcore) - A modern, open-source alternative to Swagger UI for generating interactive, user-friendly documentation from OpenAPI specs
 - [MQTTnet](https://github.com/dotnet/MQTTnet) - High performance .NET library for MQTT based communication. It provides a MQTT client and a MQTT server (broker)
 -   [Dapper](https://github.com/DapperLib/Dapper) - micro ORM for .net
@@ -41,7 +41,7 @@ until the specified range is reached, excluding refills and accounting for missi
 
 ## Build
 > [!IMPORTANT]
-> Require docker engine
+> Require docker engine & compose
 > 
 Startup:
  - `docker compose -p watertank_project up`
@@ -65,6 +65,8 @@ Database is empty by default , use one of these tools(the executable not include
  ![Animazione](https://github.com/user-attachments/assets/16f89973-3681-4e56-b680-1f8a4a9364dc)
 
  - DirectInserttoDB
+
+ template data for manual insertion into data.txt file
  
 ## Tests
 

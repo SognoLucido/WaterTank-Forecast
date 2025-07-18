@@ -45,6 +45,9 @@ namespace Dbcheck
         public async Task InitCreationAsync()
         {
 
+            int initretry = 1;
+            const int initretryCAP = 3;
+
             const string sqltable = @"
             CREATE TABLE IF NOT EXISTS watertank (
             time TIMESTAMPTZ NOT NULL,                                   
@@ -57,6 +60,7 @@ namespace Dbcheck
 
             const string sqlhypertable = @"SELECT create_hypertable('WaterTank', by_range('time') , if_not_exists => TRUE);";
 
+            retrylogicAsync:
             try
             {
 
@@ -97,7 +101,18 @@ namespace Dbcheck
             }
             catch (Exception ex)
             {
+
                 logger.LogWarning("{}", ex.Message);
+
+                if(initretry <= initretryCAP)
+                {
+
+                    logger.LogWarning("{}", $"{initretry} retry attempt(s) to connect");
+                    await Task.Delay(5000);
+                    initretry++;
+                    goto retrylogicAsync;
+                }
+
             }
 
         }
@@ -105,6 +120,9 @@ namespace Dbcheck
 
         public void InitCreation()
         {
+
+            int initretry = 1;
+            const int initretryCAP = 3;
 
             const string sqltable = @"
             CREATE TABLE IF NOT EXISTS watertank (
@@ -117,6 +135,8 @@ namespace Dbcheck
                 );";
 
             const string sqlhypertable = @"SELECT create_hypertable('WaterTank', by_range('time') , if_not_exists => TRUE);";
+
+            retrylogic:
 
             try
             {
@@ -147,7 +167,17 @@ namespace Dbcheck
             }
             catch (Exception ex)
             {
+
                 logger.LogWarning("{}", ex.Message);
+
+                if (initretry <= initretryCAP)
+                {
+
+                    logger.LogWarning("{}", $"{initretry} retry attempt(s) to connect");
+                    Thread.Sleep(5000);
+                    initretry++;
+                    goto retrylogic;
+                }
             }
 
 
