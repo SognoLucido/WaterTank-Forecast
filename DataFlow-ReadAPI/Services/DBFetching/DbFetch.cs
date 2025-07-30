@@ -36,26 +36,26 @@ namespace DataFlow_ReadAPI.Services.DBFetching
         {
 
             // WHERE current_volume != '0' todo
-
-            var sb = new StringBuilder();
+            var sb1_firstPARTInjectedSQL = string.Empty;
+            var sb2_secondPARTInjectedSQL = new StringBuilder();
             var param = new DynamicParameters();
 
             param.Add("DAYS", Rangedays, DbType.Int32);
 
             if (tank_ids is not null && tank_ids.Length > 0)
             {
-                sb.Append("AND tank_id = ANY(@TankIds) ");
+                sb2_secondPARTInjectedSQL.Append("AND tank_id = ANY(@TankIds) ");
                 param.Add("TankIds", tank_ids);
 
 
                 if (clientid is not null)
                 {
-                    sb.Append("AND client_id = @CLIENTID ");
+                    sb2_secondPARTInjectedSQL.Append("AND client_id = @CLIENTID ");
                     param.Add("CLIENTID", clientid, DbType.Guid);
                 }
                 if (zcode is not null)
                 {
-                    sb.Append("AND zone_code = @ZONE ");
+                    sb2_secondPARTInjectedSQL.Append("AND zone_code = @ZONE ");
                     param.Add("ZONE", zcode, DbType.String);
                 }
 
@@ -68,7 +68,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
 
                 if (clientid is not null)
                 {
-                    sb.Append("AND client_id = @CLIENTID ");
+                    sb2_secondPARTInjectedSQL.Append("AND client_id = @CLIENTID ");
                     param.Add("CLIENTID", clientid, DbType.Guid);
                     //  whereEnable = true;
                 }
@@ -77,27 +77,57 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                     //if(whereEnable)sb.Append("AND zone_code = @ZONE ");
                     //else sb.Append("zone_code = @ZONE ");
 
-                    sb.Append("AND zone_code = @ZONE ");
+                    sb2_secondPARTInjectedSQL.Append("AND zone_code = @ZONE ");
                     param.Add("ZONE", zcode, DbType.String);
                 }
 
             }
 
 
+
+            if (!string.IsNullOrEmpty(sb1_firstPARTInjectedSQL = sb2_secondPARTInjectedSQL.ToString()))
+            {
+                var getlastANDposition = sb1_firstPARTInjectedSQL.IndexOf("AND");
+                if (getlastANDposition != -1)
+                {
+                    sb1_firstPARTInjectedSQL = sb1_firstPARTInjectedSQL.TrimStart().Substring(3);
+                    sb1_firstPARTInjectedSQL = "WHERE" + sb1_firstPARTInjectedSQL;
+                }
+
+            }
+
+            Console.WriteLine();
             // WHERE tank_id = ANY(@TankIds)
+            //WHERE current_volume > 0
 
+            string sqlfetch = $@" 
+            WITH RECURSIVE latest_tank_readings AS (
+                SELECT DISTINCT ON (tank_id)
+                    tank_id,
+                    time AS last_time,
+                    current_volume
+                FROM watertank
+                {sb1_firstPARTInjectedSQL}
+                ORDER BY tank_id, time DESC
+	         ),
+             filter_expired_tanks AS(
 
-            string sqlfetch = $@"
-                                 WITH RECURSIVE tank_last_time AS (
-                       SELECT DISTINCT ON (tank_id)
-                       tank_id,
-                       time AS last_time ,
-                       current_volume
-                       FROM watertank
-                       WHERE current_volume > 0 
-                       {sb}
-                       ORDER BY tank_id, time DESC
-                   ),
+	            SELECT tank_id, last_time
+                FROM latest_tank_readings
+                WHERE current_volume < 1 
+               
+
+             ),
+             tank_valid_group_up AS (
+                    SELECT DISTINCT ON (tank_id)
+                    wt.tank_id,
+                    time AS last_time ,
+                    current_volume
+                    FROM watertank wt
+   	                WHERE wt.tank_id NOT IN (SELECT tank_id FROM filter_expired_tanks)
+                    {sb2_secondPARTInjectedSQL}
+                    ORDER BY tank_id, time DESC
+                ),
                 date_ranges AS (
                     SELECT 
                         tank_id,
@@ -109,7 +139,7 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                              WHERE wt.tank_id = tl.tank_id AND wt.time >= tl.last_time - (@DAYS * INTERVAL '1 day')), 
                             (last_time - (@DAYS * INTERVAL '1 day'))::date
                         ) AS start_date
-                    FROM tank_last_time tl
+                    FROM tank_valid_group_up tl
                 ),
                 all_dates AS (
                     SELECT 
@@ -195,11 +225,16 @@ namespace DataFlow_ReadAPI.Services.DBFetching
                     END AS average_daily_consumption
                 FROM summary_data sd
                 JOIN date_ranges dr ON sd.tank_id = dr.tank_id
-                )
-               SELECT g.tank_id, (g.range_end + INTERVAL '1 day' * (g.last_volume/ g.average_daily_consumption )::INTEGER)::date as empty_at_day 
-                FROM recap_data as g";
+               ),
+               final_calculation AS(
+                 SELECT g.tank_id, (g.range_end + INTERVAL '1 day' * (g.last_volume/ g.average_daily_consumption )::INTEGER)::date as empty_at_day 
+                 FROM recap_data as g
+               )
+                SELECT * FROM  final_calculation
+                UNION
+                SELECT tank_id , last_time::date as empty_at_day FROM filter_expired_tanks;";
 
-            // OLD SELECT g.tank_id, g.range_end ,  (g.last_volume / g.average_daily_consumption) as days_remaining   FROM recap_data as g"
+           
 
 
 
