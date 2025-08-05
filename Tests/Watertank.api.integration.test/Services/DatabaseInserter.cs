@@ -1,9 +1,9 @@
 ﻿
-using System.Data;
-using System.Text;
+//using System.Data;
 using Dapper;
 using Dbcheck;
 using Npgsql;
+using Watertank.api.integration.test.Models;
 
 namespace Watertank.api.integration.test.Services;
 
@@ -71,4 +71,3 @@ public class DatabaseInserter(Dbinit dbinit) : IDatabaseInserter
 
 }
 
-public record Dbrecord(DateTime time, Guid tank_id, double current_volume, Guid? client_id = null, string? zone_code = null, double? total_capacity = null);

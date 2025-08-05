@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Watertank.api.integration.test.Models;
 
 namespace Watertank.api.integration.test.Services
 {

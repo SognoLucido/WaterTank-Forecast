@@ -1,7 +1,10 @@
-﻿using System.Net.Http.Json;
+﻿using System;
+using System.Net.Http.Json;
 using DataFlow_ReadAPI.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Watertank.api.integration.test.Models;
 using Watertank.api.integration.test.Services;
+using static Watertank.api.integration.test.Models.Tankdata;
 
 namespace Watertank.api.integration.test
 {
@@ -89,6 +92,7 @@ namespace Watertank.api.integration.test
             Guid TestTankid_2 = new("F2D485A8-AC9E-4668-BB2C-E4A00C1FF002");
             Guid TestClientid_1 = new("285D7C8C-2AB4-4DB9-B0B2-7494C505F001");
             Guid TestClientid_2 = new("285D7C8C-2AB4-4DB9-B0B2-7494C505F002");
+            Guid TestTankid_4 = new("285D7C8C-2AB4-4DB9-B0B2-7494C505F002");
 
             string SharedZode = "ZC_HELLO";
 
@@ -142,66 +146,32 @@ namespace Watertank.api.integration.test
         public async Task ApiForecast_calculationFORECAST_logic()
         {
             var client = factory.CreateClient();
-            int Dayincremental = 0;
+            
             //DateTime time = DateTime.UtcNow;
             DateTime time = new(2025, 01, 01, 12, 0, 0);
-            string zone_code = "ZC_HELLO";
+            
             Guid TestTankid_1 = new("0636C302-4A85-4A0B-9B6D-B731C4890001");
             Guid TestTankid_2 = new("D57390AD-055B-4F19-8941-A798F4040002");
             Guid TestTankid_3 = new("AE4FF79E-1FBE-4172-95F5-9AE4D0D2C003");
-            Guid TestClientid_2 = new("3CDE7984-225C-49F3-BAA6-E981D728FD74"); 
+            Guid TestTankid_4 = new("ACED4974-EDD1-40C4-A323-EFCF96EC4DD6");
 
 
-            List<Dbrecord> data_1 = [
+            Guid TestClientid_2 = new("3CDE7984-225C-49F3-BAA6-E981D728FD74");
+            const string zone_code = "ZC_HELLO";
 
-              new Dbrecord(time  ,TestTankid_1,30,zone_code:zone_code),
-                new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_1,30,zone_code:zone_code),
-                 new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_1,30,zone_code:zone_code),  
-                new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_1,28,zone_code:zone_code),
-                 new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_1,25,zone_code:zone_code),
-                 new Dbrecord(Incremental_Date(ref time, 3) ,TestTankid_1,19,zone_code:zone_code),
-                 new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_1,15,zone_code:zone_code),
+
+            List<Dbrecord> tankitemlist = 
+                [
+                ..TankItem1(TestTankid_1,_zonecode:zone_code),
+                ..TankItem2(TestTankid_2,TestClientid_2,zone_code),
+                ..TankItem3(TestTankid_3,TestClientid_2),
+                ..TankItem4(TestTankid_4) //da finire
 
                 ];
 
 
-            ResetDate(ref time);
-            Dayincremental = default;
-
-            List<Dbrecord> data_2 = [
-
-                new Dbrecord(time,TestTankid_2,30,TestClientid_2,zone_code),
-                new Dbrecord(Incremental_Date(ref time, 1,2 ) ,TestTankid_2,28,TestClientid_2,zone_code),
-                 new Dbrecord(Incremental_Date(ref time, Hour:3) ,TestTankid_2,25,TestClientid_2,zone_code), 
-                  new Dbrecord(Incremental_Date(ref time, Hour:1) ,TestTankid_2,35,TestClientid_2,zone_code),
-                    new Dbrecord(Incremental_Date(ref time, 1)  ,TestTankid_2,30, TestClientid_2,zone_code),
-                     new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_2,24, TestClientid_2, zone_code),
-                     new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_2,22, TestClientid_2, zone_code),
-                     new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_2,19, TestClientid_2, zone_code)
-                ];
-
-            ResetDate(ref time);
-            Dayincremental = default;
-
-            List<Dbrecord> data_3 = [
-
-                new Dbrecord(time,TestTankid_3,30,TestClientid_2),
-                new Dbrecord(Incremental_Date(ref time, 1,2 ) ,TestTankid_2,28,TestClientid_2),
-                 new Dbrecord(Incremental_Date(ref time, Hour:3) ,TestTankid_3,40,TestClientid_2), 
-                  new Dbrecord(Incremental_Date(ref time, Hour:1) ,TestTankid_3,35,TestClientid_2),
-                    new Dbrecord(Incremental_Date(ref time, 1)  ,TestTankid_3,30, TestClientid_2),
-                     new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_3,24, TestClientid_2),
-                     new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_3,22, TestClientid_2),
-                     new Dbrecord(Incremental_Date(ref time, 1) ,TestTankid_3,19, TestClientid_2)
-                ];
-
-
-         
-
-            data_1.AddRange(data_2);
-            data_1.AddRange(data_3);
                 
-            Dbintzz.Raw_Insert(data_1);
+            Dbintzz.Raw_Insert(tankitemlist);
 
             /// Forecasting formula explanation:
             /// 
@@ -219,28 +189,54 @@ namespace Watertank.api.integration.test
 
             ////////////  ACT
 
-            var result_data_1 = await client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?tankids={TestTankid_1}");
-            var result_data_2 = await client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?tankids={TestTankid_2}");
-            var result_data_3 = await client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?tankids={TestTankid_3}");
+            var result_data_1 =  client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?tankids={TestTankid_1}");
+            var result_data_2 =  client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?tankids={TestTankid_2}");
+            var result_data_3 =  client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?tankids={TestTankid_3}");
+            var result_data_4 = client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?tankids={TestTankid_4}");
+            var get_zonecode =  client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?zone_code={zone_code}");
+            var get_client =  client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?client_id={TestClientid_2}");
+        
 
-            var get_zonecode = await client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?zone_code={zone_code}");
-            var get_client = await client.GetFromJsonAsync<DBreturnDataDto>($"/api/tank/forecast?client_id={TestClientid_2}");
+           await Task.WhenAll(result_data_1, result_data_2, result_data_3, result_data_4, get_zonecode, get_client);
+
             
             ////////////
             
-            var date_1 = result_data_1.Data.ToList()[0].empty_at_day;
-            var date_2 = result_data_2.Data.ToList()[0].empty_at_day;
-            var date_3 = result_data_3.Data.ToList()[0].empty_at_day;
 
-            var zonecodelist = get_zonecode.Data.ToList();
-            var clientlist = get_client.Data.ToList();
+            
+            var date_1 = result_data_1.Result.Data.ToList()[0].empty_at_day;
+            var date_2 = result_data_2.Result.Data.ToList()[0].empty_at_day;
+            var date_3 = result_data_3.Result.Data.ToList()[0].empty_at_day;
+            var date_4 = result_data_4.Result.Data.ToList()[0].empty_at_day;
 
+            var zonecodelist = get_zonecode.Result.Data.ToList();
+            var clientlist = get_client.Result.Data.ToList();
+
+
+            var GroupcountZonecode = tankitemlist
+                                    .Where(x => x.zone_code == zone_code)
+                                    .GroupBy(x => x.tank_id)
+                                    .Count();
+            var GroupcountClientid = tankitemlist
+                                    .Where(x => x.client_id == TestClientid_2)
+                                    .GroupBy(x => x.tank_id)
+                                    .Count();
+
+
+            var EnddateTime_tankitem4 = default(DateTime).ResetDate().AddDays
+                        (
+                        tankitemlist
+                        .Where(x => x.tank_id == TestTankid_4)
+                        .Count() - 1
+                        );
+
+            Assert.Equal(new DateOnly(EnddateTime_tankitem4.Year,EnddateTime_tankitem4.Month,EnddateTime_tankitem4.Day), new DateOnly(date_4.Year,date_4.Month,date_4.Day));
             Assert.Equal(new DateOnly(2025,1,17), new DateOnly(date_1.Year,date_1.Month,date_1.Day));
             Assert.Equal(new DateOnly(2025,1,11), new DateOnly(date_2.Year,date_2.Month,date_2.Day));
             Assert.Equal(date_2, date_3);
 
-            Assert.Equal(2,get_zonecode.Data.Count());
-            Assert.Equal(2, get_client.Data.Count());
+            Assert.Equal(GroupcountZonecode, get_zonecode.Result.Data.Count());
+            Assert.Equal(GroupcountClientid, get_client.Result.Data.Count());
 
             Assert.Contains(zonecodelist, x => x.tank_id == TestTankid_1);
             Assert.Contains(zonecodelist, x => x.tank_id == TestTankid_2);
@@ -252,43 +248,6 @@ namespace Watertank.api.integration.test
 
 
 
-        void ResetDate(ref DateTime date) => date = new(2025, 01, 01, 12, 0, 0);
-
-        DateTime Incremental_Date(ref DateTime date, int? Day = null, int? Hour = null)
-        {
-
-            //DateTime tempdate = date;
-
-            //if (Hour is not null && Hour > 0)
-            //{
-            //    tempdate = tempdate.AddHours((int)Hour);
-            //}
-
-            //if (Day is not null && Day > 0)
-            //{
-            //    tempdate = tempdate.AddDays((int)Day);
-
-            //}
-
-            //date = tempdate;
-            //return date;
-
-
-
-
-
-            if (Hour is not null && Hour > 0)
-            {
-                date = date.AddHours((int)Hour);
-            }
-
-            if (Day is not null && Day > 0)
-            {
-                date = date.AddDays((int)Day);
-            }
-
-            return date;
-        }
 
     }
 }
